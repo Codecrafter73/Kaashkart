@@ -1,0 +1,618 @@
+﻿@{
+    ViewBag.Title = "addcategory";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<style>
+    :root {
+        --primary-green: #177e3f;
+        --primary-hover: #125e30;
+        --light-green: #e8f5ed;
+        --border-radius: 10px;
+    }
+
+    .page-header {
+        /*        background: linear-gradient(135deg, var(--primary-green) 0%, #1a9d4f 100%);*/
+        border-radius: var(--border-radius);
+        padding: 5px 10px;
+        margin-bottom: 2rem;
+        color: var(--primary-green);
+        box-shadow: 0 8px 24px rgba(23, 126, 63, 0.2);
+    }
+
+        .page-header h3 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin: 0;
+        }
+
+    .add-category-btn {
+        background: white;
+        color: var(--primary-green);
+        border: none;
+        border-radius: 12px;
+        padding: 12px 24px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+        .add-category-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+            background: #f8f9fa;
+            color: var(--primary-green);
+        }
+
+    .category-card {
+        border-radius: var(--border-radius);
+        transition: all 0.3s ease;
+        cursor: pointer;
+        border: 2px solid transparent;
+        background: white;
+        overflow: hidden;
+        position: relative;
+    }
+
+        .category-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--primary-green);
+            transition: width 0.3s ease;
+        }
+
+        .category-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 32px rgba(23, 126, 63, 0.15);
+            border-color: var(--primary-green);
+        }
+
+            .category-card:hover::before {
+                width: 100%;
+                opacity: 0.05;
+            }
+
+        .category-card .card-body {
+            padding: 1.5rem;
+        }
+
+        .category-card h6 {
+            font-size: 20px !important;
+            font-weight: 600;
+            color: #2c3e50;
+            margin: 0;
+        }
+
+        .category-card i {
+            color: var(--primary-green);
+            transition: transform 0.3s ease;
+            font-size: 25px !important;
+        }
+
+        .category-card:hover i {
+            transform: translateX(5px);
+        }
+
+    .empty-state {
+        text-align: center;
+        padding: 4rem 2rem;
+        background: var(--light-green);
+        border-radius: var(--border-radius);
+        border: 2px dashed var(--primary-green);
+    }
+
+        .empty-state i {
+            font-size: 4rem;
+            color: var(--primary-green);
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        .empty-state h5 {
+            color: var(--primary-green);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .empty-state p {
+            color: #5a6c7d;
+            margin: 0;
+        }
+
+    .modal-content {
+        border: none;
+        border-radius: var(--border-radius);
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+    }
+
+    .modal-header {
+        background: linear-gradient(135deg, var(--primary-green) 0%, #1a9d4f 100%);
+        color: white;
+        border-radius: var(--border-radius) var(--border-radius) 0 0;
+        padding: 1.5rem;
+        border: none;
+    }
+
+        .modal-header .modal-title {
+            font-weight: 600;
+            font-size: 1.3rem;
+        }
+
+        .modal-header .btn-close {
+            filter: brightness(0) invert(1);
+            opacity: 0.8;
+        }
+
+            .modal-header .btn-close:hover {
+                opacity: 1;
+            }
+
+    .modal-body {
+        padding: 2rem;
+    }
+
+    .form-label {
+        font-weight: 600;
+        color: #2c3e50;
+        margin-bottom: 0.5rem;
+        font-size: 0.95rem;
+    }
+
+    .form-control {
+        border: 2px solid #e0e6ed;
+        border-radius: 10px;
+        padding: 0.75rem 1rem;
+        transition: all 0.3s ease;
+        font-size: 1rem;
+    }
+
+        .form-control:focus {
+            border-color: var(--primary-green);
+            box-shadow: 0 0 0 4px rgba(23, 126, 63, 0.1);
+        }
+
+    .submit-btn {
+        width: 100%;
+        background: var(--primary-green);
+        color: white;
+        border: none;
+        border-radius: 10px;
+        padding: 0.9rem;
+        font-weight: 600;
+        font-size: 1.05rem;
+        transition: all 0.3s ease;
+        margin-top: 1rem;
+    }
+
+        .submit-btn:hover {
+            background: var(--primary-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(23, 126, 63, 0.3);
+        }
+
+        .submit-btn i {
+            margin-right: 0.5rem;
+        }
+
+    .category-count {
+        background: rgba(255, 255, 255, 0.2);
+        padding: 0.4rem 1rem;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        font-weight: 600;
+    }
+
+    .category-count {
+        padding: 6px 10px;
+        border-radius: 20px;
+        font-size: 14px;
+        font-weight: 600;
+    }
+
+
+    .add-category-btn {
+        padding: 8px 18px;
+    }
+
+    h3 {
+        font-family: Sitka Small !important;
+        color: var(--primary-green);
+    }
+
+    .switch {
+        position: relative;
+        display: inline-block;
+        width: 80px !important;
+        height: 24px;
+    }
+
+        .switch input {
+            display: none;
+        }
+
+    .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        transition: .4s;
+        border-radius: 34px;
+    }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+    input:checked + .slider {
+        background-color: #28a745;
+    }
+
+        input:checked + .slider:before {
+            transform: translateX(22px);
+        }
+</style>
+
+
+
+<div class="page-header">
+    <div class="d-flex align-items-center gap-4 ">
+
+        <h3 class="mb-0">Category Management</h3>
+
+        @{
+            var categories = ViewBag.Categories as List<Kaasht_Kart.Models.categorymodel>;
+            var categoryCount = categories != null ? categories.Count : 0;
+        }
+
+        <span class="category-count d-flex align-items-center text-bg-light">
+            <i class="fas fa-layer-group me-1"></i> @categoryCount Categories
+        </span>
+
+        <button class="add-category-btn btn btn-primary fs-3 btn-md fw-bold ms-auto"
+                data-bs-toggle="modal" data-bs-target="#addProductModal"
+                style="border-radius: 10px; width: 200px;">
+            <i class="fas fa-plus me-2"></i>
+            Add Category
+        </button>
+
+    </div>
+</div>
+
+
+@if (categories != null && categories.Count > 0)
+{
+    <div class="row g-4">
+        @foreach (var item in categories)
+        {
+            <div class="col-md-6 col-lg-4">
+                <div class="card category-card shadow-sm">
+                    <div class="card-body d-flex justify-content-between align-items-center">
+                        <div class="d-flex align-items-center">
+                            <!-- Image Preview -->
+                            <div class="me-3"
+                                 style="width:60px; height:40px; border-radius:5px; overflow:hidden; cursor:pointer; display:flex; align-items:center; justify-content:center; border:1px solid #ddd;">
+                                @if (!string.IsNullOrEmpty(item.categoryimagepath))
+                                {
+                                    <img src="~/Content/AdminFile/Products/Categoryimage/@item.categoryimagepath"
+                                         style="width:100%; height:100%; object-fit:cover;" />
+                                }
+                                else
+                                {
+                                    <img src="~/Content/no-image.png"
+                                         style="width:100%; height:100%; object-fit:contain; opacity:.7;" />
+                                }
+                            </div>
+
+                            <div>
+                                <h6 class="mb-0">@item.categoryname</h6>
+                            </div>
+                        </div>
+
+                        <div class="d-flex align-items-center gap-2">
+                            <!-- Edit Button -->
+                            <button class="btn btn-sm  editCategoryBtn"
+                                    data-id="@item.categoryid"
+                                    data-name="@item.categoryname"
+                                    data-image="@item.categoryimagepath">
+                                <i class="fas fa-edit"></i>
+                            </button>
+
+                            <!-- Toggle Switch -->
+                            <label class="switch">
+                                <input type="checkbox" class="statusToggle"
+                                       data-id="@item.categoryid"
+                                       @(item.categorystatus ? "checked" : "") />
+                                <span class="slider round"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+else
+{
+    <div class="empty-state text-center py-5">
+        <i class="fas fa-folder-open fa-3x mb-3 text-muted"></i>
+        <h5>No Categories Yet</h5>
+        <p>Get started by adding your first category</p>
+    </div>
+}
+
+<!-- ===================== Edit Modal ===================== -->
+<div class="modal fade" id="editCategoryModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title text-light">Edit Category</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="editCategoryForm" enctype="multipart/form-data">
+                    <input type="hidden" id="editCategoryId" name="categoryid" />
+
+                    <div class="mb-3">
+                        <label class="form-label fs-4">Category Name</label>
+                        <input type="text" class="form-control p-2 rounded border border-success" id="editCategoryName" name="categoryname" required />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fs-4">Category Image</label>
+                        <input type="file"  class="form-control p-2 fs-4 rounded border border-success" id="editCategoryImage" name="categoryImageFile" accept="image/*" />
+                        <div class="mt-2">
+                            <img id="previewCategoryImage" src="~/Content/no-image.png"
+                                 style="width:100px; height:60px; border-radius:5px; object-fit:cover; border:1px solid #ddd;" />
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100 fs-4 p-2" id="editCategoryBtn">Update Category</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<!-- Add Category Modal -->
+<div class="modal fade" id="addProductModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title fs-3 text-light">
+                    <i class="fas fa-plus-circle me-2"></i>
+                    Add New Category
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+
+                <form id="categoryForm" enctype="multipart/form-data" method="post">
+
+                    <!-- Category Name -->
+                    <div class="mb-3">
+                        <label class="form-label fs-3">
+                            <i class="fas fa-tag me-1"></i>
+                            Category Name
+                        </label>
+                        <input type="text" class="form-control p-2 rounded border border-success"
+                               name="categoryname" id="category_name"
+                               placeholder="e.g., Electronics, Clothing, Books" required>
+                    </div>
+
+                    <!-- Category Image -->
+                    <div class="mb-3">
+                        <label class="form-label fs-3">
+                            <i class="fas fa-image me-1"></i>
+                            Category Image
+                        </label>
+                        <input type="file" class="form-control p-2 rounded border border-success"
+                               id="categoryImageFile" name="categoryimage"
+                               accept="image/*" required />
+                    </div>
+
+                    <!-- Preview -->
+                    <div class="text-center mb-3">
+                        <img id="previewImage" src="#" alt="Image Preview"
+                             style="display:none; width:120px; height:120px; border-radius:10px; border:2px solid #198754;" />
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button type="submit" class="submit-btn fs-3 w-100">
+                        <i class="fas fa-check-circle me-1"></i>
+                        Create Category
+                    </button>
+
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<div class="modal fade" id="categoryModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body text-center p-0">
+                <img id="modalCategoryImage" src="" style="width:100%; border-radius:10px;" />
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        // Add hover effect to cards
+        $('.category-card').hover(
+            function () {
+                $(this).addClass('shadow-lg');
+            },
+            function () {
+                $(this).removeClass('shadow-lg');
+            }
+        );
+
+        // On form submit
+        $("#categoryForm").on("submit", function (e) {
+            e.preventDefault();
+
+            var formData = new FormData(this); // ✅ FormData create (for file upload)
+
+            // Disable button during submission
+            const $submitBtn = $(this).find('.submit-btn');
+            const originalText = $submitBtn.html();
+            $submitBtn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin me-2"></i>Creating...');
+
+            $.ajax({
+                url: "/Admin/AddCategory",
+                type: "POST",
+                data: formData,
+                contentType: false,  // ✅ Needed for file upload
+                processData: false,  // ✅ Needed for file upload
+                success: function (response) {
+
+                    Swal.fire({
+                        icon: "success",
+                        title: "Success!",
+                        text: "Category added successfully!",
+                        showConfirmButton: false,
+                        timer: 2000
+                    });
+
+                    setTimeout(() => {
+                        window.location.href = "/Admin/addcategory";
+                    }, 2000);
+                },
+                error: function () {
+
+                    Swal.fire({
+                        icon: "error",
+                        title: "Oops!",
+                        text: "Something went wrong while adding category."
+                    });
+
+                    $submitBtn.prop('disabled', false).html(originalText);
+                }
+            });
+        });
+    });
+
+
+
+
+    $(document).on("change", ".statusToggle", function () {
+        var id = $(this).data("id");
+        var status = $(this).is(":checked");
+
+        $.ajax({
+            url: "/Admin/UpdateCategoryStatus",
+            type: "POST",
+            data: { id: id, status: status },
+            success: function (response) {
+
+                // ✅ Normal Sweet Alert pop-up (No Toast)
+                Swal.fire({
+                    icon: response.icon,
+                    title: response.message,
+                    confirmButtonText: "OK"
+                });
+            },
+            error: function () {
+                Swal.fire({
+                    icon: "error",
+                    title: "Something went wrong!",
+                    confirmButtonText: "OK"
+                });
+            }
+        });
+    });
+
+
+
+    $(document).ready(function () {
+
+        // Open Edit Modal & Bind Data
+        $(".editCategoryBtn").click(function () {
+            var id = $(this).data("id");
+            var name = $(this).data("name");
+            var image = $(this).data("image");
+
+            $("#editCategoryId").val(id);
+            $("#editCategoryName").val(name);
+
+            if (image && image.length > 0) {
+                $("#previewCategoryImage").attr("src", "/Content/AdminFile/Products/Categoryimage/" + image);
+            } else {
+                $("#previewCategoryImage").attr("src", "/Content/no-image.png");
+            }
+
+            $("#editCategoryModal").modal("show");
+        });
+
+        // Image Preview Before Upload
+        $("#editCategoryImage").change(function (e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    $("#previewCategoryImage").attr("src", e.target.result);
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Submit Form to Update Category (AJAX)
+        $("#editCategoryForm").submit(function (e) {
+            e.preventDefault();
+
+            var formData = new FormData(this);
+
+            $.ajax({
+                url: '/Admin/UpdateCategory', // <-- Change this to your controller action
+                type: 'POST',
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    if (response.success) {
+                        alert("Category updated successfully!");
+                        location.reload();
+                    } else {
+                        alert("Error updating category: " + response.message);
+                    }
+                },
+                error: function () {
+                    alert("An error occurred while updating category.");
+                }
+            });
+        });
+    });
+
+</script>

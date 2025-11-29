@@ -1,0 +1,564 @@
+﻿
+@{
+    ViewBag.Title = "vendordetails";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+
+
+<style>
+    p {
+        margin-bottom: 6px !important;
+    }
+
+    .vendor-card img {
+        width: 120px;
+        height: 120px;
+        object-fit: cover;
+        border-radius: 10px;
+        border: 1px solid #ddd;
+    }
+
+    .product-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .product-card img {
+        transition: transform 0.4s ease;
+    }
+
+    .product-card:hover img {
+        transform: scale(1.05);
+    }
+
+
+    .badge-price {
+        font-size: 14px;
+    }
+
+    /* Custom toggle color enhancement */
+    .form-check-input:checked {
+        background-color: #ffc107; /* amber / yellow tone */
+        border-color: #ffc107;
+        box-shadow: 0 0 0 0.2rem rgba(255,193,7,0.25);
+    }
+
+    .form-check-input {
+        width: 2.5em;
+        height: 1.3em;
+        cursor: pointer;
+    }
+
+    .form-check-label {
+        user-select: none;
+    }
+</style>
+
+
+<div class="card-body">
+    @if (Model != null)
+    {
+        <div class="card border-0 shadow-lg mb-4" style="border-radius:10px; overflow:hidden;">
+            <div class="card-body p-4" style="background: linear-gradient(135deg, #77fe46 0%, #093a02 100%); ">
+                <div class="row align-items-center">
+
+                    <!-- Vendor Logo -->
+                    <div class="col-md-3 text-center mb-3 mb-md-0">
+                        @{
+                            string vendorImg = "/Content/no-image.png";
+                            if (!string.IsNullOrEmpty(Model.CompanyLogoPath))
+                            {
+                                vendorImg = "~/Content/VendorDocs/logo/" + Model.CompanyLogoPath;
+                            }
+                        }
+                        <div class="bg-white p-3 rounded-circle d-inline-block shadow" style="width:150px; height:150px;">
+                            <img src="@Url.Content(vendorImg)" class="img-fluid rounded-circle"
+                                 style=" height: 130px; width: 130px; object-fit: cover;" alt="Vendor Logo">
+                        </div>
+                        <h5 class="fw-bold mt-3 text-white">
+                            <i class="fa fa-user-tie me-2"></i>@Model.VendorName
+                        </h5>
+                    </div>
+
+                    <!-- Vendor Details -->
+                    <div class="col-md-9">
+                        <div class="row g-3">
+                            <div class="col-lg-6">
+                                <div class="bg-white bg-opacity-25 backdrop-blur p-3 rounded-3 h-100">
+                                    <p class="mb-0 text-white">
+                                        <i class="fa fa-envelope me-2"></i>
+                                        <strong>Email:</strong><br>
+                                        <span class="ms-4">@Model.Email</span>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="bg-white bg-opacity-25 backdrop-blur p-3 rounded-3 h-100">
+                                    <p class="mb-0 text-white">
+                                        <i class="fa fa-phone me-2"></i>
+                                        <strong>Phone:</strong><br>
+                                        <span class="ms-4">@Model.Phone</span>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="bg-white bg-opacity-25 backdrop-blur p-3 rounded-3 h-100">
+                                    <p class="mb-0 text-white">
+                                        <i class="fa fa-map-marker-alt me-2"></i>
+                                        <strong>Address:</strong><br>
+                                        <span class="ms-4">@Model.Address</span>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="bg-white bg-opacity-25 backdrop-blur p-3 rounded-3 h-100">
+                                    <p class="mb-0 text-white">
+                                        <i class="fa fa-id-card me-2"></i>
+                                        <strong>GST No:</strong><br>
+                                        <span class="ms-4">@Model.GSTNo</span>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mt-3">
+                            <div class="col-md-6">
+                                @if (!string.IsNullOrEmpty(Model.GSTFilePath))
+                                {
+                                    <a class="btn btn-light btn-lg shadow w-100" target="_blank"
+                                       href="~/Content/VendorDocs/GST/@Model.GSTFilePath">
+                                        <i class="fa fa-file-pdf me-2 text-danger"></i> View GST File
+                                    </a>
+                                }
+                                else
+                                {
+                                    <div class="alert alert-light mb-0">
+                                        <i class="fa fa-times-circle me-2"></i> GST File Not Uploaded
+                                    </div>
+                                }
+                            </div>
+                            <div class="col-md-6">
+                                <div class="text-white text-end">
+                                    <i class="fa fa-calendar-check me-2"></i>
+                                    <small>Last Updated:</small><br>
+                                    <strong>@DateTime.Now.ToString("dd MMM yyyy")</strong>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+</div>
+
+<!-- Products Section -->
+@if (Model.Products != null)
+{
+    <h4 class="fw-bold mb-4 text-dark">
+        <i class="fa fa-shopping-bag me-2 text-primary"></i>Available Products
+    </h4>
+
+    <div class="row g-4">
+        @foreach (var product in Model.Products)
+        {
+            <div class="col-xl-3 col-lg-4 col-md-6">
+                <div class="card product-card h-100 shadow-sm border-0 position-relative" style="border-radius:8px; overflow:visible;">
+                    @* Discount Badge *@
+                    @if (product.Discount > 0)
+                    {
+                        <div class="position-absolute top-0 end-0 m-3" style="z-index:10;">
+                            <span class="badge bg-danger rounded-pill px-3 py-2 shadow">
+                                <i class="fa fa-tag me-1"></i>@Convert.ToInt64(product.Discount)% OFF
+                            </span>
+                        </div>
+                    }
+
+                    @* Product Image *@
+                    @{
+                        string pImg = "/Content/no-image.png";
+                        if (!string.IsNullOrEmpty(product.ProductImage))
+                        {
+                            pImg = "~/Content/VendorDocs/venderproduct/mainimage/" + product.ProductImage;
+                        }
+                    }
+                    <div class="card-img-top bg-light d-flex align-items-center justify-content-center p-3" style="height:220px; border-radius:14px 14px 0 0;">
+                        <img src="@Url.Content(pImg)" class="img-fluid" style="max-height:200px; object-fit:contain;" alt="@product.ProductName" />
+                    </div>
+
+                    <div class="card-body p-3 d-flex flex-column">
+                        <div class="d-flex align-items-start justify-content-between mb-2">
+                            <div class="d-flex align-items-center gap-2">
+                                <span class="badge bg-light border text-primary px-3 fs-3 py-1 shadow-sm">
+                                    <i class="fa fa-tag me-1"></i>
+                                    <span class="fw-semibold small fs-5 ">@product.categoryname</span>
+                                </span>
+                            </div>
+
+                            <!-- Toggle switch (Status) - paste inside your foreach where product is available -->
+                            <div class="d-flex align-items-center product-status-wrapper">
+
+                                <div class="smooth-toggle"  aria-checked="@(product.Status.ToString().ToLower())" tabindex="0">
+
+                                    <input type="checkbox"
+                                           class="smooth-toggle-input product-status-toggle"
+                                           id="status_@product.ProductId"
+                                           value="@product.ProductId"
+                                           aria-label="Toggle product status for @product.ProductName"
+                                           @(product.Status ? "checked" : "") />
+                                    <span class="smooth-toggle-slider" aria-hidden="true"></span>
+
+
+                                </div>
+
+                                <label for="status_@product.ProductId" class="ms-2 mb-0 small fw-semibold text-muted product-status-label">
+                                    @(product.Status ? "Active" : "Inactive")
+                                </label>
+                            </div>
+
+
+                        </div>
+
+                        <h6 class="fw-bold text-dark mb-2 text-truncate" title="@product.ProductName">@product.ProductName</h6>
+
+                        <!-- Price + old price -->
+                        <div class="d-flex align-items-baseline gap-3 mb-3">
+                            <div>
+                                <div class="h5 mb-0 text-success fw-bold">₹@Convert.ToInt64(product.FinalPrice)</div>
+                                @if (product.Discount > 0)
+                                {
+                                    <div class="small text-muted"><del>₹@product.Price</del></div>
+                                }
+                            </div>
+
+                            <div class="ms-auto d-flex align-items-center gap-2">
+                                <div class="info-box text-center p-2 rounded bg-light border">
+                                    <div class="small text-muted">Stock</div>
+                                    <div class="fw-semibold">@product.StockQuantity</div>
+                                </div>
+                                <div class="info-box text-center p-2 rounded bg-light border">
+                                    <div class="small text-muted">Unit</div>
+                                    <div class="fw-semibold">@product.unitquantity @product.Unit</div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+else
+{
+    <div class="alert alert-warning border-0 shadow-sm d-flex align-items-center" style="border-radius:15px;">
+        <i class="fa fa-exclamation-triangle fa-2x me-3 text-warning"></i>
+        <div>
+            <h6 class="mb-0 fw-bold">No Products Available</h6>
+            <small>This vendor hasn't added any products yet.</small>
+        </div>
+    </div>
+}
+
+<style>
+
+    .btn-amber {
+        background: #ffc107;
+        border-color: #e0a800;
+    }
+
+        .btn-amber:hover {
+            background: #e0a800;
+        }
+
+    .product-card {
+        transition: transform .25s ease, box-shadow .25s ease;
+        border-radius: 14px;
+    }
+
+        .product-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 12px 30px rgba(18,38,63,0.08);
+        }
+
+    .info-box {
+        min-width: 72px;
+    }
+
+    .card-img-top {
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+    }
+
+    /* Tweak switch size & checked color */
+    .form-check-input {
+        width: 2.3rem;
+        height: 1.35rem;
+    }
+
+        .form-check-input:checked {
+            background-color: #ffc107;
+            border-color: #ffc107;
+            box-shadow: 0 0 0 .15rem rgba(255,193,7,0.15);
+        }
+
+    /* Small screens: adjust card height and layout */
+    @@media (max-width: 576px) {
+        .product-card .card-img-top {
+            height: 160px;
+        }
+
+        .info-box {
+            min-width: 56px;
+            font-size: 0.85rem;
+        }
+    }
+
+    .card:hover {
+        transform: translateY(-5px);
+    }
+
+    .bg-opacity-25 {
+        background-color: rgba(255, 255, 255, 0.25) !important;
+    }
+
+    .backdrop-blur {
+        backdrop-filter: blur(10px);
+    }
+
+    .form-check-input {
+        cursor: pointer;
+    }
+
+    .status-toggle {
+        width: 18px;
+        height: 18px;
+        cursor: pointer;
+        accent-color: #ffc107; /* amber/yellow tone */
+    }
+
+        .status-toggle:focus {
+            box-shadow: none;
+        }
+
+
+    /* hide the actual checkbox but keep it functional */
+    .smooth-toggle-input {
+        position: absolute;
+        opacity: 0 !important;
+        width: 0;
+        height: 0;
+        pointer-events: none;
+    }
+
+
+    /* Smooth toggle: compact, modern, animated */
+    .smooth-toggle {
+        --w: 52px; /* width */
+        --h: 28px; /* height */
+        --knob: 22px; /* knob size */
+        --off-bg: #e9ecef;
+        --on-bg: #38c172; /* green when ON */
+        --accent: #ffc107; /* optional amber accent - used on focus */
+        display: inline-block;
+        position: relative;
+        width: var(--w);
+        height: var(--h);
+        border-radius: calc(var(--h) / 2);
+        transition: transform .12s ease;
+        cursor: pointer;
+        user-select: none;
+        flex-shrink: 0;
+        box-shadow: 0 1px 2px rgba(16,24,40,.06);
+        background: var(--off-bg);
+        outline: none;
+    }
+
+    /* hidden native input but reachable for accessibility */
+    .smooth-toggle-input {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        opacity: 0;
+        z-index: 2;
+        cursor: pointer;
+    }
+
+    /* slider visual */
+    .smooth-toggle-slider {
+        position: absolute;
+        top: 50%;
+        left: 4px;
+        transform: translateY(-50%);
+        width: var(--knob);
+        height: var(--knob);
+        background: #fff;
+        border-radius: 50%;
+        box-shadow: 0 3px 8px rgba(16,24,40,0.12);
+        transition: transform .28s cubic-bezier(.2,.9,.2,1), box-shadow .12s;
+        z-index: 1;
+    }
+
+    /* when checked: move knob and change bg */
+    .smooth-toggle-input:checked + .smooth-toggle-slider {
+        transform: translateY(-50%) translateX(calc(var(--w) - var(--knob) - 8px));
+    }
+
+  
+
+    
+    .smooth-toggle:focus {
+        box-shadow: 0 0 0 4px rgba(255,193,7,0.12);
+        transform: translateY(-1px);
+    }
+
+    
+    .product-status-label {
+        transition: color .18s ease;
+        color: #6c757d;
+    }
+
+        .product-status-label.active {
+            color: #198754;
+            font-weight: 600;
+        }  /* green */
+        .product-status-label.inactive {
+            color: #6c757d;
+            font-weight: 600;
+        }
+
+    
+    .smooth-toggle:active {
+        transform: scale(.985);
+    }
+</style>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  // read anti-forgery token if present (only once)
+  const tokenInputEl = document.querySelector('input[name="__RequestVerificationToken"]');
+  const antiForgeryToken = tokenInputEl ? tokenInputEl.value : null;
+
+  // delegated listener for all toggles
+  document.body.addEventListener('change', async function (e) {
+    const el = e.target;
+    if (!el.classList.contains('product-status-toggle')) return;
+
+    const productId = el.value;
+    const newStatus = el.checked;
+    const wrapper = el.closest('.product-status-wrapper');
+    const label = wrapper ? wrapper.querySelector('.product-status-label') : null;
+    const toggleContainer = wrapper ? wrapper.querySelector('.smooth-toggle') : null;
+
+    // confirmation dialog
+    const confirmMsg = newStatus
+      ? 'Are you sure you want to activate this product?'
+      : 'Are you sure you want to deactivate this product?';
+
+    if (!confirm(confirmMsg)) {
+      // user cancelled -> revert UI immediately
+      el.checked = !newStatus;
+      return;
+    }
+
+    // optimistic UI update
+    if (label) {
+      label.textContent = newStatus ? 'Active' : 'Inactive';
+      label.classList.toggle('active', newStatus);
+      label.classList.toggle('inactive', !newStatus);
+    }
+    if (toggleContainer) {
+      toggleContainer.style.background = newStatus ? '#38c172' : '#e9ecef';
+    }
+
+    // prepare headers
+    const headers = { 'Content-Type': 'application/json' };
+    if (antiForgeryToken) headers['RequestVerificationToken'] = antiForgeryToken;
+
+    try {
+      const resp = await fetch('@Url.Action("ChangeStatus","Admin")', {
+        method: 'POST',
+        headers: headers,
+        body: JSON.stringify({ id: parseInt(productId, 10), status: newStatus })
+      });
+
+      if (!resp.ok) {
+        // network-level non-2xx
+        throw new Error('Network response was not ok (' + resp.status + ')');
+      }
+
+      const data = await resp.json();
+
+      if (!data || !data.success) {
+        // server returned failure -> rollback UI and show message
+        el.checked = !newStatus;
+        if (label) {
+          label.textContent = el.checked ? 'Active' : 'Inactive';
+          label.classList.toggle('active', el.checked);
+          label.classList.toggle('inactive', !el.checked);
+        }
+        if (toggleContainer) toggleContainer.style.background = el.checked ? '#38c172' : '#e9ecef';
+        alert(data?.message || 'Status update failed. Please try again.');
+        console.warn('ChangeStatus failed:', data);
+      } else {
+        // success: optional toast or console log
+        console.log('Status updated:', data.message || 'OK');
+      }
+    } catch (err) {
+      console.error('Error updating status:', err);
+      // rollback UI
+      el.checked = !newStatus;
+      if (label) {
+        label.textContent = el.checked ? 'Active' : 'Inactive';
+        label.classList.toggle('active', el.checked);
+        label.classList.toggle('inactive', !el.checked);
+      }
+      if (toggleContainer) toggleContainer.style.background = el.checked ? '#38c172' : '#e9ecef';
+      alert('Network error. Please try again.');
+    }
+  });
+
+  // make toggle container clickable & keyboard friendly
+  document.querySelectorAll('.smooth-toggle').forEach(function (container) {
+    container.addEventListener('click', function (ev) {
+      // ignore if click originated from real input
+      if (ev.target.classList.contains('product-status-toggle')) return;
+      const input = container.querySelector('.product-status-toggle');
+      if (input) {
+        input.checked = !input.checked;
+        input.dispatchEvent(new Event('change', { bubbles: true }));
+      }
+    });
+
+    container.addEventListener('keydown', function (ev) {
+      if (ev.key === ' ' || ev.key === 'Enter') {
+        ev.preventDefault();
+        const input = container.querySelector('.product-status-toggle');
+        if (input) {
+          input.checked = !input.checked;
+          input.dispatchEvent(new Event('change', { bubbles: true }));
+        }
+      }
+    });
+  });
+
+  // initialize visuals for current state
+  document.querySelectorAll('.product-status-toggle').forEach(function (input) {
+    const container = input.closest('.smooth-toggle');
+    if (container) container.style.background = input.checked ? '#38c172' : '#e9ecef';
+    const label = input.closest('.product-status-wrapper')?.querySelector('.product-status-label');
+    if (label) {
+      label.classList.toggle('active', input.checked);
+      label.classList.toggle('inactive', !input.checked);
+      label.textContent = input.checked ? 'Active' : 'Inactive';
+    }
+  });
+});
+</script>
+

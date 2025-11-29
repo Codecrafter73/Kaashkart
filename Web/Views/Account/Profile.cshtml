@@ -1,0 +1,859 @@
+﻿@{
+    Layout = "~/Views/Shared/_CustomerLayout.cshtml";
+}
+
+@{
+    var orders = ViewBag.UserOrders as List<Kaasht_Kart.Models.OrderListModel>;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Account - Grocery Store</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-green: #177e3f;
+            --light-green: #20a354;
+            --bg-light: #f9f9f9;
+            --text-dark: #2c3e50;
+            --text-muted: #6c757d;
+            --border-color: #e0e0e0;
+        }
+
+
+
+        /* Layout Grid */
+        .account-layout {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            height: fit-content;
+            position: sticky;
+            top: 20px;
+        }
+
+        .user-info {
+            text-align: center;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 20px;
+        }
+
+        .user-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: var(--primary-green);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            margin: 0 auto 15px;
+            border: 3px solid #e8f5e9;
+        }
+
+        .user-name {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 5px;
+        }
+
+        .user-phone {
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        /* Menu Items */
+        .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 14px 16px;
+            color: var(--text-dark);
+            text-decoration: none;
+            border-radius: 6px;
+            margin-bottom: 5px;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+            .menu-item:hover {
+                background: #f5f5f5;
+                color: var(--primary-green);
+            }
+
+            .menu-item.active {
+                background: #e8f5e9;
+                color: var(--primary-green);
+                font-weight: 600;
+            }
+
+        .menu-icon {
+            font-size: 20px;
+            width: 24px;
+            text-align: center;
+        }
+
+        .menu-item.logout {
+            color: #dc3545;
+            margin-top: 15px;
+            border-top: 1px solid var(--border-color);
+            padding-top: 15px;
+        }
+
+            .menu-item.logout:hover {
+                background: #fff5f5;
+            }
+
+        /* Main Content */
+        .main-content {
+            background: white;
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .content-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .content-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        .add-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            background: var(--primary-green);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+        }
+
+            .add-btn:hover {
+                background: var(--light-green);
+                transform: translateY(-1px);
+                box-shadow: 0 4px 12px rgba(23, 126, 63, 0.2);
+            }
+
+        /* Address Cards */
+        .addresses-grid {
+            display: grid;
+            gap: 20px;
+        }
+
+        .address-card {
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            position: relative;
+            transition: all 0.2s ease;
+        }
+
+            .address-card:hover {
+                border-color: var(--primary-green);
+                box-shadow: 0 4px 12px rgba(23, 126, 63, 0.1);
+            }
+
+        .address-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        .address-icon {
+            font-size: 24px;
+        }
+
+        .address-type {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .address-text {
+            color: var(--text-muted);
+            font-size: 15px;
+            line-height: 1.6;
+            margin-left: 34px;
+        }
+
+        .address-actions {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            gap: 8px;
+        }
+
+        .action-menu-btn {
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 4px;
+            transition: all 0.2s ease;
+        }
+
+            .action-menu-btn:hover {
+                color: var(--primary-green);
+            }
+
+        /* Personal Info Section */
+        .info-section {
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-top: 15px;
+        }
+
+        .info-item {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .info-label {
+            color: var(--text-muted);
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .info-value {
+            color: var(--text-dark);
+            font-size: 15px;
+            font-weight: 500;
+        }
+
+        /* Orders Section */
+        .orders-grid {
+            display: grid;
+            gap: 15px;
+        }
+
+        .order-card {
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            transition: all 0.2s ease;
+        }
+
+            .order-card:hover {
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            }
+
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .order-id {
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .order-status {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status-delivered {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .order-details {
+            color: var(--text-muted);
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        .empty-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+            opacity: 0.3;
+        }
+
+        .empty-text {
+            color: var(--text-muted);
+            font-size: 16px;
+        }
+
+        /* Responsive */
+        @@media (max-width: 968px) {
+            .account-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                position: static;
+            }
+
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @@media (max-width: 480px) {
+            .main-content {
+                padding: 20px;
+            }
+
+            .content-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+        }
+
+        .orders-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            font-family: 'Amazon Ember', Arial, sans-serif;
+        }
+
+        .order-card {
+            background: #fff;
+            border: 1px solid #d5d9d9;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .order-header {
+            background: #f0f2f2;
+            padding: 16px 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            border-bottom: 1px solid #d5d9d9;
+        }
+
+        .order-header-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .order-header-label {
+            font-size: 11px;
+            color: #565959;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+            font-weight: 700;
+        }
+
+        .order-header-value {
+            font-size: 14px;
+            color: #0f1111;
+            font-weight: 400;
+        }
+
+        .order-number {
+            font-size: 14px;
+            color: #0f1111;
+        }
+
+        .order-number-label {
+            color: #565959;
+            margin-right: 10px;
+        }
+
+        .order-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .view-details-link {
+            color: #007185;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+            .view-details-link:hover {
+                color: #c7511f;
+                text-decoration: underline;
+            }
+
+        .invoice-dropdown {
+            color: #007185;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            padding: 0;
+        }
+
+        .order-body {
+            padding: 20px;
+        }
+
+        .delivery-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .status-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #007600;
+        }
+
+        .status-subtitle {
+            font-size: 14px;
+            color: #565959;
+        }
+
+        .product-section {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .product-image {
+            flex-shrink: 0;
+        }
+
+            .product-image img {
+                width: 120px;
+                height: 120px;
+                object-fit: contain;
+            }
+
+        .product-info {
+            flex: 1;
+        }
+
+        .product-title {
+            color: #007185;
+            text-decoration: none;
+            font-size: 14px;
+            line-height: 1.4;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+            .product-title:hover {
+                color: #c7511f;
+                text-decoration: underline;
+            }
+
+        .return-window {
+            font-size: 12px;
+            color: #565959;
+            margin-bottom: 12px;
+        }
+
+        .product-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 12px;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 13px;
+            cursor: pointer;
+            border: 1px solid #d5d9d9;
+            background: #fff;
+            transition: all 0.2s;
+        }
+
+            .btn:hover {
+                background: #f7fafa;
+                border-color: #008296;
+            }
+
+        .btn-primary {
+            background: #ffd814;
+            border-color: #fcd200;
+            color: #0f1111;
+            font-weight: 600;
+        }
+
+            .btn-primary:hover {
+                background: #f7ca00;
+            }
+
+        .side-actions {
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            min-width: 200px;
+        }
+
+        .side-btn {
+            padding: 10px 16px;
+            border: 1px solid #d5d9d9;
+            border-radius: 8px;
+            background: #fff;
+            cursor: pointer;
+            font-size: 13px;
+            text-align: center;
+            transition: all 0.2s;
+        }
+
+            .side-btn:hover {
+                background: #f7fafa;
+                border-color: #008296;
+            }
+
+        .side-btn-primary {
+            background: #ffd814;
+            border-color: #fcd200;
+            font-weight: 600;
+        }
+
+            .side-btn-primary:hover {
+                background: #f7ca00;
+            }
+
+        @@media (max-width: 768px) {
+            .order-header {
+                grid-template-columns: 1fr;
+            }
+
+            .product-section {
+                flex-direction: column;
+            }
+
+            .side-actions {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    @if (ViewBag.Data != null)
+    {
+        foreach (System.Data.DataRow item in ViewBag.Data.Rows)
+        {
+            <div class="container">
+                <div class="account-layout">
+                    <!-- Sidebar -->
+                    <div class="sidebar">
+                        <div class="user-info">
+                            <div class="user-avatar">👤</div>
+                            <div class="user-name">@item["UserName"]</div>
+                            <div class="user-phone">@item["MobileNumber"]</div>
+                        </div>
+
+                        <a href="/Account/Profile" class="menu-item">
+                            <span class="menu-icon">👤</span>
+                            <span>My Profile</span>
+                        </a>
+
+                        <a href="/Account/Addresses" class="menu-item active">
+                            <span class="menu-icon">📍</span>
+                            <span>My Addresses</span>
+                        </a>
+
+                        <a href="/Account/Orders" class="menu-item">
+                            <span class="menu-icon">📦</span>
+                            <span>My Orders</span>
+                        </a>
+
+                        <a href="/Account/Wishlist" class="menu-item">
+                            <span class="menu-icon">❤️</span>
+                            <span>My Wishlist</span>
+                        </a>
+
+                        <a href="/Account/EGiftCards" class="menu-item">
+                            <span class="menu-icon">🎁</span>
+                            <span>E-Gift Cards</span>
+                        </a>
+
+                        <a href="/Account/Wallet" class="menu-item">
+                            <span class="menu-icon">💳</span>
+                            <span>Wallet</span>
+                        </a>
+
+                        <a href="/Account/Privacy" class="menu-item">
+                            <span class="menu-icon">🔒</span>
+                            <span>Account Privacy</span>
+                        </a>
+
+                        <a href="/Account/Logout" class="menu-item logout">
+                            <span class="menu-icon">🚪</span>
+                            <span>Logout</span>
+                        </a>
+                    </div>
+
+                    <!-- Main Content -->
+                    <div class="main-content">
+                        <!-- My Addresses View -->
+                        <div id="addressesView">
+                            <div class="content-header">
+                                <h1 class="content-title">My addresses</h1>
+                                <a href="/Account/AddAddress" class="add-btn">
+                                    <span>+</span>
+                                    <span>Add new address</span>
+                                </a>
+                            </div>
+
+                            <div class="addresses-grid">
+                                <div class="address-card">
+                                    <div class="address-header">
+                                        <span class="address-icon">🏠</span>
+                                        <span class="address-type">Home</span>
+                                    </div>
+                                    <div class="address-text">
+                                        @item["Address"]
+                                    </div>
+                                    <div class="address-actions">
+                                        <button class="action-menu-btn">⋮</button>
+                                    </div>
+                                </div>
+
+                                <!-- Add more address cards as needed -->
+                            </div>
+                        </div>
+
+                        <!-- My Profile View (Hidden by default) -->
+                        <div id="profileView" style="display: none;">
+                            <div class="content-header">
+                                <h1 class="content-title">My Profile</h1>
+                                <a href="/Account/EditProfile" class="add-btn">
+                                    <span>✏️</span>
+                                    <span>Edit Profile</span>
+                                </a>
+                            </div>
+
+                            <div class="info-section">
+                                <h3 class="section-title">Personal Information</h3>
+                                <div class="info-grid">
+                                    <div class="info-item">
+                                        <span class="info-label">Full Name</span>
+                                        <span class="info-value">@item["UserName"]</span>
+                                    </div>
+
+                                    <div class="info-item">
+                                        <span class="info-label">Mobile Number</span>
+                                        <span class="info-value">@item["MobileNumber"]</span>
+                                    </div>
+
+                                    <div class="info-item">
+                                        <span class="info-label">Email Address</span>
+                                        <span class="info-value">@item["Email"]</span>
+                                    </div>
+
+                                    <div class="info-item">
+                                        <span class="info-label">Date of Birth</span>
+                                        <span class="info-value">
+                                            @(item["DateOfBirth"] == null
+                                ? "Not provided"
+                                : Convert.ToDateTime(item["DateOfBirth"]).ToString("dd MMM yyyy"))
+                                        </span>
+                                    </div>
+
+                                    <div class="info-item">
+                                        <span class="info-label">Gender</span>
+                                        <span class="info-value">@item["Gender"]</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                       
+
+                        <div id="ordersView" class="orders-container">
+                            @if (orders != null)
+                            {
+                                foreach (var data in orders)
+                                {
+                                    <div class="order-card">
+                                        <!-- Order Header -->
+                                        <div class="order-header">
+                                            <div class="order-header-item">
+                                                <div class="order-header-label">Order Placed</div>
+                                                <div class="order-header-value">@data.OrderDate.ToString("d MMMM yyyy")</div>
+                                            </div>
+                                            <div class="order-header-item">
+                                                <div class="order-header-label">Total</div>
+                                                <div class="order-header-value">₹@data.GrandTotal.ToString("N2")</div>
+                                            </div>
+                                            @*<div class="order-header-item">
+                                                <div class="order-header-label">Ship To</div>
+                                                <div class="order-header-value">
+                                                    @data.CustomerName
+                                                    <span style="color: #007185; cursor: pointer;">▼</span>
+                                                </div>
+                                            </div>*@
+                                            <div class="order-header-item" style="text-align: right;">
+                                                <div class="order-number">
+                                                    <span class="order-number-label">ORDER #</span>
+                                                    <span>@data.OrderId</span>
+                                                </div>
+                                                <div class="order-actions">
+                                                    <a href="/Order/OrderDetails?orderId=@data.OrderId" class="view-details-link">
+                                                        View order details
+                                                    </a>
+                                                    <button class="invoice-dropdown">Invoice ▼</button>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Order Body -->
+                                        <div class="order-body">
+                                            <div style="display: flex; gap: 20px;">
+                                                <div style="flex: 1;">
+                                                    <!-- Delivery Status -->
+                                                    @*<div class="delivery-status">
+                                                        <div>
+                                                            @if (data.OrderStatus == "Delivered")
+                                                            {
+                                                                <div class="status-title">Delivered @data.DeliveryDate?.ToString("d MMMM")</div>
+                                                                <div class="status-subtitle">Package was handed to resident</div>
+                                                            }
+                                                            else if (data.OrderStatus == "In Transit")
+                                                            {
+                                                                <div class="status-title">In Transit</div>
+                                                                //<div class="status-subtitle">Expected delivery: @data.ExpectedDeliveryDate?.ToString("d MMMM yyyy")</div>
+                                                            }
+                                                            else
+                                                            {
+                                                                <div class="status-title">@data.OrderStatus</div>
+                                                            }
+                                                        </div>
+                                                    </div>*@
+
+                                                    <!-- Product Section -->
+                                                    @foreach (var orderitem in orders)
+                                                    {
+                                                        <div class="product-section">
+                                                            <div class="product-image">
+                                                                @*<img src="@orderitem.ProductImageUrl" alt="@orderitem.ProductName">*@
+
+                                                            </div>
+                                                            @*<div class="product-info">
+                                                                <a href="/Product/Details?id=@orderitem.OrderId" class="product-title">
+                                                                    @orderitem.
+                                                                </a>
+                                                                @if (data.OrderStatus == "Delivered" && data.DeliveryDate.HasValue)
+                                                                {
+                                                                    var returnWindowDate = data.DeliveryDate.Value.AddDays(10);
+                                                                    <div class="return-window">
+                                                                        Return window closed on @returnWindowDate.ToString("d MMMM yyyy")
+                                                                    </div>
+                                                                }
+                                                                <div class="product-actions">
+                                                                    <button class="btn btn-primary">
+                                                                        <span style="font-size: 16px;">↻</span> Buy it again
+                                                                    </button>
+                                                                    <button class="btn">View your item</button>
+                                                                </div>
+                                                            </div>*@
+                                                        </div>
+                                                    }
+                                                </div>
+
+                                                <!-- Side Actions -->
+                                                <div class="side-actions">
+                                                    <button class="side-btn side-btn-primary">Get product support</button>
+                                                    <button class="side-btn">Track package</button>
+                                                    <button class="side-btn">Ask Product Question</button>
+                                                    <button class="side-btn">Leave seller feedback</button>
+                                                    <button class="side-btn">Write a product review</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            }
+                            else
+                            {
+                                <div style="text-align: center; padding: 40px; color: #565959;">
+                                    <p>No orders found</p>
+                                </div>
+                            }
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        }
+
+    }
+    else
+    {
+        <div class="container">
+            <div class="empty-state">
+                <div class="empty-icon">🔒</div>
+                <div class="empty-text">Please login to view your account</div>
+            </div>
+        </div>
+    }
+</body>
+</html>

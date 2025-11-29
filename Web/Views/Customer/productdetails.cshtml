@@ -1,0 +1,474 @@
+﻿
+@{
+    ViewBag.Title = "productdetails";
+    Layout = "~/Views/Shared/_CustomerLayout.cshtml";
+}
+
+@model Kaasht_Kart.Models.productmodel
+@{
+    string mainPath = "~/Content/AdminFile/Products/mainimages/";
+    string subPath = "/Content/AdminFile/Products/submainimages/";
+}
+
+<style>
+  
+
+    .zoom-container {
+        position: relative;
+        width: 450px;
+        /* height: 450px; */
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+/* Main product image */
+.main-product-img {
+    width: 100%;
+    max-height: 450px;
+    object-fit: contain;
+    transition: transform .2s ease-out;
+    cursor: crosshair;
+}
+
+/* Magnifier Lens */
+.zoom-lens {
+    position: absolute;
+    width: 130px;
+    height: 130px;
+    border-radius: 50%;
+    border: 2px solid rgba(0,0,0,0.3);
+    background: rgba(255,255,255,0.2);
+    pointer-events: none;
+    display: none;
+    backdrop-filter: brightness(1.1);
+    z-index: 10;
+}
+
+/* Thumbnail strip container */
+.product-thumb-filter-group {
+    display: flex;
+    gap: 10px;
+    margin-top: 12px;
+}
+
+/* All thumbnail images */
+.thumb-img {
+    width: 75px;
+    height: 75px;
+    object-fit: cover;
+    border: 2px solid transparent;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: .3s;
+}
+
+/* Active thumbnail */
+.thumb-img.active-thumb {
+    border-color: #28a745;
+    transform: scale(1.05);
+}
+
+/* Hover effect */
+.thumb-img:hover {
+    border-color: #28a745;
+}
+
+/* For mobile responsive */
+@@media (max-width: 576px) {
+    .thumb-img {
+        width: 60px;
+        height: 60px;
+    }
+
+    .zoom-lens {
+        width: 100px;
+        height: 100px;
+    }
+}
+    /* --- Layout wrap --- */
+    .zoom-wrapper {
+        display: flex;
+        gap: 20px;
+        align-items: flex-start;
+    }
+
+    /* --- Main Image Box --- */
+    .zoom-container {
+        position: relative;
+        width: 450px;
+        height: 450px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+    .main-product-img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+    }
+
+    /* --- Lens Box --- */
+    .zoom-lens {
+        position: absolute;
+        border: 2px solid #ff6600;
+        width: 120px;
+        height: 120px;
+        background: rgba(255,255,255,0.4);
+        display: none;
+    }
+
+    /* --- Zoom Result Right Box --- */
+    .zoom-result {
+        width: 650px;
+        height: 500px;
+        background-repeat: no-repeat;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        display: none;
+    }
+
+    /* --- Sub thumbs --- */
+    .thumb-img {
+        width: 80px;
+        height: 80px;
+        object-fit: cover;
+        border-radius: 6px;
+        border: 2px solid transparent;
+        cursor: pointer;
+    }
+
+        .thumb-img.active-thumb {
+            border-color: #ff6600;
+        }
+
+    .zoom-overlay {
+        position: absolute;
+        top: 0;
+        right: -150px; /* adjust if needed */
+        z-index: 9999;
+        border: 2px solid gray;
+        padding:10px;
+
+    }
+</style>
+
+<div class="rts-chop-details-area rts-section-gap bg_light-1">
+    <div class="container">
+        <div class="shopdetails-style-1-wrapper">
+            <div class="row g-5">
+                <div class="col-xl-8 col-lg-8 col-md-12">
+                    <div class="product-details-popup-wrapper in-shopdetails">
+                        <div class="rts-product-details-section rts-product-details-section2 product-details-popup-section">
+                            <div class="product-details-popup">
+                                <div class="details-product-area">
+                                    <div class="product-thumb-area">
+                                        <div class="cursor"></div>
+
+                                        <div class="zoom-wrapper">
+
+                                            <!-- ✅ MAIN IMAGE -->
+                                            @if (!string.IsNullOrEmpty(Model.ProductImagePath))
+                                            {
+                                                var imgPath = Url.Content("~/Content/AdminFile/Products/mainimages/" + Model.ProductImagePath);
+                                                <div class="zoom-container" id="zoomBox">
+                                                    <img src="@imgPath" id="mainProductImg" class="main-product-img" alt="product-thumb">
+                                                    <div id="zoomLens" class="zoom-lens"></div>
+                                                </div>
+                                                <!-- ✅ RIGHT SIDE RESULT -->
+                                                <div id="zoomResult" class="zoom-result zoom-overlay"></div>
+                                            }
+                                            else
+                                            {
+                                                <div style="height:450px; display:flex; align-items:center; justify-content:center; border:1px solid #ddd;">
+                                                    <span>No Image Available</span>
+                                                </div>
+                                            }
+
+                                        </div>
+
+                                        <!-- ✅ Sub Images -->
+                                        <div class="mt-3 d-flex gap-2">
+                                            <img src="@mainPath@Model.ProductImagePath"
+                                                 class="thumb-img active-thumb"
+                                                 data-full="@mainPath@Model.ProductImagePath" />
+
+                                            @if (Model.ProductSubImage != null && Model.ProductSubImage.Count > 0)
+                                            {
+                                                foreach (var img in Model.ProductSubImage)
+                                                {
+                                                    <img src="@subPath@img" class="thumb-img" data-full="@subPath@img" />
+                                                }
+                                            }
+                                        </div>
+
+
+                                    </div>
+
+
+
+                                    <div class="contents">
+
+                                        <h2 class="product-title">@Model.ProductName</h2>
+                                        <p>@Model.tagline</p>
+
+                                        <span class="product-price mb--15 d-block" style="color:#DC2626;font-weight:600;">
+                                            ₹@Model.FinalPrice
+                                            <span class="old-price ml--15">₹@Model.Price</span>
+                                        </span>
+                                        <div class="product-status">
+
+                                            <div class="rating-stars-group">
+                                                <div class="rating-star"><i class="fas fa-star"></i></div>
+                                                <div class="rating-star"><i class="fas fa-star"></i></div>
+                                                <div class="rating-star"><i class="fas fa-star-half-alt"></i></div>
+                                                <span>10 Reviews</span>
+                                            </div>
+                                        </div>
+
+
+
+                                        <div class="product-bottom-action">
+                                            <div class="cart-edits">
+                                                <div class="quantity-edit action-item">
+                                                    <button class="button"><i class="fal fa-minus minus"></i></button>
+                                                    <input type="text" class="input" value="1" />
+                                                    <button class="button plus">+<i class="fal fa-plus plus"></i></button>
+                                                </div>
+                                            </div>
+                                            @if (!string.IsNullOrEmpty(Model.ProductImagePath))
+                                            {
+                                                var imgPath = Url.Content("~/Content/AdminFile/Products/mainimages/" + Model.ProductImagePath);
+
+                                                <a href="javascript:void(0)" class="rts-btn btn-primary radious-sm with-icon add-to-cart-btn"
+                                                   data-id="@Model.ProductId" data-name="@Model.ProductName" data-price="@Model.FinalPrice" data-image="@imgPath">
+                                                    <div class="btn-text">Add To Cart</div>
+                                                    <div class="arrow-icon"><i class="fa-regular fa-cart-shopping"></i></div>
+                                                    <div class="arrow-icon"><i class="fa-regular fa-cart-shopping"></i></div>
+                                                </a>
+                                            }
+
+                                            <a href="javascript:void(0);" class="rts-btn btn-primary ml--20"><i class="fa-light fa-heart"></i></a>
+                                        </div>
+                                        <div class="product-uniques">
+                                            @*<span class="sku product-unipue mb--10"><span style="font-weight: 400; margin-right: 10px;">SKU: </span> BO1D0MX8SJ</span>*@
+
+                                            <span class="catagorys product-unipue mb--10"><span style="font-weight: 400; margin-right: 10px;">Categories: </span>@Model.CategoryName</span>
+
+                                            @*<span class="tags product-unipue mb--10"><span style="font-weight: 400; margin-right: 10px;">Tags: </span> fashion, t-shirts, Men</span>
+                                            <span class="tags product-unipue mb--10"><span style="font-weight: 400; margin-right: 10px;">LIFE:: </span> 6 Months</span>
+                                            <span class="tags product-unipue mb--10"><span style="font-weight: 400; margin-right: 10px;">Type: </span> original</span>
+                                            <span class="tags product-unipue mb--10"><span style="font-weight: 400; margin-right: 10px;">Category: </span> Beverages, Dairy & Bakery</span>*@
+
+                                        </div>
+                                        <div class="share-option-shop-details">
+                                            <div class="single-share-option">
+                                                <div class="icon">
+                                                    <i class="fa-regular fa-heart"></i>
+                                                </div>
+                                                <span>Add To Wishlist</span>
+                                            </div>
+                                            <div class="single-share-option">
+                                                <div class="icon">
+                                                    <i class="fa-solid fa-share"></i>
+                                                </div>
+                                                <span>Share On social</span>
+                                            </div>
+                                            <div class="single-share-option">
+                                                <div class="icon">
+                                                    <i class="fa-light fa-code-compare"></i>
+                                                </div>
+                                                <span>Compare</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                   
+                </div>
+               
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+<script>
+    const mainImg = document.getElementById("mainProductImg");
+    const zoomLens = document.getElementById("zoomLens");
+    const zoomResult = document.getElementById("zoomResult");
+    const zoomBox = document.getElementById("zoomBox");
+
+    // ✅ Zoom Function
+    function imageZoom() {
+        zoomBox.addEventListener("mousemove", moveLens);
+        zoomBox.addEventListener("mouseenter", () => {
+            zoomLens.style.display = "block";
+            zoomResult.style.display = "block";
+        });
+        zoomBox.addEventListener("mouseleave", () => {
+            zoomLens.style.display = "none";
+            zoomResult.style.display = "none";
+        });
+
+        function moveLens(e) {
+            let rect = zoomBox.getBoundingClientRect();
+            let x = e.pageX - rect.left - zoomLens.offsetWidth / 2;
+            let y = e.pageY - rect.top - zoomLens.offsetHeight / 2;
+
+            if (x > zoomBox.clientWidth - zoomLens.offsetWidth) x = zoomBox.clientWidth - zoomLens.offsetWidth;
+            if (x < 0) x = 0;
+            if (y > zoomBox.clientHeight - zoomLens.offsetHeight) y = zoomBox.clientHeight - zoomLens.offsetHeight;
+            if (y < 0) y = 0;
+
+            zoomLens.style.left = x + "px";
+            zoomLens.style.top = y + "px";
+
+            zoomResult.style.backgroundImage = `url('${mainImg.src}')`;
+            zoomResult.style.backgroundSize = (zoomBox.clientWidth * 2) + "px " + (zoomBox.clientHeight * 2) + "px";
+            zoomResult.style.backgroundPosition = `-${x * 2}px -${y * 2}px`;
+        }
+    }
+
+    imageZoom();
+
+    // ✅ Thumbnail Click Switch Image
+    document.querySelectorAll(".thumb-img").forEach(img => {
+        img.addEventListener("click", function () {
+            document.querySelector(".active-thumb")?.classList.remove("active-thumb");
+            this.classList.add("active-thumb");
+            mainImg.src = this.dataset.full;
+        });
+    });
+
+
+    $(".add-to-cart-btn").click(function () {
+        addToCart(
+            $(this).data("id"),
+            $(this).data("name"),
+            parseFloat($(this).data("price")),
+            $(this).data("image")
+        );
+        //alert("Added to cart!");
+    });
+
+
+    // ================================================================
+    // 🛒 INDEX PAGE - FIX NULL VALUES
+    // ================================================================
+
+    document.addEventListener("DOMContentLoaded", function () {
+        // Attach to all Add to Cart buttons
+        document.querySelectorAll(".addToCartBtn").forEach(btn => {
+            // Clone to remove old listeners
+            const newBtn = btn.cloneNode(true);
+            btn.parentNode.replaceChild(newBtn, btn);
+
+            newBtn.addEventListener("click", function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+
+                // Get data from attributes
+                let productId = this.getAttribute("data-id");
+                let productName = this.getAttribute("data-name");
+                let price = this.getAttribute("data-price");
+                let image = this.getAttribute("data-image");
+                let unit = this.getAttribute("data-unit") || "1 pc";
+
+                // Debug: Log values
+                console.log("Add to Cart clicked:", {
+                    productId,
+                    productName,
+                    price,
+                    image,
+                    unit
+                });
+
+                // Validate all fields
+                if (!productId || productId === "null" || productId === "") {
+                    alert("Product ID is missing!");
+                    return;
+                }
+
+                if (!productName || productName === "null" || productName === "") {
+                    alert("Product name is missing!");
+                    return;
+                }
+
+                if (!price || price === "null" || price === "" || isNaN(price)) {
+                    alert("Product price is missing or invalid!");
+                    return;
+                }
+
+                if (!image || image === "null" || image === "") {
+                    alert("Product image is missing!");
+                    return;
+                }
+
+                // Get quantity from parent card
+                let qtyInput = this.closest('.single-shopping-card-one')?.querySelector('.quantity-edit .input');
+                let quantity = qtyInput ? parseInt(qtyInput.value) : 1;
+
+                if (isNaN(quantity) || quantity < 1) {
+                    quantity = 1;
+                }
+
+                // Add to cart
+                addToCart(productId, productName, price, image, unit, quantity);
+            });
+        });
+    });
+
+    // ✅ Universal Add to Cart Function
+    function addToCart(productId, productName, price, imagePath, unit, quantity = 1) {
+        // Check user login
+        let userId = localStorage.getItem("UserId");
+        if (!userId || userId === "guest" || userId === "") {
+            alert("Please login first to add items to cart!");
+            window.location.href = "/Account/userlogin";
+            return;
+        }
+
+        // Get cart key
+        let cartKey = "cart_user_" + userId;
+
+        // Load cart
+        let cart = JSON.parse(localStorage.getItem(cartKey)) || [];
+
+        // Check existing item
+        let existingItem = cart.find(item => item.id == productId);
+
+        if (existingItem) {
+            existingItem.qty += quantity;
+            showNotification(`Updated ${productName} quantity to ${existingItem.qty}`, "success");
+        } else {
+            cart.push({
+                id: productId,
+                name: productName,
+                price: parseFloat(price),
+                image: imagePath,
+                unit: unit,
+                qty: quantity,
+                addedAt: new Date().toISOString()
+            });
+            showNotification(`${quantity} × ${productName} added to cart!`, "success");
+        }
+
+        // Save
+        localStorage.setItem(cartKey, JSON.stringify(cart));
+
+        // Update UI
+        if (typeof renderCart === 'function') {
+            renderCart();
+        }
+    }
+
+    </script>

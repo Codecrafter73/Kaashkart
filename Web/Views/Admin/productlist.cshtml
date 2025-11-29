@@ -1,0 +1,557 @@
+﻿
+@{
+    ViewBag.Title = "productlist";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+
+
+<link href="https://cdn.datatables.net/1.10.15/css/jquery.dataTables.min.css" rel="stylesheet">
+
+<style>
+    :root {
+        --primary-green: #177e3f;
+        --primary-hover: #125e30;
+        --light-green: #e8f5ed;
+        --border-radius: 5px;
+    }
+
+    .page-header {
+        /*        background: linear-gradient(135deg, var(--primary-green) 0%, #1a9d4f 100%);*/
+        border-radius: var(--border-radius);
+        padding: 8px 20px;
+        margin-bottom: 2rem;
+        color: black;
+        box-shadow: 0 8px 24px rgba(23, 126, 63, 0.2);
+    }
+
+        .page-header h3 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin: 0;
+        }
+
+    .add-category-btn {
+        background: white;
+        color: var(--primary-green);
+        border: none;
+        border-radius: 12px;
+        padding: 12px 24px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+        .add-category-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+            background: #f8f9fa;
+            color: var(--primary-green);
+        }
+
+    .category-card {
+        border-radius: var(--border-radius);
+        transition: all 0.3s ease;
+        cursor: pointer;
+        border: 2px solid transparent;
+        background: white;
+        overflow: hidden;
+        position: relative;
+    }
+
+        .category-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--primary-green);
+            transition: width 0.3s ease;
+        }
+
+        .category-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 32px rgba(23, 126, 63, 0.15);
+            border-color: var(--primary-green);
+        }
+
+            .category-card:hover::before {
+                width: 100%;
+                opacity: 0.05;
+            }
+
+        .category-card .card-body {
+            padding: 1.5rem;
+        }
+
+        .category-card h6 {
+            font-size: 20px !important;
+            font-weight: 600;
+            color: #2c3e50;
+            margin: 0;
+        }
+
+        .category-card i {
+            color: var(--primary-green);
+            transition: transform 0.3s ease;
+            font-size: 25px !important;
+        }
+
+        .category-card:hover i {
+            transform: translateX(5px);
+        }
+
+    .empty-state {
+        text-align: center;
+        padding: 4rem 2rem;
+        background: var(--light-green);
+        border-radius: var(--border-radius);
+        border: 2px dashed var(--primary-green);
+    }
+
+        .empty-state i {
+            font-size: 4rem;
+            color: var(--primary-green);
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        .empty-state h5 {
+            color: var(--primary-green);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .empty-state p {
+            color: #5a6c7d;
+            margin: 0;
+        }
+
+    .modal-content {
+        border: none;
+        border-radius: var(--border-radius);
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+    }
+
+    .modal-header {
+        background: linear-gradient(135deg, var(--primary-green) 0%, #1a9d4f 100%);
+        color: white;
+        border-radius: var(--border-radius) var(--border-radius) 0 0;
+        padding: 1.5rem;
+        border: none;
+    }
+
+        .modal-header .modal-title {
+            font-weight: 600;
+            font-size: 1.3rem;
+        }
+
+        .modal-header .btn-close {
+            filter: brightness(0) invert(1);
+            opacity: 0.8;
+        }
+
+            .modal-header .btn-close:hover {
+                opacity: 1;
+            }
+
+    .modal-body {
+        padding: 2rem;
+    }
+
+    .form-label {
+        font-weight: 600;
+        color: #2c3e50;
+        margin-bottom: 0.5rem;
+        font-size: 0.95rem;
+    }
+
+    .form-control, .form-select {
+        border: 1px solid #e7e5e5 !important;
+        border-radius: 5px !important;
+        padding: 0.75rem 1rem;
+        transition: all 0.3s ease;
+        font-size: 1rem;
+    }
+
+        .form-control:focus {
+            border-color: var(--primary-green);
+            box-shadow: 0 0 0 4px rgba(23, 126, 63, 0.1);
+        }
+
+    .submit-btn {
+        width: 100%;
+        background: var(--primary-green);
+        color: white;
+        border: none;
+        border-radius: 10px;
+        padding: 0.9rem;
+        font-weight: 600;
+        font-size: 1.05rem;
+        transition: all 0.3s ease;
+        margin-top: 1rem;
+    }
+
+        .submit-btn:hover {
+            background: var(--primary-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(23, 126, 63, 0.3);
+        }
+
+        .submit-btn i {
+            margin-right: 0.5rem;
+        }
+
+    .category-count {
+        background: rgba(255, 255, 255, 0.2);
+        padding: 0.4rem 1rem;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        font-weight: 600;
+    }
+
+    .category-count {
+        padding: 6px 10px;
+        border-radius: 20px;
+        font-size: 14px;
+        font-weight: 600;
+    }
+
+
+    .add-category-btn {
+        padding: 8px 18px;
+    }
+
+    h3 {
+        font-family: Sitka Small !important;
+    }
+
+    .form-label {
+        font-size: 16px !important;
+    }
+
+    table thead tr th {
+        background-color: var(--primary-green) !important;
+        color: white !important;
+    }
+
+    .dataTables_empty {
+        display: none;
+    }
+
+    .dataTables_paginate .next, .previous {
+        background-color: var(--primary-green) !important;
+    }
+
+    table.dataTable td:last-child,
+    table.dataTable th:last-child {
+        min-width: 120px !important;
+        white-space: nowrap;
+    }
+
+    /* Product Name column (2nd column after image) */
+    table.dataTable td:nth-child(3),
+    table.dataTable th:nth-child(3) {
+        min-width: 180px;
+        max-width: 220px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    /* Final Price Column */
+    table.dataTable td:nth-child(7),
+    table.dataTable th:nth-child(7) {
+        min-width: 120px;
+        max-width: 140px;
+        white-space: nowrap;
+    }
+
+    .form-control, .form-select {
+        height: 38px !important;
+    }
+    /* Hide scrollbar by default */
+    .dataTables_scrollBody::-webkit-scrollbar {
+        height: 8px;
+        display: none;
+    }
+
+    .dataTables_scrollBody {
+        scrollbar-width: none; /* Firefox */
+    }
+
+        /* Show scrollbar on hover */
+        .dataTables_scrollBody:hover::-webkit-scrollbar {
+            display: block;
+        }
+
+        .dataTables_scrollBody:hover {
+            scrollbar-width: thin; /* Firefox */
+        }
+</style>
+
+<div class="page-header">
+    <div class="d-flex align-items-center gap-4 ">
+
+        <h3 class="mb-0 ">!! Product List !!</h3>
+
+
+    </div>
+</div>
+<div class="transection">
+    <div class="card">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover mydatatable" id="example">
+                    <thead class="mb--20">
+                        <tr>
+                            <th>#</th>
+                            <th>Main Image</th>
+                            <th>Sub Images</th>
+                            <th>Category</th>
+                            <th>Product Name</th>
+                            <th>Tag Line</th>
+
+                            <th>Pack / Unit</th>
+                            <th>Price</th>
+                            <th>Discount</th>
+                            <th>Final Price</th>
+                            <th>Stock</th>
+
+                            <th>Description</th>
+                            <th>Benefits</th>
+                            <th>Usage Info</th>
+                            <th>Storage Info</th>
+                            <th>FAQ</th>
+                            @*<th>Status</th>*@
+
+                            <th>Created Date</th>
+                            <th>Updated Date</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @{
+                            int sr = 1;
+                        }
+
+                        @foreach (var p in ViewBag.Products)
+                        {
+                            <tr>
+                                <td>@sr</td>
+
+                                <!-- Main Image -->
+                                <td>
+                                    <div style="position:relative; width:60px; height:60px;">
+                                        @{
+                                            string mainImg = "/Content/no-image.png";
+                                            if (!string.IsNullOrEmpty(p.ProductImagePath))
+                                            {
+                                                mainImg = "/Content/AdminFile/Products/mainimages/" + p.ProductImagePath;
+                                            }
+                                        }
+
+                                        <img src="@mainImg" style="width:60px;height:60px;object-fit:cover;border-radius:8px;" />
+
+                                        <button class="viewMainBtn"
+                                                data-image="@mainImg"
+                                                style="position:absolute; top:18px; right:12px; background:rgba(0,0,0,0.4); border:none; color:#fff; border-radius:5px; padding:2px; width:30px;">
+                                            <i class="fa fa-eye"></i>
+                                        </button>
+                                    </div>
+                                </td>
+
+                                <!-- Sub Images -->
+                                <td>
+                                    <div style="position:relative; width:60px; height:60px;">
+                                        @{
+                                            List<string> subList = new List<string>();
+
+                                            if (p.ProductSubImage != null)
+                                            {
+                                                foreach (var img in p.ProductSubImage)
+                                                {
+                                                    if (!string.IsNullOrEmpty(img))
+                                                    {
+                                                        subList.Add("/Content/AdminFile/Products/submainimages/" + img);
+                                                    }
+                                                }
+                                            }
+
+                                            string subImagesJson = Newtonsoft.Json.JsonConvert.SerializeObject(subList);
+                                            string firstSubImg = subList.Count > 0 ? subList[0] : "/Content/no-image.png";
+                                        }
+
+                                        <img src="@firstSubImg" style="width:60px;height:60px;object-fit:cover;border-radius:8px;" />
+
+                                        <button class="viewSubBtn"
+                                                data-images='@subImagesJson'
+                                                style="position:absolute; top:18px; right:17px; background:rgba(0,0,0,0.4); border:none; color:#fff; border-radius:5px; padding:2px; width:30px;">
+                                            <i class="fa fa-eye"></i>
+                                        </button>
+                                    </div>
+                                </td>
+
+                                <td>@p.CategoryName</td>
+                                <td>@p.ProductName</td>
+                                <td>@p.tagline</td>
+
+                                <!-- Pack / Unit -->
+                                <td>
+                                    @{
+                                        List<string> unitsCombined = new List<string>();
+
+                                        for (int i = 0; i < p.UnitQuantity.Count; i++)
+                                        {
+                                            string uq = p.UnitQuantity[i];
+                                            string u = p.Unit[i];
+
+                                            unitsCombined.Add(uq + " " + u);
+                                        }
+                                    }
+
+                                    @String.Join(", ", unitsCombined)
+                                </td>
+
+
+                                <!-- Price -->
+                                <td>
+                                    @String.Join(", ", p.Price)
+                                </td>
+
+                                <!-- Discount -->
+                                <td>
+                                    @String.Join(", ", p.Discount)
+                                </td>
+
+                                <!-- Final Price -->
+                                <td>
+                                    @String.Join(", ", p.FinalPrice)
+                                </td>
+
+                                <!-- Stock -->
+                                <td>
+                                    @String.Join(", ", p.Stock_Quantity)
+                                </td>
+
+                                <td style="width:180px; max-width:180px; overflow:hidden;">
+                                    @Html.Raw(p.Description)
+                                </td>
+
+                                <td style="width:180px; max-width:180px; overflow:hidden;">
+                                    @Html.Raw(p.Benefits)
+                                </td>
+
+                                <td style="width:180px !important; max-width:180px !important; overflow:hidden;">
+                                    @Html.Raw(p.UsageInfo)
+                                </td>
+
+                                <td style="width:180px; max-width:180px; overflow:hidden;">
+                                    @Html.Raw(p.StorageInfo)
+                                </td>
+
+                                <td style="width:200px; max-width:200px; overflow:hidden;">
+                                    @Html.Raw(p.Faq)
+                                </td>
+
+
+                                @*<td>@p.Status</td>*@
+
+                                <td>@p.Created_At.ToString("dd-MMM-yyyy")</td>
+                                <td>@p.Updated_At.ToString("dd-MMM-yyyy")</td>
+                            </tr>
+
+                            sr++;
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<!--Table Printing Jquery-->
+<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+
+<!--Table function-->
+<link href="https://cdn.datatables.net/2.1.8/css/dataTables.dataTables.min.css" rel="stylesheet" />
+<script src="https://cdn.datatables.net/2.1.8/js/dataTables.min.js"></script>
+<!-- DataTables Buttons CSS -->
+<link rel="stylesheet" href="https://cdn.datatables.net/buttons/3.1.2/css/buttons.dataTables.css">
+
+<!-- DataTables Buttons JavaScript -->
+<script src="https://cdn.datatables.net/buttons/3.1.2/js/dataTables.buttons.js"></script>
+<script src="https://cdn.datatables.net/buttons/3.1.2/js/buttons.dataTables.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+<script src="https://cdn.datatables.net/buttons/3.1.2/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/3.1.2/js/buttons.print.min.js"></script>
+<script>
+    $(document).ready(function () {
+        let table = new DataTable(".mydatatable",
+            {
+                paging: true,
+                searching: true,
+                scrollX: true,
+                fixedHeader: true,
+                ordering: false,  // ❌ turn off sorting
+                language: {
+                    searchPlaceholder: "Search here...",
+                    search: "",
+                },
+                dom: '<"top d-flex justify-content-between"lfB>rt<"bottom d-flex justify-content-between mt-2"ip>',
+
+                buttons: [
+                    {
+                        extend: 'excelHtml5',
+                        text: '<i class="fas fa-file-excel"></i> Export Excel',
+                        className: 'btn btn-success btn-sm fw-bold'
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        text: '<i class="fas fa-file-pdf"></i> Export PDF',
+                        className: 'btn btn-danger btn-sm fw-bold',
+                        orientation: 'landscape',
+                        pageSize: 'A4'
+                    }
+                ]
+            });
+    });
+
+
+    let subImages = [];
+    let index = 0;
+
+    $(document).on("click", ".viewMainBtn", function () {
+        let img = $(this).data("image");
+        $("#mainModalImage").attr("src", img);
+        $("#mainImgModal").modal("show");
+    });
+
+    $(document).on("click", ".viewSubBtn", function () {
+        subImages = $(this).data("images");
+        index = 0;
+        $("#subModalImage").attr("src", subImages[index]);
+        $("#subImgModal").modal("show");
+    });
+
+    $("#nextImg").click(function () {
+        if (subImages.length > 0) {
+            index = (index + 1) % subImages.length;
+            $("#subModalImage").attr("src", subImages[index]);
+        }
+    });
+
+    $("#prevImg").click(function () {
+        if (subImages.length > 0) {
+            index = (index - 1 + subImages.length) % subImages.length;
+            $("#subModalImage").attr("src", subImages[index]);
+        }
+    });
+</script>

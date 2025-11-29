@@ -1,0 +1,128 @@
+﻿@model List<Kaasht_Kart.Models.productmodel>
+
+@if (Model != null && Model.Count > 0)
+{
+    foreach (var item in Model)
+    {
+
+        string mainImg = "/Content/no-image.png";
+
+        if (!string.IsNullOrEmpty(item.ProductImagePath))
+        {
+            mainImg = "/Content/AdminFile/Products/mainimages/" + item.ProductImagePath;
+        }
+
+        <div class="col-xxl-2 col-xl-3 col-lg-4 col-md-4 col-sm-6 col-12">
+            <div class="single-shopping-card-one">
+                <!-- iamge and sction area start -->
+                <div class="image-and-action-area-wrapper">
+                    <a href="@Url.Action("productdetails","Customer", new { id = item.ProductId })" class="thumbnail-preview" style="height:200px !important;">
+                        <div class="badge">
+                            <span>
+                                @Convert.ToInt64(item.Discount)%<br>
+                                Off
+                            </span>
+                            <i class="fa-solid fa-bookmark"></i>
+                        </div>
+
+                        <img src="~/Content/Adminfile/Products/mainimages/@item.ProductImagePath" alt="@item.ProductName" class="img-fluid" />
+                    </a>
+                    <div class="action-share-option">
+                        <span class="single-action openuptip message-show-action" data-flow="up" title="Add To Wishlist">
+                            <i class="fa-light fa-heart"></i>
+                        </span>
+                        <span class="single-action openuptip" data-flow="up" title="Compare" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                            <i class="fa-solid fa-arrows-retweet"></i>
+                        </span>
+                        <span class="single-action openuptip cta-quickview product-details-popup-btn" data-flow="up" title="Quick View">
+                            <i class="fa-regular fa-eye"></i>
+                        </span>
+                    </div>
+                </div>
+                <div class="body-content">
+                    <a href="@Url.Action("productdetails","Customer", new { id = item.ProductId })">
+                        <h4 class="title">
+                            @item.ProductName
+                        </h4>
+                    </a>
+                    <span class="availability">@item.UnitQuantity @item.Unit </span>
+                    <div class="price-area">
+                        <span class="current">₹@item.FinalPrice</span>
+                        <div class="previous">₹@item.Price</div>
+                    </div>
+
+                    <div class="cart-counter-action">
+
+                        @*<a href="#"
+                           class="rts-btn btn-success radious-sm with-icon addToCartBtn"
+                           data-id="@item.productid"
+                           data-qty="1">
+
+                            <div class="btn-text" style="max-width:200px !important;">Add</div>
+                        </a>*@
+
+                        <a href="javascript:void(0)"
+                           class="rts-btn btn-primary radious-sm with-icon addToCartBtn"
+                           data-id="@item.ProductId"
+                           data-name="@item.ProductName"
+                           data-price="@item.FinalPrice"
+                           data-image="@mainImg"
+                           data-unit="@item.Unit">
+
+                            <div class="btn-text">Add</div>
+                            <div class="arrow-icon"><i class="fa-regular fa-cart-shopping"></i></div>
+                        </a>
+
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+
+    }
+
+}
+else
+{
+    <div class="text-center py-5">
+        <div class="mb-4">
+            <svg class="text-success" width="80" height="80" fill="currentColor" viewBox="0 0 16 16">
+                <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z" />
+            </svg>
+        </div>
+        <h3 class="fw-bold mb-3">No Products Found</h3>
+        <p class="text-muted mb-4">We couldn't find any products in this category. Please check & explore other categories.</p>
+        @*<a href="@Url.Action("Index", "Customer")" class="btn btn-primary btn-lg px-4v fs-4">
+            Browse All Categories
+        </a>*@
+    </div>
+    @*<p class="text-center text-muted fs-4 my-5">No products found.</p>*@
+}
+
+<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+
+<script>
+   
+
+    $(document).on('click', '.addToCartBtn', function (e) {
+        e.preventDefault(); // Prevent page refresh
+
+        var productId = $(this).data('id');
+        var qty = $(this).data('qty') || 1;
+
+        $.ajax({
+            url: '/Customer/AddToCart',
+            type: 'POST',
+            data: { productId: productId, qty: qty },
+            success: function (result) {
+                // You can show success message
+                //alert("Item added to cart");
+            },
+            error: function () {
+                //alert("Error while adding product");
+            }
+        });
+    });
+</script>

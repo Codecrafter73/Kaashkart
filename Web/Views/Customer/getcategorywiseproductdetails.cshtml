@@ -1,0 +1,660 @@
+﻿@{
+    ViewBag.Title = "Products - " + ViewBag.CategoryName;
+    Layout = "~/Views/Shared/_CustomerLayout.cshtml";
+}
+@model Kaasht_Kart.Models.CategoryWiseProductsViewModel
+
+<!-- Enhanced Custom CSS -->
+<style>
+    :root {
+        --primary-color: #28a745;
+        --secondary-color: #20c997;
+        --danger-color: #dc3545;
+        --light-bg: #f8f9fa;
+        --card-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        --card-hover-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    }
+
+    /* Hero Section Enhancement */
+    .hero-section {
+/*        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);*/
+        position: relative;
+        overflow: hidden;
+        
+    }
+
+    .hero-section::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url('data:image/svg+xml,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><defs><pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="1"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+        opacity: 0.5;
+    }
+
+    .hero-content {
+        position: relative;
+        z-index: 1;
+    }
+
+    .breadcrumb {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border-radius: 50px;
+        padding: 0.75rem 1.5rem;
+        display: inline-flex;
+    }
+
+    .breadcrumb-item {
+        color: rgba(255, 255, 255, 0.8);
+        font-weight: 500;
+    }
+
+    .breadcrumb-item.active {
+        color: #fff;
+    }
+
+    .breadcrumb-item + .breadcrumb-item::before {
+        content: "›";
+        font-size: 1.2rem;
+        color: rgba(255, 255, 255, 0.6);
+    }
+
+    .category-title {
+        font-size: 3.5rem;
+        font-weight: 800;
+        color: var(--primary-color);
+        text-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        margin: -3rem 0;
+        letter-spacing: -1px;
+    }
+
+    /* Section Headers */
+    .section-header {
+        margin-bottom: 2.5rem;
+        position: relative;
+    }
+
+    .section-title {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #2d3748;
+        margin-bottom: 0.5rem;
+    }
+
+    .section-subtitle {
+        color: #718096;
+        font-size: 1.1rem;
+    }
+
+    .items-badge {
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        color: white;
+        padding: 0.5rem 1.25rem;
+        border-radius: 50px;
+        font-weight: 600;
+        box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+    }
+
+    /* Product Card Enhancements */
+    .product-card {
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        background: #fff;
+        border-radius: 16px;
+        overflow: hidden;
+        border: 1px solid #e2e8f0;
+        height: 100%;
+    }
+
+    .product-card:hover {
+        transform: translateY(-8px);
+        box-shadow: var(--card-hover-shadow);
+        border-color: var(--primary-color);
+    }
+
+    .product-image-wrapper {
+        position: relative;
+        overflow: hidden;
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        padding: 1.5rem;
+        height: 280px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .product-image {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        transition: transform 0.5s ease;
+        filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
+    }
+
+    .product-card:hover .product-image {
+        transform: scale(1.1) rotate(2deg);
+    }
+
+    .discount-badge {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        color: white;
+        padding: 0.5rem 1rem;
+        border-radius: 50px;
+        font-weight: 700;
+        font-size: 1.5rem;
+        box-shadow: 0 4px 12px rgba(245, 87, 108, 0.4);
+        z-index: 2;
+        animation: pulse 2s infinite;
+    }
+
+    @@keyframes pulse {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+    }
+
+    .category-badge {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 0.35rem 0.9rem;
+        border-radius: 5px !important;
+        font-size: 1.5rem;
+        font-weight: 600;
+        display: inline-block;
+        margin-bottom: 0.75rem;
+    }
+
+    .product-title {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #2d3748;
+        text-decoration: none;
+        display: block;
+        margin-bottom: 0.75rem;
+        line-height: 1.4;
+        transition: color 0.3s ease;
+    }
+
+        .product-title:hover {
+            color: var(--primary-color);
+            transition: color 0.5s ease;
+        }
+
+    .price-section {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        margin-bottom: 0.75rem;
+    }
+
+    .price-current {
+        font-size: 1.8rem;
+        font-weight: 800;
+        color: var(--primary-color);
+        margin: 0;
+    }
+
+    .price-original {
+        font-size: 1.3rem;
+        color: #a0aec0;
+        text-decoration: line-through;
+    }
+
+    .product-quantity {
+        color: #718096;
+        font-size: 1.5rem;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .product-quantity::before {
+        content: "📦";
+        font-size: 1.1rem;
+    }
+
+    .card-body {
+        padding: 1.5rem;
+    }
+
+    /* Add to Cart Button Styles */
+    .btn-add-cart {
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        color: white;
+        border: none;
+        padding: 0.75rem 1.5rem;
+        border-radius: 5px !important;
+        font-weight: 600;
+        font-size: 1.5rem;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        width: 100%;
+    }
+
+    .btn-add-cart:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4);
+        background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+    }
+
+    .btn-add-cart:active {
+        transform: translateY(0);
+    }
+
+    .btn-view-details {
+        background: transparent;
+        color: var(--primary-color);
+        border: 2px solid var(--primary-color);
+        padding: 0.75rem 1.5rem;
+        border-radius: 5px !important;
+        font-weight: 600;
+        font-size: 1.5rem;
+        transition: all 0.3s ease;
+        width: 100%;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+    }
+
+    .btn-view-details:hover {
+        background: var(--primary-color);
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+    }
+
+    .product-actions {
+        margin-top: 1rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    /* Divider */
+    .section-divider {
+        border: none;
+        height: 2px;
+        background: linear-gradient(90deg, transparent, #e2e8f0, transparent);
+        margin: 4rem 0;
+    }
+
+    /* Empty State Enhancement */
+    .empty-state {
+        text-align: center;
+        padding: 5rem 2rem;
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        border-radius: 20px;
+    }
+
+    .empty-state-icon {
+        width: 120px;
+        height: 120px;
+        margin: 0 auto 2rem;
+        background: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    }
+
+    .empty-state h3 {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #2d3748;
+        margin-bottom: 1rem;
+    }
+
+    .empty-state p {
+        font-size: 1.15rem;
+        color: #718096;
+        max-width: 500px;
+        margin: 0 auto 2rem;
+    }
+
+    .btn-browse {
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        color: white;
+        padding: 1rem 2.5rem;
+        border-radius: 50px;
+        font-weight: 600;
+        font-size: 1.5rem;
+        border: none;
+        box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-block;
+    }
+
+    .btn-browse:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4);
+        color: white;
+    }
+
+    /* Responsive adjustments */
+    @@media (max-width: 768px) {
+        .category-title {
+            font-size: 2.5rem;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+        }
+
+        .product-image-wrapper {
+            height: 220px;
+        }
+    }
+
+    /* Loading animation for images */
+    .product-image {
+        animation: fadeIn 0.5s ease-in;
+    }
+
+    @@keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+</style>
+
+<!-- Hero Section -->
+<div class="hero-section py-5">
+    <div class="container hero-content">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 text-center">
+                <nav aria-label="breadcrumb" class="mb-4">
+                    <ol class="breadcrumb justify-content-center">
+                        <li class="breadcrumb-item">
+                            <a href="@Url.Action("Index", "Customer")" class="text-dark text-decoration-none">Home</a>
+                        </li>
+                        <li class="breadcrumb-item text-dark">
+                            <span>> Categories</span>
+                        </li>
+                        @*<li class="breadcrumb-item active">@Model.CategoryName</li>*@
+                    </ol>
+                </nav>
+                <h1 class="category-title">@Model.CategoryName</h1>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container my-5">
+    <!-- Featured Products Section -->
+    @if (Model.AdminProducts != null && Model.AdminProducts.Count > 0)
+    {
+        <div class="mb-5">
+            <div class="section-header d-flex align-items-center justify-content-between flex-wrap gap-3">
+                <div>
+                    <h2 class="section-title">✨ Featured Products</h2>
+                    <p class="section-subtitle">Premium selection from our collection</p>
+                </div>
+                <span class="items-badge">@Model.AdminProducts.Count items</span>
+            </div>
+
+            <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 row-cols-xl-4 g-4">
+                @foreach (var item in Model.AdminProducts)
+                {
+                    var imagePath = string.IsNullOrEmpty(item.productimagepath)
+                        ? Url.Content("~/Content/no-image.png")
+                        : Url.Content("~/Content/AdminFile/Products/mainimages/" + item.productimagepath);
+
+                    <div class="col">
+                        <div class="product-card">
+                            <div class="product-image-wrapper">
+                                <img src="@imagePath"
+                                     alt="@item.productname"
+                                     class="product-image" />
+
+                                @if (item.discount > 0)
+                                {
+                                    <span class="discount-badge">-@item.discount%</span>
+                                }
+                            </div>
+
+                            <div class="card-body">
+                                <span class="category-badge">@item.categoryname</span>
+
+                                <a href="@Url.Action("productdetails", "Customer", new { id = item.productid })"
+                                   class="product-title"
+                                   title="@item.productname">
+                                    @item.productname
+                                </a>
+
+                                <div class="price-section">
+                                    <h4 class="price-current">₹@item.finalprice</h4>
+                                    @if (item.discount > 0)
+                                    {
+                                        <span class="price-original">₹@item.price</span>
+                                    }
+                                </div>
+
+                                <div class="product-quantity">
+                                    @item.unitquantity @item.unit
+                                </div>
+
+                                <div class="product-actions">
+                                    <button class="btn-add-cart" onclick="addToCart(@item.productid, '@item.productname')">
+                                        🛒 Add to Cart
+                                    </button>
+                                    <a href="@Url.Action("productdetails", "Customer", new { id = item.productid })"
+                                       class="btn-view-details">
+                                        View Details
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+
+    <!-- Section Divider -->
+    @if (Model.AdminProducts != null && Model.AdminProducts.Count > 0 &&
+         Model.VendorProducts != null && Model.VendorProducts.Count > 0)
+    {
+        <hr class="section-divider" />
+    }
+
+    <!-- Vendor Products Section -->
+    @if (Model.VendorProducts != null && Model.VendorProducts.Count > 0)
+    {
+        <div class="mb-5">
+            <div class="section-header d-flex align-items-center justify-content-between flex-wrap gap-3">
+                <div>
+                    <h2 class="section-title">🛍️ More Options</h2>
+                    <p class="section-subtitle">Explore additional choices from our vendors</p>
+                </div>
+                <span class="items-badge">@Model.VendorProducts.Count items</span>
+            </div>
+
+            <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 row-cols-xl-4 g-4">
+                @foreach (var item in Model.VendorProducts)
+                {
+                    var imagePath = string.IsNullOrEmpty(item.ProductImage)
+                        ? Url.Content("~/Content/no-image.png")
+                        : Url.Content("~/Content/VendorDocs/venderproduct/mainimage/" + item.ProductImage);
+
+                    <div class="col">
+                        <div class="product-card">
+                            <div class="product-image-wrapper">
+                                <img src="@imagePath"
+                                     alt="@item.ProductName"
+                                     class="product-image" />
+
+                                @if (item.Discount > 0)
+                                {
+                                    <span class="discount-badge">-@item.Discount%</span>
+                                }
+                            </div>
+
+                            <div class="card-body">
+                                <span class="category-badge">@item.categoryname</span>
+
+                                <a href="@Url.Action("productdetails", "Customer", new { id = item.ProductId })"
+                                   class="product-title"
+                                   title="@item.ProductName">
+                                    @item.ProductName
+                                </a>
+
+                                <div class="price-section">
+                                    <h4 class="price-current">₹@Convert.ToInt64(item.FinalPrice)</h4>
+                                    @if (item.Discount > 0)
+                                    {
+                                        <span class="price-original">₹@item.Price</span>
+                                    }
+                                </div>
+
+                                <div class="product-quantity">
+                                    @item.unitquantity @item.Unit
+                                </div>
+
+                                <div class="product-actions">
+                                    <button class="btn-add-cart" onclick="addToCart(@item.ProductId, '@item.ProductName')">
+                                        🛒 Add to Cart
+                                    </button>
+                                    <a href="@Url.Action("productdetails", "Customer", new { id = item.ProductId })"
+                                       class="btn-view-details">
+                                        View Details
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+
+    <!-- Empty State -->
+    @if ((Model.AdminProducts == null || Model.AdminProducts.Count == 0) &&
+         (Model.VendorProducts == null || Model.VendorProducts.Count == 0))
+    {
+        <div class="empty-state">
+            <div class="empty-state-icon">
+                <svg width="60" height="60" fill="#28a745" viewBox="0 0 16 16">
+                    <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z" />
+                </svg>
+            </div>
+            <h3>No Products Found</h3>
+            <p>We couldn't find any products in this category. Please check back later or explore other categories.</p>
+            <a href="@Url.Action("Index", "Customer")" class="btn-browse">
+                🔍 Browse All Categories
+            </a>
+        </div>
+    }
+</div>
+
+<script>
+    // Add to Cart Function
+    function addToCart(productId, productName) {
+        // Show loading state on button
+        event.target.disabled = true;
+        event.target.innerHTML = '⏳ Adding...';
+
+        // AJAX call to add item to cart
+        $.ajax({
+            url: '@Url.Action("AddToCart", "Cart")', // Update with your actual controller/action
+            type: 'POST',
+            data: {
+                productId: productId,
+                quantity: 1
+            },
+            success: function(response) {
+                // Reset button
+                event.target.disabled = false;
+                event.target.innerHTML = '🛒 Add to Cart';
+
+                // Show success message
+                showNotification('✅ ' + productName + ' added to cart!', 'success');
+
+                // Optional: Update cart count in navbar
+                updateCartCount();
+            },
+            error: function(xhr, status, error) {
+                // Reset button
+                event.target.disabled = false;
+                event.target.innerHTML = '🛒 Add to Cart';
+
+                // Show error message
+                showNotification('❌ Failed to add item to cart. Please try again.', 'error');
+                console.error('Error:', error);
+            }
+        });
+    }
+
+    // Show notification function
+    function showNotification(message, type) {
+        // Create notification element
+        const notification = $('<div>')
+            .addClass('cart-notification')
+            .addClass(type === 'success' ? 'notification-success' : 'notification-error')
+            .text(message);
+
+        // Append to body
+        $('body').append(notification);
+
+        // Show notification
+        setTimeout(() => notification.addClass('show'), 100);
+
+        // Hide and remove after 3 seconds
+        setTimeout(() => {
+            notification.removeClass('show');
+            setTimeout(() => notification.remove(), 300);
+        }, 3000);
+    }
+
+    // Update cart count function
+    function updateCartCount() {
+        $.ajax({
+            url: '@Url.Action("GetCartCount", "Cart")', // Update with your actual controller/action
+            type: 'GET',
+            success: function(count) {
+                // Update cart count badge in navbar
+                $('.cart-count').text(count);
+            }
+        });
+    }
+</script>
+
+<style>
+    /* Notification Styles */
+    .cart-notification {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        padding: 1rem 1.5rem;
+        border-radius: 12px;
+        font-weight: 600;
+        font-size: 1rem;
+        z-index: 9999;
+        transform: translateX(400px);
+        transition: transform 0.3s ease;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    }
+
+        .cart-notification.show {
+            transform: translateX(0);
+        }
+
+    .notification-success {
+        background: linear-gradient(135deg, #28a745, #20c997);
+        color: white;
+    }
+
+    .notification-error {
+        background: linear-gradient(135deg, #dc3545, #c82333);
+        color: white;
+    }
+</style>

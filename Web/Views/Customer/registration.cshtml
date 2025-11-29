@@ -1,0 +1,938 @@
+﻿@{
+    ViewBag.Title = "registration";
+    Layout = "~/Views/Shared/_CustomerLayout.cshtml";
+}
+
+<style>
+    /* --- Enhanced Variables & Core Styles --- */
+    :root {
+        --primary-green: #177e3f;
+        --primary-hover: #125e30;
+        --light-green: #e8f5ed;
+        --border-radius: 5px; /* Slightly larger radius for softer look */
+        --card-shadow: 0 4px 15px rgba(0, 0, 0, 0.05); /* Lighter shadow */
+    }
+
+    
+   
+    .form-label {
+        font-weight: 600;
+        color: #34495e; /* Darker, professional text */
+        margin-bottom: 0.35rem;
+        font-size: 14px !important; /* Slightly smaller for density */
+    }
+    .form-select {
+        width: 280px;
+        font-size: 14px !important; /* Slightly smaller for density */
+    }
+    .form-control, .form-select {
+        border: 1px solid #dcdcdc !important; /* Lighter border */
+        border-radius: var(--border-radius) !important;
+        padding: 0.6rem 1rem;
+        transition: all 0.3s ease;
+        font-size: 0.95rem;
+        height: 40px !important; /* Consistent height */
+    }
+
+    .form-control:focus, .form-select:focus {
+        border-color: var(--primary-green) !important;
+        box-shadow: 0 0 0 3px rgba(23, 126, 63, 0.15) !important; /* Slightly smaller shadow */
+    }
+
+    ::placeholder {
+        font-size: 14px !important; /* Slightly smaller for density */
+        color: #b0b0b0 !important;
+    }
+
+    /* --- Button & Link Styles --- */
+    .submit-btn {
+        width: 100%;
+        background: var(--primary-green);
+        color: white;
+        border: none;
+        border-radius: var(--border-radius);
+        padding: 0.9rem;
+        font-weight: 600;
+        font-size: 1.05rem;
+        transition: all 0.3s ease;
+        margin-top: 1rem;
+    }
+
+    .submit-btn:hover {
+        background: var(--primary-hover);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 15px rgba(23, 126, 63, 0.4);
+    }
+
+    .next-step, .prev-step {
+        font-size: 1rem !important;
+        padding: 0.5rem 2rem !important;
+        border-radius: var(--border-radius) !important;
+        font-weight: 600;
+    }
+
+    .next-step {
+        background-color: var(--primary-green);
+        border-color: var(--primary-green);
+    }
+
+    .prev-step {
+        background-color: #f8f9fa;
+        color: #6c757d;
+        border-color: #dcdcdc;
+    }
+
+    .next-step:hover {
+        background-color: var(--primary-hover);
+        border-color: var(--primary-hover);
+    }
+
+    .prev-step:hover {
+        background-color: #e2e6ea;
+        border-color: #c8cbcf;
+    }
+
+    /* --- Tabs & Step Indicator (Enhanced) --- */
+    .nav-tabs {
+        border-bottom: none;
+    }
+
+    .nav-tabs .nav-link {
+        border: 1px solid #ddd;
+        border-radius: var(--border-radius) var(--border-radius) 0 0;
+        margin-right: 5px;
+        color: #495057 !important;
+        background-color: #f7f7f7;
+        transition: all 0.3s ease;
+    }
+
+    .nav-tabs .nav-link.active {
+        background-color: white !important; /* Active tab stands out */
+        color: var(--primary-green) !important;
+        border-color: #ddd #ddd white #ddd;
+        border-bottom-color: transparent !important; /* Hide bottom border */
+    }
+
+    .nav-tabs .nav-link:hover:not(.active) {
+        border-color: #ccc;
+        background-color: #eee;
+    }
+
+    /* Step Progress Bar Styling */
+    #formSteps {
+        display: flex;
+        justify-content: space-between;
+        padding: 0;
+        list-style: none;
+        margin-bottom: 30px;
+        position: relative;
+    }
+
+    #formSteps::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background-color: #e0e0e0;
+        transform: translateY(-50%);
+        z-index: 1;
+    }
+
+    #formSteps .nav-item {
+        flex-grow: 1;
+        text-align: center;
+        z-index: 2;
+        position: relative;
+    }
+
+    #formSteps .nav-link {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 100%;
+        padding: 0.5rem 1rem;
+        background-color: #fff;
+        border: none;
+        color: #999;
+        font-weight: 500;
+        transition: color 0.3s ease;
+    }
+
+    #formSteps .nav-link.active {
+        color: var(--primary-green);
+        font-weight: 700;
+    }
+
+    #formSteps .nav-link::before {
+        content: attr(data-step);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 30px;
+        height: 30px;
+        margin-right: 8px;
+        background-color: #e0e0e0;
+        color: #fff;
+        border-radius: 50%;
+        font-weight: 700;
+        transition: background-color 0.3s ease;
+    }
+
+    #formSteps .nav-link.active::before {
+        background-color: var(--primary-green);
+    }
+
+    /* --- Fieldset and Card Styles --- */
+    .card {
+        border: none;
+        border-radius: var(--border-radius);
+        box-shadow: var(--card-shadow);
+    }
+
+    .step-fieldset {
+        border: 1px solid #e0e0e0;
+        padding: 30px;
+        border-radius: var(--border-radius);
+        margin-bottom: 20px;
+        background-color: #fff;
+    }
+
+    .step-fieldset h4 {
+        color: var(--primary-green);
+        border-bottom: 2px solid var(--light-green);
+        padding-bottom: 10px;
+        margin-bottom: 20px;
+        font-weight: 700;
+    }
+
+    /* Responsive adjustments */
+    @@media (max-width: 768px) {
+        .col-sm-4, .col-sm-12 {
+            width: 100% !important;
+        }
+        .container {
+            padding: 10px !important;
+        }
+        #formSteps {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        #formSteps::before {
+            display: none;
+        }
+        #formSteps .nav-item {
+            width: 100%;
+            margin-bottom: 5px;
+        }
+        .d-flex.justify-content-between {
+            flex-direction: column;
+            gap: 10px;
+        }
+        .next-step, .prev-step {
+            width: 100% !important;
+        }
+    }
+
+    /* Image Box Styling */
+    .vendor-img-box {
+        padding: 15px;
+        background: var(--light-green); /* Changed background color for better contrast */
+        border-radius: var(--border-radius);
+        border: 2px solid var(--primary-green);
+        transition: .3s ease-in-out;
+        margin-top: 0; /* Reset margin for better flow */
+    }
+
+    .vendor-img {
+        border-radius: 6px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .validation-msg {
+        font-size: 13px !important;
+        font-weight: 500;
+        margin-top: 0.25rem;
+        display: block; /* Ensure it's on a new line */
+    }
+    /* Step Progress Bar Styling */
+    #formSteps {
+        /* ... existing styles ... */
+        display: flex;
+        justify-content: space-between;
+        padding: 0;
+        list-style: none;
+        margin-bottom: 30px;
+        position: relative;
+    }
+
+        /* ... other formSteps styles ... */
+
+        #formSteps .nav-link {
+            /* ... existing styles ... */
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+            padding: 0.5rem 1rem;
+            background-color: #fff;
+            border: none;
+            color: #999;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+            /* Active link style */
+            #formSteps .nav-link.active {
+                color: var(--primary-green);
+                font-weight: 700;
+            }
+
+            /* 🚀 NEW: Hover style - Text turns white */
+            #formSteps .nav-link:hover {
+                color: black !important;
+                /* The !important ensures it overrides the default color and the active color */
+            }
+
+            /* 🚀 NEW: Hover style for Active link - Keeps white text if the background changes on hover (just in case) */
+            #formSteps .nav-link.active:hover {
+                color: black !important;
+            }
+
+            #formSteps .nav-link::before {
+                /* ... existing styles for the circle number ... */
+            }
+
+            #formSteps .nav-link.active::before {
+                /* ... existing styles ... */
+            }
+    input[type="date"], input[type="file"] {
+        font-size: 14px !important;
+    }
+    .nice-select{
+        line-height:28px !important;
+    }
+
+    .login-container {
+        /* White background and slight shadow for the card effect */
+        background-color: white;
+        padding: 2.5rem; /* Increase padding */
+        border-radius: 6px;
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.05);
+        /* Set a reasonable maximum width for the form container */
+        max-width: 350px;
+        width: 90%;
+    }
+
+    /* Adjustments to match the button style in the image */
+    .btn-success-custom {
+        background-color: #38a169; /* Green from the image */
+        border-color: #38a169;
+        color: white;
+        font-size: 1.25rem; /* Larger font size */
+        font-weight: bold;
+        padding: 0.5rem 1rem;
+        width: 100%; /* Make button full width as per standard practice, or match the smaller width if preferred */
+    }
+
+        .btn-success-custom:hover {
+            background-color: #2c8c5c;
+            border-color: #2c8c5c;
+        }
+
+    .form-control-lg {
+        padding: 0.75rem 1rem; /* Adjust padding to make inputs taller */
+    }
+
+    .form-select {
+        display: block;
+        width: 100%;
+        padding: .375rem 2.25rem .375rem .75rem;
+        -moz-padding-start: calc(0.75rem - 3px);
+        font-size: 1rem;
+        font-weight: 400;
+        line-height: 1.5;
+        color: #212529;
+        background-color: #fff;
+        background-position: right .75rem center;
+        background-size: 16px 12px;
+        border: 1px solid #ced4da;
+        border-radius: .25rem;
+        -webkit-transition: border-color .15s ease-in-out,-webkit-box-shadow .15s ease-in-out;
+        transition: border-color .15s ease-in-out,-webkit-box-shadow .15s ease-in-out;
+        -o-transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+        transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+        transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out,-webkit-box-shadow .15s ease-in-out;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none
+    }
+
+</style>
+
+<div class="container p-4">
+    <ul class="nav nav-tabs" id="vendorTabs">
+        <li class="nav-item">
+            <a class="nav-link active fw-bold" id="register-tab" href="#">Register</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link fw-bold" id="login-tab" href="#">Login</a>
+        </li>
+    </ul>
+
+    <div class="card p-4">
+        <div class="card-body rounded">
+
+            <div class="row">
+                <div class="col-lg-8 col-md-12 p-3" id="registerFormSection">
+                    <div class="container">
+
+
+                        <ul class="nav nav-pills mb-4" id="formSteps">
+                            <li class="nav-item">
+                                <a class="nav-link active" href="#" data-step="1">Organization Details</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#" data-step="2">Authorized Person</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#" data-step="3">Address Details</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#" data-step="4">Bank Details</a>
+                            </li>
+                        </ul>
+
+
+
+                        <form id="vendorForm" enctype="multipart/form-data" action="/Customer/RegisterVendor">
+                            <fieldset data-step="1" class="step-fieldset">
+                                <h4>Vendor / Organization Details</h4>
+
+
+                                <div class="row g-3">
+                                    <div class="col-sm-4 col-sm-6">
+                                        <label class="form-label">Vendor Type*</label><br/>
+                                        <select class="form-select" name="vendorType" required>
+                                            <option value="">Select Vendor Type</option>
+                                            <option value="FPO">FPO</option>
+                                            <option value="SHG">SHG</option>
+                                            <option value="Individual Farmer">Individual Farmer</option>
+                                            <option value="MSME">MSME</option>
+                                            <option value="Cooperative">Cooperative</option>
+                                            <option value="Others">Others</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="col-sm-4 col-sm-6">
+                                        <label class="form-label">Legal Entity Name*</label>
+                                        <input type="text" class="form-control" name="LegalEntityName" placeholder="Enter Legal Entity Name" required>
+                                        <span class="text-danger validation-msg"></span>
+                                    </div>
+
+                                    <div class="col-sm-4 col-sm-6">
+                                        <label class="form-label">Brand Name</label>
+                                        <input type="text" class="form-control" name="brandName" placeholder="Enter Brand Name">
+                                        <span class="text-danger validation-msg"></span>
+                                    </div>
+
+                                    <div class="col-sm-4 col-sm-6">
+                                        <label class="form-label">Registration Type*</label>
+                                        <input type="text" class="form-control" name="registrationType" placeholder="Enter Registration Type" required>
+                                        <span class="text-danger validation-msg"></span>
+                                    </div>
+
+                                    <div class="col-sm-4 col-sm-6">
+                                        <label class="form-label">Registration Certificate*</label>
+                                        <input type="file" class="form-control" name="registrationCertificate" required>
+                                        <span class="text-danger validation-msg"></span>
+                                    </div>
+
+                                    <div class="col-sm-4 col-sm-6">
+                                        <label class="form-label">Date of Establishment*</label>
+                                        <input type="date" class="form-control" name="establishmentDate" placeholder="Select Date of Establishment" required>
+                                        <span class="text-danger validation-msg"></span>
+                                    </div>
+
+                                    <div class="col-sm-4 col-sm-6">
+                                        <label class="form-label">GST Registration Status*</label>
+                                        <select class="form-select" name="gstStatus" id="gstStatusSelect" required>
+                                            <option value="">Select GST Registration Status</option>
+                                            <option value="Yes">Yes</option>
+                                            <option value="No">No</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="col-sm-4 col-sm-6">
+                                        <label class="form-label">GST Number</label>
+                                        <input type="text" class="form-control" name="gstNumber" id="gstNumberInput" placeholder="Enter GST Number">
+                                        <span class="text-danger validation-msg"></span>
+                                    </div>
+
+                                    <div class="col-sm-4 col-sm-6">
+                                        <label class="form-label">PAN Number*</label>
+                                        <input type="text" class="form-control" name="panNumber" placeholder="Enter PAN Number" required>
+                                        <span class="text-danger validation-msg"></span>
+                                    </div>
+
+                                    <div class="col-sm-4 col-sm-6">
+                                        <label class="form-label">MSME Registration Number (Optional)</label>
+                                        <input type="text" class="form-control" name="msmeNumber" placeholder="Enter MSME Registration Number">
+                                        <span class="text-danger validation-msg"></span>
+                                    </div>
+                                </div>
+
+                                <div class="d-flex justify-content-end text-end mt-4">
+                                    <button type="button" class="btn btn-primary next-step w-auto" style="font-size: 15px !important;">Next Step <i class="bi bi-arrow-right"></i></button>
+                                </div>
+                            </fieldset>
+
+                            <fieldset data-step="2" class="step-fieldset d-none">
+                                <h4>Authorized Person Details</h4>
+
+                                <div class="row g-3">
+                                    <div class="col-sm-4 col-sm-6">
+                                        <label class="form-label">Full Name*</label>
+                                        <input type="text" class="form-control" name="authFullName" placeholder="Enter Full Name" required>
+                                        <span class="text-danger validation-msg"></span>
+                                    </div>
+
+                                    <div class="col-sm-4 col-sm-6">
+                                        <label class="form-label">Designation*</label>
+                                        <input type="text" class="form-control" name="authDesignation" placeholder="Enter Designation" required>
+                                        <span class="text-danger validation-msg"></span>
+                                    </div>
+
+                                    <div class="col-sm-4 col-sm-6">
+                                        <label class="form-label">Mobile Number*</label>
+                                        <input type="text" class="form-control" id="authMobile" name="authMobile" maxlength="10"
+                                               placeholder="Enter Mobile Number" required>
+                                        <span class="text-danger validation-msg"></span>
+                                    </div>
+
+
+                                    <div class="col-sm-4 col-sm-6">
+                                        <label class="form-label">Alternate Mobile Number</label>
+                                        <input type="text" class="form-control" name="authAltMobile" maxlength="10" placeholder="Enter Alternate Mobile Number">
+                                        <span class="text-danger validation-msg"></span>
+                                    </div>
+
+                                    <div class="col-sm-4 col-sm-6">
+                                        <label class="form-label">Email ID*</label>
+                                        <input type="email" class="form-control" name="authEmail" placeholder="Enter Email ID" required>
+                                        <span class="text-danger validation-msg"></span>
+                                    </div>
+
+                                    <div class="col-sm-4 col-sm-6">
+                                        <label class="form-label">Password</label>
+                                        <input type="text" class="form-control" id="Password" name="Password"
+                                               placeholder="Auto Generated" readonly required>
+                                        <span class="text-danger validation-msg"></span>
+                                    </div>
+
+                                    <div class="col-sm-4 col-sm-6">
+                                        <label class="form-label">Aadhaar Number*</label>
+                                        <input type="text" class="form-control" name="aadhaarNumber" placeholder="Enter Aadhaar Number" required>
+                                        <span class="text-danger validation-msg"></span>
+                                    </div>
+
+                                    <div class="col-sm-4 col-sm-6">
+                                        <label class="form-label">Aadhaar Upload*</label>
+                                        <input type="file" class="form-control" name="aadhaarUpload" required>
+                                        <span class="text-danger validation-msg"></span>
+                                    </div>
+
+                                    <div class="d-flex justify-content-between pt-4 w-100">
+                                        <button type="button" class="btn btn-secondary prev-step w-auto" style="font-size: 15px !important;"><i class="bi bi-arrow-left"></i> Previous Step</button>
+                                        <button type="button" class="btn btn-primary next-step w-auto" style="font-size: 15px !important;">Next Step <i class="bi bi-arrow-right"></i></button>
+                                    </div>
+                                </div>
+                            </fieldset>
+
+                            <fieldset data-step="3" class="step-fieldset d-none">
+                                <h4>Address Details</h4>
+                                <div class="row g-3">
+                                    <div class="col-sm-6 col-sm-12">
+                                        <label class="form-label">Registered Address*</label>
+                                        <textarea class="form-control" name="registeredAddress" placeholder="Enter Registered Address" rows="3" required></textarea>
+                                        <span class="text-danger validation-msg"></span>
+                                    </div>
+
+                                    <div class="col-sm-6 col-sm-12">
+                                        <label class="form-label">Operational / Warehouse Address*</label>
+                                        <textarea class="form-control" name="warehouseAddress" placeholder="Enter Operational / Warehouse Address" rows="3" required></textarea>
+                                        <span class="text-danger validation-msg"></span>
+                                    </div>
+
+                                    <div class="col-sm-4 col-sm-6">
+                                        <label class="form-label">State*</label>
+                                        <input type="text" class="form-control" name="state" placeholder="Enter State" required>
+                                        <span class="text-danger validation-msg"></span>
+                                    </div>
+
+                                    <div class="col-sm-4 col-sm-6">
+                                        <label class="form-label">District*</label>
+                                        <input type="text" class="form-control" name="district" placeholder="Enter District" required>
+                                        <span class="text-danger validation-msg"></span>
+                                    </div>
+
+                                    <div class="col-sm-4 col-sm-6">
+                                        <label class="form-label">Pincode*</label>
+                                        <input type="text" class="form-control" name="pincode" placeholder="Enter Pincode" required>
+                                        <span class="text-danger validation-msg"></span>
+                                    </div>
+
+                                    <div class="col-sm-4 col-sm-6">
+                                        <label class="form-label">Google Map Location (Optional)</label>
+                                        <input type="text" class="form-control" name="googleMap" placeholder="Enter Google Map Location URL">
+                                        <span class="text-danger validation-msg"></span>
+                                    </div>
+
+                                    <div class="d-flex justify-content-between pt-4 w-100">
+                                        <button type="button" class="btn btn-secondary prev-step w-auto" style="font-size: 15px !important;"><i class="bi bi-arrow-left"></i> Previous Step</button>
+                                        <button type="button" class="btn btn-primary next-step w-auto" style="font-size: 15px !important;">Next Step <i class="bi bi-arrow-right"></i></button>
+                                    </div>
+                                </div>
+                            </fieldset>
+
+                            <fieldset data-step="4" class="step-fieldset d-none">
+                                <h4>Bank Details (For Payments)</h4>
+                                <div class="row g-3">
+                                    <div class="col-sm-4 col-sm-6">
+                                        <label class="form-label">Account Holder Name*</label>
+                                        <input type="text" class="form-control" name="bankAccountHolder" placeholder="Enter Account Holder Name" required>
+                                        <span class="text-danger validation-msg"></span>
+                                    </div>
+
+                                    <div class="col-sm-4 col-sm-6">
+                                        <label class="form-label">Bank Name*</label>
+                                        <input type="text" class="form-control" name="bankName" placeholder="Enter Bank Name" required>
+                                        <span class="text-danger validation-msg"></span>
+                                    </div>
+
+                                    <div class="col-sm-4 col-sm-6">
+                                        <label class="form-label">Branch Name*</label>
+                                        <input type="text" class="form-control" name="branchName" placeholder="Enter Branch Name" required>
+                                        <span class="text-danger validation-msg"></span>
+                                    </div>
+
+                                    <div class="col-sm-4 col-sm-6">
+                                        <label class="form-label">Account Number*</label>
+                                        <input type="text" class="form-control" name="accountNumber" placeholder="Enter Account Number" required>
+                                        <span class="text-danger validation-msg"></span>
+                                    </div>
+
+                                    <div class="col-sm-4 col-sm-6">
+                                        <label class="form-label">IFSC Code*</label>
+                                        <input type="text" class="form-control" name="ifsc" placeholder="Enter IFSC Code" required>
+                                        <span class="text-danger validation-msg"></span>
+                                    </div>
+
+                                    <div class="col-sm-4 col-sm-6">
+                                        <label class="form-label">Cancelled Cheque Upload*</label>
+                                        <input type="file" class="form-control" name="cancelledCheque" required>
+                                        <span class="text-danger validation-msg"></span>
+                                    </div>
+
+                                    <div class="col-sm-4 col-sm-6">
+                                        <label class="form-label">Passbook First Page Upload*</label>
+                                        <input type="file" class="form-control" name="passbookFirstPage" required>
+                                        <span class="text-danger validation-msg"></span>
+                                    </div>
+
+                                    <div class="d-flex justify-content-between pt-4 w-100">
+                                        <button type="button" class="btn btn-secondary prev-step w-auto" style="font-size: 15px !important;"><i class="bi bi-arrow-left"></i> Previous Step</button>
+                                        <button type="submit" class="btn submit-btn w-auto" style="font-size: 15px !important;">Submit Registration <i class="bi bi-check-circle-fill"></i></button>
+                                    </div>
+                                </div>
+                            </fieldset>
+
+                        </form>
+
+                    </div>
+                </div>
+
+
+                <div class="col-lg-8 col-md-12 p-3" id="loginFormSection" style="display:none;">
+                    <!-- Full page container -->
+                    <div style="
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    height: 75vh;
+                    background: #f5f5f5;
+                ">
+
+                        <form id="vendorLoginForm" action="/Customer/Login" method="post"
+                              style="width:450px; padding:20px 20px; background:white;  border-radius:10px;">
+
+                            <div class="p-4">
+                                <h2 class="text-center">Vender Login <sup><i class="fas fa-lock" style="color:var(--primary-green);"></i></sup></h2>
+                                <div class="mb-4">
+                                    <label class="form-label fw-bold " style="color:#0b509d;font-size:17px !important;">Email</label>
+                                    <input type="email" class="form-control form-control-lg" name="loginEmail"
+                                           placeholder="Enter registered email" required>
+                                    <span class="text-danger validation-msg"></span>
+                                </div>
+
+                                <div class="mb-4">
+                                    <label class="form-label fw-bold" style="color: #0b509d; font-size: 17px !important;">Password</label>
+                                    <input type="password" class="form-control form-control-lg" name="loginPassword"
+                                           placeholder="Enter password" required>
+                                    <span class="text-danger validation-msg"></span>
+                                </div>
+
+                                <button type="submit" class="btn btn-success-custom fs-3">Login</button>
+
+                            </div>
+
+                        </form>
+                    </div>
+
+                </div>
+
+
+                <div class="col-lg-4 col-md-12 text-center p-3">
+                    <div class="vendor-img-box">
+                        <img src="~/Content/Kaashtkart-Data/vender.jpg"
+                             class="img-fluid vendor-img" alt="Vendor Registration Image" />
+                        <h5 class="mt-3 text-center" style="color: var(--primary-green); font-weight: 700;">Join Our Vendor Network!</h5>
+                        <p class="text-muted small">Complete the 4-step process to get started.</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+<script>
+    // --- Step Navigation Logic ---
+    $(document).ready(function () {
+        // Initial setup for form steps
+        updateStepNav(1);
+
+        $(".next-step").click(function () {
+            var current = $(this).closest("fieldset");
+            // Basic validation check before moving to the next step
+            if (!validateStep(current)) {
+                return;
+            }
+
+            var next = current.next("fieldset");
+            if (next.length) {
+                current.addClass("d-none");
+                next.removeClass("d-none");
+                updateStepNav(next.data("step"));
+            }
+        });
+
+        $(".prev-step").click(function () {
+            var current = $(this).closest("fieldset");
+            var prev = current.prev("fieldset");
+            if (prev.length) {
+                current.addClass("d-none");
+                prev.removeClass("d-none");
+                updateStepNav(prev.data("step"));
+            }
+        });
+
+        // Function to update the visual step indicator
+        function updateStepNav(step) {
+            $("#formSteps .nav-link").removeClass("active");
+            $("#formSteps .nav-link[data-step='" + step + "']").addClass("active");
+        }
+
+        // --- Step Validation Function ---
+        function validateStep(fieldset) {
+            let isValid = true;
+            fieldset.find("input[required], textarea[required]").each(function () {
+                let $input = $(this);
+                let errorMessage = "";
+
+                // Perform browser's native validation
+                if (!this.checkValidity()) {
+                    errorMessage = "This field is required.";
+                    isValid = false;
+                } else if ($input.attr('name') === 'authMobile' || $input.attr('name') === 'authAltMobile') {
+                    // Custom mobile validation
+                    if ($input.val().length > 0 && !/^\d{10}$/.test($input.val())) {
+                        errorMessage = "Mobile number must be 10 digits.";
+                        isValid = false;
+                    }
+                }
+
+                // Display validation message next to the input
+                let $validationMsg = $input.next(".validation-msg");
+                if ($validationMsg.length === 0) {
+                    $validationMsg = $('<span class="text-danger validation-msg"></span>');
+                    $input.after($validationMsg);
+                }
+
+                $validationMsg.text(errorMessage);
+            });
+            return isValid;
+        }
+
+        // --- Tab Switching Logic (Slightly cleaner) ---
+        $("#register-tab").click(function (e) {
+            e.preventDefault();
+            $("#loginFormSection").hide();
+            $("#registerFormSection").show();
+            $("#login-tab").removeClass("active");
+            $(this).addClass("active");
+        });
+
+        $("#login-tab").click(function (e) {
+            e.preventDefault();
+            $("#registerFormSection").hide();
+            $("#loginFormSection").show();
+            $("#register-tab").removeClass("active");
+            $(this).addClass("active");
+        });
+
+        // --- Form Submission ---
+        $("#vendorForm").on("submit", function (e) {
+            e.preventDefault();
+            // Final step validation
+            if (!validateStep($(this).find('fieldset:visible'))) {
+                return;
+            }
+
+            var formData = new FormData(this);
+
+            $.ajax({
+                url: "/Customer/RegisterVendor",
+                type: "POST",
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function (res) {
+
+                    if (res.status) {
+                        Swal.fire({
+                            icon: "success",
+                            title: "Success",
+                            text: res.message,
+                            timer: 2000,
+                            showConfirmButton: false
+                        });
+
+                        $("#vendorForm")[0].reset();
+                        // Optionally redirect or switch to login tab
+                        $("#login-tab").click();
+                    }
+                    else {
+                        Swal.fire({
+                            icon: "error",
+                            title: "Error",
+                            text: res.message
+                        });
+                    }
+                },
+                error: function () {
+                    Swal.fire({
+                        icon: "error",
+                        title: "Server Error",
+                        text: "Something went wrong, try again!"
+                    });
+                }
+            });
+        });
+
+        // --- Simple Login Form Submission ---
+        $("#vendorLoginForm").on("submit", function (e) {
+            // Perform basic required field validation here if needed
+        });
+    });
+
+
+    document.addEventListener('DOMContentLoaded', function () {
+        // 1. Function to restrict input to A-Z and spaces
+        function validateNameInput(event) {
+            const input = event.target;
+            // Use a regular expression to allow only letters (a-z, A-Z) and spaces
+            input.value = input.value.replace(/[^a-zA-Z\s]/g, '');
+        }
+
+        // 2. Apply the validation function to all required name/string inputs
+        const nameInputs = document.querySelectorAll(
+            'input[name="legalName"], input[name="brandName"], input[name="registrationType"],' +
+            'input[name="authFullName"], input[name="authDesignation"], input[name="bankAccountHolder"],' +
+            'input[name="bankName"], input[name="branchName"], input[name="state"], input[name="district"]'
+            /* Added State/District assuming they should also be string-only */
+        );
+
+        nameInputs.forEach(input => {
+            input.addEventListener('input', validateNameInput);
+        });
+
+        // 3. Function to restrict input to 0-9 and enforce max length
+        function validateNumberInput(event) {
+            const input = event.target;
+            // Use a regular expression to allow only digits (0-9)
+            input.value = input.value.replace(/[^0-9]/g, '');
+        }
+
+        // 4. Apply the validation function to all required number/ID inputs
+        const numberInputs = document.querySelectorAll(
+            'input[name="authMobile"], input[name="authAltMobile"], input[name="pincode"],' +
+            'input[name="aadhaarNumber"], input[name="accountNumber"], input[name="ifsc"]'
+        );
+
+        numberInputs.forEach(input => {
+            input.addEventListener('input', validateNumberInput);
+        });
+    });
+
+
+
+    document.addEventListener('DOMContentLoaded', function () {
+
+        const gstStatusSelect = document.getElementById('gstStatusSelect');
+        const gstNumberInput = document.getElementById('gstNumberInput');
+
+        function toggleGstField() {
+
+            if (!gstStatusSelect || !gstNumberInput) return;
+
+            if (gstStatusSelect.value === 'No') {
+                gstNumberInput.disabled = true;
+                gstNumberInput.value = "";
+                gstNumberInput.removeAttribute('required');
+            } else {
+                gstNumberInput.disabled = false;
+                // Agar required lagana ho to:
+                 if (gstStatusSelect.value === 'Yes') {
+                     gstNumberInput.setAttribute('required', 'required');
+                 }
+            }
+        }
+
+        // Page load par bhi apply kare
+        toggleGstField();
+
+        // Dropdown change event
+        gstStatusSelect.addEventListener('change', toggleGstField);
+    });
+
+    document.getElementById("authMobile").addEventListener("input", function () {
+        let mobile = this.value;
+
+        if (mobile.length === 10) {
+            let lastFour = mobile.slice(-4);      // last 4 digits
+            let autoPass = "KK-" + lastFour;      // format: KK-xxxx
+            document.getElementById("Password").value = autoPass;
+        } else {
+            document.getElementById("Password").value = ""; // clear if invalid
+        }
+    });
+</script>

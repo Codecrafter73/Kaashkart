@@ -1,0 +1,919 @@
+﻿﻿
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grocery Store - Login / Register</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-green: #2d5016;
+            --light-green: #4a7c2c;
+            --accent-orange: #ff8c42;
+            --text-dark: #2c3e50;
+            --background: #056228;
+        }
+
+        body {
+            font-family: Sitka Small;
+            background-image: url('../../content/kaashtkart-data/svg.png');
+            background-repeat: no-repeat;
+            min-height: 100vh;
+            padding: 0;
+            margin: 0;
+            overflow:hidden;
+        }
+
+        /* Top Header Bar */
+        .top-header {
+            background: var(--primary-green);
+            color: white;
+            padding: 8px 0;
+            font-size: 12px;
+        }
+
+        .top-header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .contact-info span {
+            margin-right: 20px;
+        }
+
+        .social-links a {
+            color: white;
+            margin-left: 12px;
+            text-decoration: none;
+            font-size: 16px;
+        }
+
+        /* Main Container */
+        .main-wrapper {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+            height:100vh;
+            justify-content:center;
+            align-items:center;
+        }
+
+        .login-container {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            min-height: 550px;
+        }
+
+        /* Left Side - Promo Banner */
+        .promo-side {
+            background: #025f02;
+            background-size: cover;
+            background-position: center;
+            padding: 60px 50px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+            .promo-side::before {
+                content: '';
+                position: absolute;
+                top: -50%;
+                right: -50%;
+                width: 200%;
+                height: 200%;
+                background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+                animation: pulse 4s ease-in-out infinite;
+            }
+
+        @@keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.1);
+            }
+        }
+
+        .promo-content {
+            text-align: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .grocery-icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
+        }
+
+        .promo-content h1 {
+            font-size: 42px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .promo-content p {
+            font-size: 18px;
+            margin-bottom: 25px;
+            opacity: 0.95;
+        }
+
+        .shop-now-btn {
+            background: white;
+            color: #348300 !important;
+            padding: 14px 35px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(255, 140, 66, 0.4);
+        }
+
+            .shop-now-btn:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 6px 10px rgba(255, 140, 66, 0.6);
+            }
+
+        .fresh-quality {
+            margin-top: 30px;
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+            .fresh-quality span {
+                display: inline-block;
+                margin: 0 15px;
+                font-weight: 600;
+            }
+
+        /* Right Side - Form */
+        .form-side {
+            padding: 40px 50px;
+            background: white;
+            min-height: 650px;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+
+        .form-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .brand-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+            .brand-header h2 {
+                color: #025f02;
+                font-size: 28px;
+                font-weight: 700;
+                margin-bottom: 8px;
+            }
+
+            .brand-header p {
+                color: #666;
+                font-size: 14px;
+            }
+
+        .form-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            background: #f8f9fa;
+            padding: 5px;
+            border-radius: 8px;
+            border: 1px solid #d1cccc;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 12px;
+            background: transparent;
+            border: none;
+            border-radius: 6px;
+            font-size: 15px;
+            font-weight: 600;
+            color: #666;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+            .tab-btn.active {
+                color: white;
+                background: var(--background);
+                box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            }
+
+        .form-content {
+            display: none;
+            min-height: 400px;
+        }
+
+            .form-content.active {
+                display: block;
+                animation: fadeIn 0.4s ease;
+            }
+
+        @@keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            color: #333;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 3px;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+            input:focus, select:focus {
+                border-color: var(--light-green);
+                box-shadow: 0 0 0 4px rgba(74, 124, 44, 0.1);
+            }
+
+        .input-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #999;
+            font-size: 16px;
+        }
+
+        input.with-icon {
+            padding-left: 45px;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #999;
+            font-size: 18px;
+        }
+
+        .options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            font-size: 13px;
+        }
+
+        .remember-me {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #666;
+        }
+
+        .forgot-link {
+            color: var(--light-green);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+            .forgot-link:hover {
+                text-decoration: underline;
+            }
+
+        .submit-btn {
+            width: 100%;
+            padding: 14px;
+            background: #025f02;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+            .submit-btn:hover {
+                background: #078507;
+                transform: translateY(-2px);
+                box-shadow: 0 6px 20px rgba(45, 80, 22, 0.3);
+            }
+
+        .divider {
+            text-align: center;
+            margin: 25px 0;
+            position: relative;
+        }
+
+            .divider::before,
+            .divider::after {
+                content: '';
+                position: absolute;
+                top: 50%;
+                width: 43%;
+                height: 1px;
+                background: #e0e0e0;
+            }
+
+            .divider::before {
+                left: 0;
+            }
+
+            .divider::after {
+                right: 0;
+            }
+
+            .divider span {
+                background: white;
+                padding: 0 15px;
+                color: #999;
+                font-size: 13px;
+            }
+
+        .social-login {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .social-btn {
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+        }
+
+            .social-btn:hover {
+                border-color: var(--light-green);
+                background: #f8f9fa;
+            }
+
+        .switch-form {
+            text-align: center;
+            margin-top: 25px;
+            color: #666;
+            font-size: 14px;
+        }
+
+            .switch-form button {
+                color: var(--light-green);
+                background: none;
+                border: none;
+                font-weight: 600;
+                cursor: pointer;
+                text-decoration: underline;
+            }
+
+        .terms-checkbox {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+            .terms-checkbox input {
+                width: auto;
+                margin-top: 3px;
+            }
+
+            .terms-checkbox label {
+                font-size: 13px;
+                font-weight: 400;
+                margin: 0;
+            }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        /* Footer */
+        .footer-bar {
+            background: var(--primary-green);
+            color: white;
+            text-align: center;
+            padding: 15px 20px;
+            margin-top: 40px;
+            font-size: 13px;
+        }
+
+            .footer-bar span {
+                margin: 0 15px;
+            }
+
+        @@media (max-width: 968px) {
+            .login-container {
+                grid-template-columns: 1fr;
+            }
+
+            .promo-side {
+                padding: 40px 30px;
+                min-height: 300px;
+            }
+
+            .promo-content h1 {
+                font-size: 32px;
+            }
+
+            .form-side {
+                padding: 40px 30px;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @@media (max-width: 480px) {
+            .social-login {
+                grid-template-columns: 1fr;
+            }
+
+            .top-header-content {
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+
+    <!-- Main Container -->
+    <div class="main-wrapper ">
+        <div class="login-container">
+            <!-- Left Side - Promo -->
+            <div class="promo-side">
+                <div class="promo-content">
+                    <div class="grocery-icon">🛒🥬🍎</div>
+                    <h1>Online Grocery<br>Shopping</h1>
+                    <p>Fresh vegetables, fruits & daily essentials<br>delivered to your doorstep</p>
+                    <button class="shop-now-btn">Shop Now</button>
+                    <div class="fresh-quality">
+                        <span>✓ 100% Fresh</span>
+                        <span>✓ Best Quality</span>
+                        <span>✓ On-time Delivery</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Side - Form -->
+            <div class="form-side">
+
+                <div class="form-tabs">
+                    <button class="tab-btn active" onclick="switchTab('login')">Email Login</button>
+                    <button class="tab-btn" onclick="switchTab('mobile')">Mobile Login</button>
+                    <button class="tab-btn" onclick="switchTab('register')">Register</button>
+                </div>
+
+                <!-- Login Form -->
+                <div class="form-content active" id="loginForm">
+                    <form>
+                        <div class="input-group">
+                            <label>Email</label>
+                            <div class="input-wrapper">
+                                <span class="input-icon">📧</span>
+                                <input type="email" name="Email" class="with-icon" placeholder="Enter your email" required>
+                            </div>
+                        </div>
+
+                        <div class="input-group">
+                            <label>Password</label>
+                            <div class="input-wrapper">
+                                <span class="input-icon">🔒</span>
+                                <input type="password" id="loginPassword" name="Password" class="with-icon" placeholder="Enter password" required>
+                                <span class="password-toggle" onclick="togglePassword('loginPassword')">👁️</span>
+                            </div>
+                        </div>
+
+                        <div class="options">
+                            <label class="remember-me">
+                                <input type="checkbox">
+                                <span>Remember me</span>
+                            </label>
+                            <a href="#" class="forgot-link">Forgot Password?</a>
+                        </div>
+
+                        <button type="submit" class="submit-btn">Login</button>
+
+                        <div class="divider">
+                            <span>or</span>
+                        </div>
+
+                        <button type="button" class="submit-btn" style="background: var(--accent-orange);" onclick="switchTab('mobile')">Login with Mobile OTP</button>
+                    </form>
+
+                    <div class="switch-form">
+                        Don't have an account? <button onclick="switchTab('register')">Sign Up</button>
+                    </div>
+                </div>
+
+                <!-- Mobile Login Form -->
+                <div class="form-content" id="mobileLoginForm">
+                    <div class="input-group">
+                        <label>Mobile Number</label>
+                        <div class="input-wrapper">
+                            <span class="input-icon">📱</span>
+                            <input type="tel" id="mobileNumber" name="mobile" class="with-icon" placeholder="Enter 10-digit mobile number" maxlength="10" required>
+                        </div>
+                    </div>
+
+                    <button type="button" class="submit-btn" id="getOtpBtn" onclick="getOTP()">Get OTP</button>
+
+                    <div id="otpSection" style="display: none; margin-top: 20px;">
+                        <div class="input-group">
+                            <label>Enter OTP</label>
+                            <div class="input-wrapper">
+                                <span class="input-icon">🔢</span>
+                                <input type="text" id="otpInput" name="otp" class="with-icon" placeholder="Enter 6-digit OTP" maxlength="6" required>
+                            </div>
+                        </div>
+                        <div style="text-align: center; margin: 15px 0; font-size: 13px; color: #666;">
+                            OTP sent to <strong id="maskedNumber"></strong>
+                            <a href="#" onclick="getOTP(); return false;" style="color: var(--light-green); margin-left: 10px; text-decoration: none; font-weight: 600;">Resend</a>
+                        </div>
+                        <button type="button" class="submit-btn" onclick="verifyOTP()">Verify & Login</button>
+                    </div>
+
+                    <div style="text-align: center; margin-top: 20px;">
+                        <a href="#" onclick="switchTab('login'); return false;" style="color: var(--light-green); font-size: 14px; text-decoration: none; font-weight: 600;">← Back to Email Login</a>
+                    </div>
+
+                    <div class="switch-form">
+                        Don't have an account? <button onclick="switchTab('register')">Sign Up</button>
+                    </div>
+                </div>
+
+                <!-- Register Form -->
+                <div class="form-content" id="registerForm">
+                    <form>
+                        <div class="form-row">
+                            <div class="input-group">
+                                <label>Username</label>
+                                <input type="text" name="UserName" placeholder="Enter username" required>
+                            </div>
+
+                            <div class="input-group">
+                                <label>Mobile Number</label>
+                                <input type="tel" name="MobileNumber" placeholder="10-digit number" maxlength="10" required>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="input-group">
+                                <label>Date of Birth</label>
+                                <input type="text" id="dateOfBirth" name="DateOfBirth" placeholder="Select Date of Birth" required>
+                            </div>
+
+                            <div class="input-group">
+                                <label>Gender</label>
+                                <select name="Gender" required>
+                                    <option value="">Select</option>
+                                    <option value="male">Male</option>
+                                    <option value="female">Female</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+                        </div>
+
+
+                        <div class="form-row">
+                            <div class="input-group">
+                                <label>Email Address</label>
+                                <input type="email" name="Email" placeholder="your.email@example.com" required>
+                            </div>
+
+                            <div class="input-group">
+                                <label>Password</label>
+                                <div class="input-wrapper">
+                                    <input type="password" id="regPassword" name="Password" placeholder="Create password" required>
+                                    <span class="password-toggle" onclick="togglePassword('regPassword')">👁️</span>
+                                </div>
+                                @*<div style="font-size: 11px; color: #666; margin-top: 5px;">
+                                        8+ chars, uppercase, lowercase, number
+                                    </div>*@
+                            </div>
+                        </div>
+
+                        <div class="input-group">
+                            <label>Address</label>
+                            <input type="text" name="address" placeholder="Enter Your Address....." required>
+                        </div>
+
+
+                        <div class="terms-checkbox">
+                            <input type="checkbox" id="terms" name="TermsAccepted" required>
+                            <label for="terms">
+                                I agree to the Terms & Conditions and Privacy Policy
+                            </label>
+                        </div>
+
+                        <button type="submit" class="submit-btn">Create Account</button>
+                    </form>
+
+                    <div class="switch-form">
+                        Already have an account? <button onclick="switchTab('login')">Login</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Flatpickr CSS & JS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+    <script>
+
+        // =========================================================
+        // PASSWORD TOGGLE
+        // =========================================================
+        function togglePassword(fieldId) {
+            const field = document.getElementById(fieldId);
+            const toggle = field.parentElement.querySelector('.password-toggle');
+            if (field.type === 'password') {
+                field.type = 'text';
+                toggle.textContent = '🙈';
+            } else {
+                field.type = 'password';
+                toggle.textContent = '👁️';
+            }
+        }
+
+        // =========================================================
+        // TAB SWITCHING (LOGIN / REGISTER / MOBILE LOGIN)
+        // =========================================================
+        function switchTab(tab) {
+            const tabs = document.querySelectorAll('.tab-btn');
+            tabs.forEach(x => x.classList.remove('active'));
+
+            event.target.classList.add('active');
+
+            document.getElementById('loginForm').classList.remove('active');
+            document.getElementById('registerForm').classList.remove('active');
+            document.getElementById('mobileLoginForm').classList.remove('active');
+
+            if (tab === 'login') document.getElementById('loginForm').classList.add('active');
+            if (tab === 'register') document.getElementById('registerForm').classList.add('active');
+            if (tab === 'mobile') document.getElementById('mobileLoginForm').classList.add('active');
+        }
+
+        // =========================================================
+        // SHOW MOBILE / EMAIL LOGIN
+        // =========================================================
+        function showMobileLogin() {
+            document.getElementById('loginForm').classList.remove('active');
+            document.getElementById('mobileLoginForm').classList.add('active');
+        }
+
+        function showEmailLogin() {
+            document.getElementById('mobileLoginForm').classList.remove('active');
+            document.getElementById('loginForm').classList.add('active');
+
+            $("#mobileNumber").val('');
+            $("#otpInput").val('');
+            $("#otpSection").hide();
+        }
+
+        // =========================================================
+        // LOGIN USING EMAIL + PASSWORD
+        // =========================================================
+        $("#loginForm form").on("submit", function (e) {
+            e.preventDefault();
+
+            const email = $("#loginForm input[name='Email']").val().trim();
+            const password = $("#loginForm input[name='Password']").val().trim();
+
+            if (!email || !password) {
+                alert("Please enter both email and password");
+                return;
+            }
+
+            $.ajax({
+                url: "/Account/LoginByEmail",
+                type: "POST",
+                data: { Email: email, Password: password },
+                success: function (response) {
+                    if (response.success) {
+
+                        // *** FIX: TRANSFER GUEST CART TO USER CART AFTER LOGIN
+                        transferGuestCart(response.userId);
+
+                        alert(response.message);
+                        window.location.href = "/Customer/Checkout";
+                    } else {
+                        alert(response.message);
+                    }
+                },
+                error: function () {
+                    alert("Login failed. Try again later.");
+                }
+            });
+        });
+
+        // =========================================================
+        // SEND OTP FOR MOBILE LOGIN
+        // =========================================================
+        function getOTP() {
+
+            const mobile = $("#mobileNumber").val().trim();
+
+            if (!/^\d{10}$/.test(mobile)) {
+                alert("Please enter valid 10-digit mobile number");
+                return;
+            }
+
+            $.ajax({
+                url: "/Account/CheckMobile",
+                type: "POST",
+                data: { mobile: mobile },
+                success: function (response) {
+                    if (response.success) {
+
+                        $("#otpSection").show();
+
+                        const masked = mobile.substring(0, 2) + "XXXXXX" + mobile.substring(8);
+                        $("#maskedNumber").text(masked);
+
+                        $("#getOtpBtn").text("Resend OTP");
+
+                        alert("OTP sent! (Demo OTP: " + response.otp + ")");
+                    } else {
+                        alert(response.message);
+                    }
+                },
+                error: function () {
+                    alert("Error while sending OTP.");
+                }
+            });
+        }
+
+        // =========================================================
+        // OTP VERIFY
+        // =========================================================
+        function verifyOTP() {
+
+            const mobile = $("#mobileNumber").val().trim();
+            const otp = $("#otpInput").val().trim();
+
+            if (otp.length !== 6) {
+                alert("Please enter a valid 6-digit OTP");
+                return;
+            }
+
+            $.ajax({
+                url: "/Account/VerifyOTP",
+                type: "POST",
+                data: { mobile: mobile, otp: otp },
+                success: function (response) {
+                    if (response.success) {
+
+                        // *** FIX: MOVE GUEST CART ***
+                        transferGuestCart(response.userId);
+
+                        alert(response.message);
+                        window.location.href = "/Customer/Cart";
+                    } else {
+                        alert(response.message);
+                    }
+                },
+                error: function () {
+                    alert("Error verifying OTP.");
+                }
+            });
+        }
+
+        // =========================================================
+        // GUEST CART → USER CART TRANSFER (IMPORTANT FIX)
+        // =========================================================
+        function transferGuestCart(userId) {
+
+            let guestKey = "cart_user_guest";
+            let userKey = "cart_user_" + userId;
+
+            let guestCart = localStorage.getItem(guestKey);
+
+            if (guestCart) {
+                localStorage.setItem(userKey, guestCart);
+                localStorage.removeItem(guestKey);
+                console.log("Guest cart successfully moved to:", userKey);
+            }
+        }
+
+        // =========================================================
+        // REGISTRATION
+        // =========================================================
+        $("#registerForm form").submit(function (e) {
+            e.preventDefault();
+
+            $.ajax({
+                url: "/Customer/Register",
+                type: "POST",
+                data: $(this).serialize(),
+                success: function (response) {
+                    if (response.success) {
+                        alert(response.message);
+                        $("#registerForm form")[0].reset();
+
+                        setTimeout(() => switchTab("login"), 1500);
+                    } else {
+                        alert(response.message);
+                    }
+                },
+                error: function () {
+                    alert("Something went wrong.");
+                }
+            });
+        });
+
+        // =========================================================
+        // NUMBER-ONLY RESTRICTION (MOBILE + OTP)
+        // =========================================================
+        $(document).on("input", "input[type='tel'], #otpInput", function () {
+            this.value = this.value.replace(/[^0-9]/g, '');
+        });
+
+        // =========================================================
+        // DOB DATE PICKER
+        // =========================================================
+        document.addEventListener("DOMContentLoaded", function () {
+            if (document.getElementById("dateOfBirth")) {
+                flatpickr("#dateOfBirth", {
+                    dateFormat: "d-m-Y",
+                    maxDate: "today",
+                    altInput: true,
+                    altFormat: "F j, Y",
+                    allowInput: false
+                });
+            }
+        });
+
+    </script>
+
+</body>
+</html>

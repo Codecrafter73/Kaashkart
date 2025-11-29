@@ -1,0 +1,749 @@
+﻿
+@{
+    ViewBag.Title = "venderproduct";
+    Layout = "~/Views/Shared/_VenderLayout.cshtml";
+}
+
+
+
+<link href="https://cdn.datatables.net/1.10.15/css/jquery.dataTables.min.css" rel="stylesheet">
+
+<style>
+    :root {
+        --primary-green: #177e3f;
+        --primary-hover: #125e30;
+        --light-green: #e8f5ed;
+        --border-radius: 5px;
+    }
+
+    .page-header {
+        /*        background: linear-gradient(135deg, var(--primary-green) 0%, #1a9d4f 100%);*/
+        border-radius: var(--border-radius);
+        padding: 8px 20px;
+        margin-bottom: 2rem;
+        color: black;
+        box-shadow: 0 8px 24px rgba(23, 126, 63, 0.2);
+    }
+
+        .page-header h3 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin: 0;
+        }
+
+    .add-category-btn {
+        background: white;
+        color: var(--primary-green);
+        border: none;
+        border-radius: 5px;
+        padding: 10px 10px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        border: 0.5px solid gray;
+    }
+
+        .add-category-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+            background: #f8f9fa;
+            color: var(--primary-green);
+        }
+
+    .category-card {
+        border-radius: var(--border-radius);
+        transition: all 0.3s ease;
+        cursor: pointer;
+        border: 2px solid transparent;
+        background: white;
+        overflow: hidden;
+        position: relative;
+    }
+
+        .category-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--primary-green);
+            transition: width 0.3s ease;
+        }
+
+        .category-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 32px rgba(23, 126, 63, 0.15);
+            border-color: var(--primary-green);
+        }
+
+            .category-card:hover::before {
+                width: 100%;
+                opacity: 0.05;
+            }
+
+        .category-card .card-body {
+            padding: 1.5rem;
+        }
+
+        .category-card h6 {
+            font-size: 20px !important;
+            font-weight: 600;
+            color: #2c3e50;
+            margin: 0;
+        }
+
+        .category-card i {
+            color: var(--primary-green);
+            transition: transform 0.3s ease;
+            font-size: 25px !important;
+        }
+
+        .category-card:hover i {
+            transform: translateX(5px);
+        }
+
+    .empty-state {
+        text-align: center;
+        padding: 4rem 2rem;
+        background: var(--light-green);
+        border-radius: var(--border-radius);
+        border: 2px dashed var(--primary-green);
+    }
+
+        .empty-state i {
+            font-size: 4rem;
+            color: var(--primary-green);
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        .empty-state h5 {
+            color: var(--primary-green);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .empty-state p {
+            color: #5a6c7d;
+            margin: 0;
+        }
+
+    .modal-content {
+        border: none;
+        border-radius: var(--border-radius);
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+    }
+
+    .modal-header {
+        background: linear-gradient(135deg, var(--primary-green) 0%, #1a9d4f 100%);
+        color: white;
+        border-radius: var(--border-radius) var(--border-radius) 0 0;
+        padding: 1.5rem;
+        border: none;
+    }
+
+        .modal-header .modal-title {
+            font-weight: 600;
+            font-size: 1.3rem;
+        }
+
+        .modal-header .btn-close {
+            filter: brightness(0) invert(1);
+            opacity: 0.8;
+        }
+
+            .modal-header .btn-close:hover {
+                opacity: 1;
+            }
+
+    .modal-body {
+        padding: 2rem;
+    }
+
+    .form-label {
+        font-weight: 600;
+        color: #2c3e50;
+        margin-bottom: 0.5rem;
+        font-size: 0.95rem;
+    }
+
+    .form-control, .form-select {
+        border: 1px solid #e7e5e5 !important;
+        border-radius: 5px !important;
+        padding: 0.75rem 1rem;
+        transition: all 0.3s ease;
+        font-size: 1rem;
+    }
+
+        .form-control:focus {
+            border-color: var(--primary-green);
+            box-shadow: 0 0 0 4px rgba(23, 126, 63, 0.1);
+        }
+
+    .submit-btn {
+        width: 100%;
+        background: var(--primary-green);
+        color: white;
+        border: none;
+        border-radius: 10px;
+        padding: 0.9rem;
+        font-weight: 600;
+        font-size: 1.05rem;
+        transition: all 0.3s ease;
+        margin-top: 1rem;
+    }
+
+        .submit-btn:hover {
+            background: var(--primary-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(23, 126, 63, 0.3);
+        }
+
+        .submit-btn i {
+            margin-right: 0.5rem;
+        }
+
+    .category-count {
+        background: rgba(255, 255, 255, 0.2);
+        padding: 0.4rem 1rem;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        font-weight: 600;
+    }
+
+    .category-count {
+        padding: 6px 10px;
+        border-radius: 20px;
+        font-size: 14px;
+        font-weight: 600;
+    }
+
+
+    .add-category-btn {
+        padding: 8px 18px;
+    }
+
+    h3 {
+        font-family: Sitka Small !important;
+    }
+
+    .form-label {
+        font-size: 16px !important;
+    }
+
+    table thead tr th {
+        background-color: var(--primary-green) !important;
+        text-align: center !important;
+    }
+
+    td {
+        text-align: center !important;
+    }
+
+    .dataTables_empty {
+        display: none;
+    }
+
+    .dataTables_paginate .next, .previous {
+        background-color: var(--primary-green) !important;
+        color: white !important;
+    }
+
+
+    .form-control, .form-select {
+        height: 38px !important;
+    }
+
+    .dataTables_length label {
+        display: flex !important;
+    }
+
+    /* ✅ Search box border */
+    .dataTables_filter input {
+        border: 1px solid gray !important;
+        border-radius: 6px !important;
+        padding: 6px 10px !important;
+        margin: 10px 0px;
+    }
+
+    #DataTables_Table_0_previous, #DataTables_Table_0_next {
+        color: white !important;
+    }
+
+    /* Hide scrollbar by default */
+    .dataTables_scrollBody::-webkit-scrollbar {
+        height: 8px;
+        display: none;
+    }
+
+    .dataTables_scrollBody {
+        scrollbar-width: none; /* Firefox */
+    }
+
+        /* Show scrollbar on hover */
+        .dataTables_scrollBody:hover::-webkit-scrollbar {
+            display: block;
+        }
+
+        .dataTables_scrollBody:hover {
+            scrollbar-width: thin; /* Firefox */
+        }
+
+</style>
+
+<div class="page-header">
+    <div class="d-flex align-items-center gap-4 ">
+
+        <h3 class="mb-0 ">Product Management</h3>
+        <button class="add-category-btn btn fs-3 btn-md fw-bold ms-auto"
+                data-bs-toggle="modal" data-bs-target="#addProductModal"
+                style="border-radius: 10px; width: 200px;">
+            <i class="fas fa-plus me-2"></i>
+            Add Product
+        </button>
+
+    </div>
+</div>
+
+@model List<Kaasht_Kart.Models.VendorProductModel>
+
+
+<div class="container mt-4">
+    <div class="card p-3">
+        <div class="card-body ">
+            <table class="table table-responsive mydatatable">
+                <thead class="table-dark text-center">
+                    <tr>
+                        <th>#</th>
+                        <th>Image</th>
+                        <th>Sub Image</th>
+                        <th>Product Name</th>
+                        <th>Category</th>
+                        <th>Price (₹)</th>
+                        <th>Discount (%)</th>
+                        <th>Final Price (₹)</th>
+                        <th>Stock</th>
+                        <th>Unit</th>
+                        <th>Description</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @if (Model != null && Model.Count > 0)
+                    {
+                        int i = 1;
+                        foreach (var item in Model)
+                        {
+                            <tr class="text-center">
+                                <td>@i</td>
+                                <td>
+                                    @if (!string.IsNullOrEmpty(item.ProductImage))
+                                    { 
+                                        <button class="btn btn-sm btn-success viewMainBtn p-2 fs-4"
+                                                data-image="~/Content/VendorDocs/venderproduct/mainimage/@item.ProductImage">
+                                            <i class="fa fa-eye"></i> 
+                                        </button>
+                                    }
+                                    else
+                                    {
+                                        <span>No Image</span>
+                                    }
+                                </td>
+
+                                <td style="width:50px;">
+                                    @if (item.productsubimage != null && item.productsubimage.Count > 0)
+                                    {
+                                        <button class="btn btn-sm btn-success viewSubBtn p-2 fs-5"
+                                                data-images='@Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(item.productsubimage))'>
+                                            <i class="fa fa-eye"></i>  <i class="fas fa-image"></i> All
+                                        </button>
+                                    }
+                                    else
+                                    {
+                                        <span>No Sub Images</span>
+                                    }
+                                </td>
+
+                                <td>@item.ProductName</td>
+                                <td>@item.categoryname</td>
+                                <td>@item.Price</td>
+                                <td>@item.Discount</td>
+                                <td>@Convert.ToInt64(item.FinalPrice)</td>
+                                <td>@item.StockQuantity</td>
+                                <td>@item.unitquantity @item.Unit</td>
+                                <td >
+                                    @item.Description
+                                </td>
+
+                                <td>
+                                    @if (Convert.ToBoolean(item.Status))
+                                    {
+                                        <span class="badge bg-success p-3">Active</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-danger p-3">Inactive</span>
+                                    }
+                                </td>
+
+                            </tr>
+                            i++;
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="11" class="text-center text-danger fw-bold">
+                                No Products Found
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+<div class="modal fade" id="mainImgModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-body text-center">
+                <img id="mainModalImage" src="" class="img-fluid border rounded" />
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="subImgModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-body text-center">
+
+                <button id="prevImg" class="btn btn-dark btn-sm p-3">
+                    <i class="fa fa-arrow-left"></i>
+                </button>
+
+                <img id="subModalImage" src="" class="img-fluid mx-2 border rounded" style="max-height:450px;" />
+
+                <button id="nextImg" class="btn btn-dark btn-sm p-2">
+                    <i class="fa fa-arrow-right"></i>
+                </button>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+<!-- Add Product Modal -->
+<div class="modal fade" id="addProductModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-content border-0 shadow-lg rounded-4">
+
+            <div class="modal-header bg-success text-white rounded-top-4">
+                <h3 class="modal-title fs-3 text-light">
+                    <i class="fas fa-plus-circle me-2 "></i> Add New Product
+                </h3>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body p-5">
+                <form id="productForm" enctype="multipart/form-data">
+                    <div class="row g-4">
+
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold">Vender Id</label>
+                            <input type="text" name="vendorid" class="form-control" value="@ViewBag.VendorId" readonly />
+
+                        </div>
+                        <!-- Category -->
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold">Select Category</label>
+                            <select class="form-select form-select-lg fs-3" name="categoryname" required>
+                                <option value="">Choose category...</option>
+                                @foreach (var cat in ViewBag.Categories)
+                                {
+                                    <option value="@cat.categoryname">@cat.categoryname</option>
+                                }
+                            </select>
+                        </div>
+
+                        <!-- Product Name -->
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold">Product Name</label>
+                            <input type="text" class="form-control form-control-lg"
+                                   name="productname"
+                                   placeholder="Enter product name" required>
+                        </div>
+
+                        <!-- Price -->
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold">Price (₹)</label>
+                            <input type="number" class="form-control form-control-lg"
+                                   name="price" step="0.01" placeholder="0.00" required>
+                        </div>
+
+                        <!-- Discount -->
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold">Discount (%)</label>
+                            <input type="number" class="form-control form-control-lg"
+                                   name="discount" step="0.01" placeholder="0">
+                        </div>
+
+                        <!-- Final Price -->
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold">Final Price</label>
+                            <input type="text" class="form-control form-control-lg bg-light"
+                                   name="finalprice" readonly placeholder="Auto calculated">
+                        </div>
+
+                        <!-- Stock -->
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold">Stock Quantity</label>
+                            <input type="number" class="form-control form-control-lg"
+                                   name="StockQuantity"
+                                   placeholder="Enter stock" min="0">
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold">Unit Value</label>
+                            <input type="number" class="form-control form-control-lg"
+                                   name="unitquantity"
+                                   placeholder="Enter Unit Value" min="0">
+                        </div>
+
+                        <!-- Unit -->
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold">Unit</label>
+                            <select class="form-control form-control-lg fs-3" name="unit" required>
+                                <option value="">-- Select Unit --</option>
+                                <option value="Piece">Piece (pcs)</option>
+                                <option value="Kg">Kg</option>
+                                <option value="Gram">Gram</option>
+                                <option value="Litre">Litre</option>
+                                <option value="Packet">Packet</option>
+                            </select>
+                        </div>
+
+                        <!-- Product Image -->
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Product Image</label>
+                            <input type="file" class="form-control form-control-lg fs-3"
+                                   name="ProductImageFile" accept="image/*">
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Product Sub Image</label>
+                            <input type="file" class="form-control form-control-lg fs-3"
+                                   name="productsubimageupload" multiple accept="image/*">
+                        </div>
+
+                        <!-- Description -->
+                        <div class="col-12">
+                            <label class="form-label fw-bold">Description</label>
+                            <textarea class="form-control form-control-lg fs-3"
+                                      name="description" rows="3" style="height:70px !important;"
+                                      placeholder="Write description..."></textarea>
+                        </div>
+                    </div>
+
+                    <div class="text-end mt-4">
+                        <button type="submit" class="btn btn-success btn-lg px-5 p-3 fs-3 fw-bold">
+                            <i class="fas fa-check-circle me-2"></i> Save Product
+                        </button>
+                    </div>
+                </form>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<!--Table Printing Jquery-->
+<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+
+<!--Table function-->
+<link href="https://cdn.datatables.net/2.1.8/css/dataTables.dataTables.min.css" rel="stylesheet" />
+<script src="https://cdn.datatables.net/2.1.8/js/dataTables.min.js"></script>
+<!-- DataTables Buttons CSS -->
+<link rel="stylesheet" href="https://cdn.datatables.net/buttons/3.1.2/css/buttons.dataTables.css">
+
+<!-- DataTables Buttons JavaScript -->
+<script src="https://cdn.datatables.net/buttons/3.1.2/js/dataTables.buttons.js"></script>
+<script src="https://cdn.datatables.net/buttons/3.1.2/js/buttons.dataTables.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+<script src="https://cdn.datatables.net/buttons/3.1.2/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/3.1.2/js/buttons.print.min.js"></script>
+
+<script>
+
+    $(document).ready(function () {
+
+        // 🧮 Auto-calculate Final Price
+        $("input[name='price'], input[name='discount']").on("input", function () {
+            const price = parseFloat($("input[name='price']").val()) || 0;
+            const discount = parseFloat($("input[name='discount']").val()) || 0;
+            const finalPrice = price - (price * discount / 100);
+            $("input[name='finalprice']").val(finalPrice.toFixed(2));
+        });
+
+        // 🧾 Submit Product Form with Images
+        $("#productForm").on("submit", function (e) {
+            e.preventDefault();
+
+            // ✅ Basic Validation
+            let productName = $("input[name='productname']").val();
+            let price = $("input[name='price']").val();
+            let vendorId = $("input[name='vendorid']").val();
+
+            if (!vendorId || vendorId == "0") {
+                Swal.fire("Vendor ID Missing!", "Vendor not identified!", "warning");
+                return;
+            }
+            if (!productName) {
+                Swal.fire("Product Name Required!", "Please enter a product name.", "warning");
+                return;
+            }
+            if (!price || price <= 0) {
+                Swal.fire("Invalid Price!", "Please enter a valid price.", "warning");
+                return;
+            }
+
+            let formData = new FormData(this);
+
+            $.ajax({
+                url: "/Vender/addvenderproduct",
+                type: "POST",
+                data: formData,
+                processData: false,
+                contentType: false,
+
+                beforeSend: function () {
+                    $(".btn-custom").prop("disabled", true)
+                        .html('<i class="fas fa-spinner fa-spin"></i> Saving...');
+                },
+
+                success: function (response) {
+                    $(".btn-custom").prop("disabled", false)
+                        .html('<i class="fas fa-check-circle me-2"></i> Save Product');
+
+                    if (response.success) {
+                        Swal.fire({
+                            icon: "success",
+                            title: "✅ Success",
+                            text: response.message,
+                            timer: 1500,
+                            showConfirmButton: false
+                        });
+
+                        $("#addProductModal").modal("hide");
+                        $("#productForm")[0].reset();
+                        $("input[name='finalprice']").val("");
+                    } else {
+                        Swal.fire("❌ Failed", response.message, "error");
+                    }
+                },
+
+                error: function () {
+                    $(".btn-custom").prop("disabled", false)
+                        .html('<i class="fas fa-check-circle me-2"></i> Save Product');
+
+                    Swal.fire("❌ Error", "Something went wrong!", "error");
+                }
+            });
+        });
+
+    });
+
+
+
+    $(document).ready(function () {
+        let table = new DataTable(".mydatatable",
+            {
+                paging: true,
+                searching: true,
+                scrollX: true,
+                fixedHeader: true,
+                ordering: false,  // ❌ turn off sorting
+                language: {
+                    searchPlaceholder: "Search here...",
+                    search: "",
+                },
+                dom: '<"top d-flex justify-content-between"lfB>rt<"bottom d-flex justify-content-between mt-2"ip>',
+
+                buttons: [
+                    {
+                        extend: 'excelHtml5',
+                        text: '<i class="fas fa-file-excel"></i> Export Excel',
+                        className: 'btn btn-success btn-sm fw-bold'
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        text: '<i class="fas fa-file-pdf"></i> Export PDF',
+                        className: 'btn btn-danger btn-sm fw-bold',
+                        orientation: 'landscape',
+                        pageSize: 'A4'
+                    }
+                ]
+            });
+    });
+
+
+    let subImages = [];
+    let index = 0;
+
+    $(document).on("click", ".viewMainBtn", function () {
+        let imgPath = $(this).data("image");
+        imgPath = imgPath.replace("~", "");  // remove ~
+
+        $("#mainModalImage").attr("src", imgPath);
+        $("#mainImgModal").modal("show");
+    });
+
+    $(document).on("click", ".viewSubBtn", function () {
+        subImages = $(this).data("images");
+
+        // Add full folder path for sub images
+        subImages = subImages.map(img => "/Content/VendorDocs/venderproduct/subimage/" + img);
+
+        index = 0;
+
+        $("#subModalImage").attr("src", subImages[index]);
+        $("#subImgModal").modal("show");
+    });
+
+    $("#nextImg").click(function () {
+        if (subImages.length > 0) {
+            index = (index + 1) % subImages.length;
+            $("#subModalImage").attr("src", subImages[index]);
+        }
+    });
+
+    $("#prevImg").click(function () {
+        if (subImages.length > 0) {
+            index = (index - 1 + subImages.length) % subImages.length;
+            $("#subModalImage").attr("src", subImages[index]);
+        }
+    });
+
+
+
+</script>
+
+
+

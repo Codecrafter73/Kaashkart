@@ -1,0 +1,1064 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_CustomerLayout.cshtml";
+}
+<style>
+
+    element.style {
+    }
+
+    .rts-banner-area-one .banner-bg-image {
+        border-radius: 6px;
+    }
+
+    .bg_one-banner.two {
+        background-image: url('../../content/assets/images/banner/08.png');
+    }
+
+    .bg_one-banner {
+        background-image: url('../../content/assets/images/banner/01.png');
+    }
+
+    .swiper-container {
+        width: 100%;
+        height: 100%;
+        perspective: 1200px;
+    }
+
+    .pt_sm--20 {
+        padding: 10px 0px !important;
+    }
+
+    /* 🌈 Custom Styling for Category Tabs */
+    .best-selling-grocery {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        border-bottom: none;
+        gap: 10px;
+        margin-top: 20px;
+    }
+
+        .best-selling-grocery .nav-item {
+            margin: 5px;
+        }
+
+        .best-selling-grocery .nav-link {
+            border-radius: 30px;
+            padding: 5px 11px;
+            font-weight: 600;
+            font-size: 15px;
+            color: #333;
+            background: #f8f9fa;
+            border: 2px solid #ddd;
+            transition: all 0.3s ease-in-out;
+        }
+
+            .best-selling-grocery .nav-link:hover {
+                background-color: #198754;
+                color: white;
+                border-color: #198754;
+                transform: scale(1.05);
+                box-shadow: 0px 3px 10px rgba(25, 135, 84, 0.3);
+            }
+
+            .best-selling-grocery .nav-link.active {
+                background-color: #198754;
+                color: #fff;
+                border-color: #198754;
+                box-shadow: 0px 3px 8px rgba(25, 135, 84, 0.3);
+            }
+
+    /* 🌟 Responsive Design */
+    @@media (max-width: 768px) {
+        .best-selling-grocery {
+            flex-direction: column;
+            align-items: center;
+        }
+
+            .best-selling-grocery .nav-link {
+                width: 80%;
+                text-align: center;
+            }
+    }
+
+    .title-left {
+        margin-bottom: -36px !important;
+    }
+
+
+    /*card*/
+    .card-2 {
+        margin-right: 12px;
+        margin-left: 12px;
+        position: relative;
+        text-align: center;
+        margin-bottom: 20px;
+        min-height: 180px;
+        background: rgb(244, 246, 250);
+        border-width: 1px;
+        border-style: solid;
+        border-color: rgb(244, 246, 250);
+        border-image: initial;
+        border-radius: 10px;
+        padding: 20px 0px 18px;
+        transition: 0.2s;
+    }
+
+        .card-2:hover {
+            box-shadow: rgba(0, 0, 0, 0.05) 5px 5px 15px;
+            background: rgb(255, 255, 255);
+            border-width: 1px;
+            border-style: solid;
+            border-color: rgb(188, 227, 201);
+            border-image: initial;
+            transition: 0.2s;
+        }
+
+    .slick-slide {
+        display: block;
+    }
+
+    .bg-9 {
+        background-color: rgb(236, 255, 236) !important;
+        height: 230px !important;
+    }
+
+    .slide {
+        display: block;
+        flex-shrink: 0;
+        position: relative;
+        transition-property: transform;
+        width: 156px !important;
+    }
+
+    .category-image {
+        display: flex;
+        justify-content: center !important;
+        align-items: center !important;
+        height: 100%;
+        width: 137px;
+        visibility: visible;
+        animation-delay: 0.3s;
+        animation-name: fadeInUp;
+    }
+
+    .category-image {
+        width: 100%;
+        height: 140px; /* fixed height */
+        object-fit: cover; /* crop and maintain layout */
+        border-radius: 8px;
+    }
+
+    .swiper-slide .bottom {
+        text-align: center;
+        margin-top: 12px;
+        min-height: 60px; /* keeps category name area fixed */
+    }
+
+    .image-and-action-area-wrapper img {
+        width: 100%;
+        height: 220px; /* set your desired height */
+        object-fit: cover; /* crop and keep layout clean */
+        border-radius: 6px;
+    }
+
+
+    .form-select {
+        padding: 8px 12px;
+        font-size: 14px;
+        font-weight: 500;
+        color: #333;
+        background-color: #fff;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+        .form-select:hover {
+            border-color: #28a745;
+        }
+
+        .form-select:focus {
+            outline: none;
+            border-color: #28a745;
+            box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.1);
+        }
+
+
+    .unit-dropdown-wrapper {
+        position: relative;
+        margin-top: -5px;
+    }
+
+        .unit-dropdown-wrapper select {
+            width: 100%;
+            padding: 10px 40px 10px 12px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #1a202c;
+            background: linear-gradient(to bottom, #ffffff 0%, #f7fafc 100%);
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            cursor: pointer;
+            appearance: none;
+            transition: all 0.3s ease;
+        }
+
+            .unit-dropdown-wrapper select:hover {
+                border-color: #28a745;
+                background: #ffffff;
+                transform: translateY(-1px);
+                box-shadow: 0 4px 6px rgba(0,0,0,0.07);
+            }
+
+            .unit-dropdown-wrapper select:focus {
+                outline: none;
+                border-color: #28a745;
+                box-shadow: 0 0 0 4px rgba(40, 167, 69, 0.15);
+            }
+
+        .unit-dropdown-wrapper::after {
+            content: "▼";
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 10px;
+            color: #28a745;
+            pointer-events: none;
+        }
+
+    .product-grid-container {
+        padding: 20px 20px;
+    }
+
+    .product-card-wrapper {
+        margin-bottom: 10px;
+    }
+
+    .single-shopping-card-one {
+        background: #ffffff;
+        border-radius: 12px;
+        overflow: hidden;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        height: 95%;
+        display: flex;
+        flex-direction: column;
+        width:350px !important;
+    }
+
+    .single-shopping-card-one:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+    }
+
+    /* Image Section */
+    .image-and-action-area-wrapper {
+        position: relative;
+        overflow: hidden;
+        background: #f8f9fa;
+    }
+
+    .thumbnail-preview {
+        display: block;
+        position: relative;
+        padding-top: 100%; /* 1:1 Aspect Ratio */
+        overflow: hidden;
+    }
+
+    .thumbnail-preview img {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+    }
+
+    .single-shopping-card-one:hover .thumbnail-preview img {
+        transform: scale(1.05);
+    }
+
+    /* Badge */
+    .badge {
+        position: absolute;
+        top: 12px;
+        left: 12px;
+        z-index: 2;
+    }
+
+    .badge span {
+        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+        color: white !important;
+        padding: 6px 12px;
+        border-radius: 2px;
+        font-size: 12px;
+        font-weight: 700;
+        display: inline-block;
+        box-shadow: 0 2px 8px rgba(245, 158, 11, 0.3);
+    }
+
+    .badge i {
+        display: none;
+    }
+
+    /* Action Buttons */
+    .action-share-option {
+        position: absolute;
+        top: 12px;
+        right: 12px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        z-index: 2;
+        opacity: 0;
+        transform: translateX(10px);
+        transition: all 0.3s ease;
+    }
+
+    .single-shopping-card-one:hover .action-share-option {
+        opacity: 1;
+        transform: translateX(0);
+    }
+
+    .single-action {
+        width: 40px;
+        height: 40px;
+        background: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .single-action:hover {
+        background: #28a745;
+        color: white;
+        transform: scale(1.1);
+    }
+
+    .single-action i {
+        font-size: 16px;
+    }
+
+    /* Body Content */
+    .body-content {
+        padding: 16px;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .body-content .title {
+        font-size: 16px;
+        font-weight: 600;
+        color: #1a202c;
+        margin-bottom: 4px;
+        line-height: 1.4;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        transition: color 0.3s ease;
+    }
+
+    .body-content a:hover .title {
+        color: #28a745;
+    }
+
+    .body-content span {
+        font-size: 16px;
+        color: #718096;
+        margin-bottom: 2px;
+        display: block;
+    }
+
+    /* Price Area */
+    .price-area {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin: 12px 0;
+    }
+
+    .price-area .current {
+        font-size: 22px;
+        font-weight: 700;
+        color: #e53e3e;
+    }
+
+    .price-area .previous {
+        font-size: 15px;
+        color: #a0aec0;
+        text-decoration: line-through;
+    }
+
+    /* Custom Dropdown */
+    .custom-unit-select {
+        width: 100%;
+        padding: 0px 35px 10px 12px;
+        font-size: 14px;
+        font-weight: 600;
+        color: #2d3748;
+       
+        background-position: right 12px center;
+        background-size: 12px;
+        border: 2px solid #e2e8f0;
+        border-radius: 8px;
+        cursor: pointer;
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        transition: all 0.2s ease;
+        margin-bottom: 5px;
+    }
+
+    .custom-unit-select:hover {
+        border-color: #28a745;
+        box-shadow: 0 2px 4px rgba(40, 167, 69, 0.1);
+    }
+
+    .custom-unit-select:focus {
+        outline: none;
+        border-color: #28a745;
+        box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.15);
+    }
+
+    /* Add to Cart Button */
+    .quantity-edit {
+        margin-top: auto;
+    }
+
+    .add-to-cart-btn {
+        width: 100%;
+        padding: 12px;
+        background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 15px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+    }
+
+    .add-to-cart-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(40, 167, 69, 0.3);
+    }
+
+    .add-to-cart-btn i {
+        font-size: 16px;
+    }
+
+    /* Responsive */
+    @@media (max-width: 768px) {
+        .body-content .title {
+            font-size: 14px;
+        }
+
+        .price-area .current {
+            font-size: 18px;
+        }
+
+        .price-area .previous {
+            font-size: 13px;
+        }
+    }
+    .single-shopping-card-one .body-content .price-area {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: -5px !important;
+    }
+    .single-shopping-card-one .thumbnail-preview .badge span {
+        position: absolute;
+        top: 12px;
+        left:-28px;
+        font-size: 11px;
+        line-height: 1.1;
+        color: #2C3C28;
+        text-align: left;
+        font-weight: 700;
+    }
+
+    .title {
+        transition: 0.3s;
+        font-size:20px !;
+        margin-bottom: 2px !important;
+    }
+
+    .custom-dropdown-wrapper {
+        position: relative;
+        display: inline-block;
+        width: 100%;
+    }
+
+    .custom-unit-select {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #28a745;
+        border-radius: 8px;
+        background: #fff;
+        appearance: none;
+        cursor: pointer;
+        font-size: 14px;
+    }
+
+    /* Custom arrow */
+    .custom-dropdown-wrapper::after {
+        content: "\25BE"; /* down arrow */
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        pointer-events: none;
+    }
+
+    /* Dropdown open UPWARD */
+    .custom-unit-select:focus {
+        transform-origin: top center;
+    }
+
+     .custom-unit-select:focus option
+     {
+            position: absolute;
+            bottom: 100%;
+            left: 0;
+            width: 100%;
+     }
+    
+     .title-area-between {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        position: relative;
+        margin-bottom: 10px !important;
+    }
+    .custom-unit-select {
+        width: 100%;
+        padding: 1px 10px !important;
+        border: 1px solid #28a745;
+        border-radius: 8px;
+        background: #fff;
+        appearance: none;
+        cursor: pointer;
+        font-size: 14px;
+    }
+
+</style>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.css" />
+
+    <div class="background-light-gray-color rts-section-gap bg_light-1 pt_sm--20">
+        <!-- rts banner area start -->
+        <div class="rts-banner-area-one mb--30">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="category-area-main-wrapper-one">
+                            <div class="swiper mySwiper-category-1 swiper-data" data-swiper='{
+                        "spaceBetween":1,
+                        "slidesPerView":1,
+                        "loop": true,
+                        "speed": 2000,
+                        "autoplay":{"delay":"4000"},
+                        "navigation":{"nextEl":".swiper-button-next","prevEl":".swiper-button-prev"}
+                    }'>
+                                <div class="swiper-wrapper">
+
+                                    @foreach (var slider in ViewBag.Slider)
+                                    {
+                                        <div class="swiper-slide">
+                                            <div class="banner-bg-image bg_image ptb--120 ptb_md--80 ptb_sm--60"
+                                                 style="background-image:url('@Url.Content("../../content/Adminfile/Products/Bannerfile/" + slider.imagefilepath)');">
+                                                <div class="banner-one-inner-content">
+                                                    <span class="pre">Get up to 30% off on your first $150 purchase</span>
+                                                    <h1 class="title">@slider.bannername</h1>
+                                                    <a href="shop-grid-sidebar-1.html" class="rts-btn btn-primary radious-sm with-icon">
+                                                        <div class="btn-text">Shop Now</div>
+                                                        <div class="arrow-icon"><i class="fa-light fa-arrow-right"></i></div>
+                                                        <div class="arrow-icon"><i class="fa-light fa-arrow-right"></i></div>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+
+
+                                </div>
+
+                                <button class="swiper-button-next"><i class="fa-regular fa-arrow-right"></i></button>
+                                <button class="swiper-button-prev"><i class="fa-regular fa-arrow-left"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <!-- rts banner area end -->
+        <!-- rts category area satart -->
+        <div class="rts-category-area-one py-4">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <h2 class="featured-title">All Categories </h2>
+                        <div class="category-area-main-wrapper-one">
+                            <div class="swiper mySwiper-category-1 swiper-data"
+                                 data-swiper='{
+                                 "spaceBetween":15,
+                                 "slidesPerView":6,
+                                 "loop": false,
+                                 "speed": 800,
+                                 "breakpoints":{
+                                     "0":{"slidesPerView":2,"spaceBetween":10},
+                                     "480":{"slidesPerView":3,"spaceBetween":10},
+                                     "768":{"slidesPerView":4,"spaceBetween":12},
+                                     "1024":{"slidesPerView":6,"spaceBetween":15}
+                                 }
+                             }'>
+
+                                @if (ViewBag.getallcategories != null && ViewBag.getallcategories.Count > 0)
+                                {
+                                    <div class="swiper-wrapper">
+                                        @foreach (var cat in ViewBag.getallcategories)
+                                        {
+                                            string img = Url.Content("~/Content/Adminfile/Products/Categoryimage/" + cat.categoryimagepath);
+
+                                            <div class="swiper-slide slide card-2 bg-9 wow animate__ animate__fadeInUp slick-slide slick-current slick-active">
+                                                <figure class="img-hover-scale overflow-hidden">
+                                                    <a href="/Customer/getcategorywiseproductdetails?categoryname=@cat.categoryname" tabindex="0">
+                                                        <img class="category-image" src="@img" alt="@cat.categoryname" />
+                                                    </a>
+                                                </figure>
+                                                <div class="bottom">
+                                                    <h6 class="mt-3 mb-0">
+                                                        <a href="/Customer/getcategorywiseproductdetails?categoryname=@cat.categoryname" tabindex="0">
+                                                            @cat.categoryname
+                                                        </a>
+                                                    </h6>
+                                                    <span>26 items</span>
+                                                </div>
+                                            </div>
+                                        }
+                                    </div>
+                                }
+                                else
+                                {
+                                    <span>No categories available</span>
+                                }
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- rts category area end -->
+    </div>
+
+
+    <!-- rts grocery feature area start -->
+    <div class="rts-grocery-feature-area rts-section-gapBottom">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+
+                    <div class="title-area-between">
+                        <h2 class="featured-title mt-5 mb-2">Featured Categories</h2>
+                        <div class="next-prev-swiper-wrapper">
+                            <div class="swiper-button-prev"><i class="fa-regular fa-chevron-left"></i></div>
+                            <div class="swiper-button-next"><i class="fa-regular fa-chevron-right"></i></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="container product-grid-container">
+            <div class="row">
+                @foreach (var p in ViewBag.gettopproduct)
+                {
+                    string mainImg = "/Content/no-image.png";
+                    if (!string.IsNullOrEmpty(p.ProductImagePath))
+                    {
+                        mainImg = "/Content/AdminFile/Products/mainimages/" + p.ProductImagePath;
+                    }
+
+                    decimal displayPrice = p.Price != null && p.Price.Count > 0 ? p.Price[0] : 0;
+                    decimal displayFinalPrice = p.FinalPrice != null && p.FinalPrice.Count > 0 ? p.FinalPrice[0] : displayPrice;
+                    int displayDiscount = p.Discount != null && p.Discount.Count > 0 ? Convert.ToInt32(p.Discount[0]) : 0;
+
+                    // Combine unit and quantity
+                    List<string> unitsCombined = new List<string>();
+                    if (p.UnitQuantity != null && p.Unit != null && p.UnitQuantity.Count == p.Unit.Count)
+                    {
+                        for (int i = 0; i < p.UnitQuantity.Count; i++)
+                        {
+                            unitsCombined.Add(p.UnitQuantity[i] + " " + p.Unit[i]);
+                        }
+                    }
+                    string displayUnit = unitsCombined.Count > 0 ? unitsCombined[0] : "";
+
+                    <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-6 product-card-wrapper">
+                        <div class="single-shopping-card-one" data-product-id="@p.ProductId">
+
+                            <!-- Image Section -->
+                            <div class="image-and-action-area-wrapper">
+                                <a href="@Url.Action("productdetails", "Customer", new { id = p.ProductId })" class="thumbnail-preview">
+                                    <div class="badge">
+                                        <span class="discount-badge-@p.ProductId">@displayDiscount% Off</span>
+                                    </div>
+                                    <img src="@mainImg" alt="@p.ProductName" />
+                                </a>
+
+                                @*<div class="action-share-option">
+                                    <div class="single-action openuptip message-show-action" data-flow="up" title="Add To Wishlist">
+                                        <i class="fa-light fa-heart"></i>
+                                    </div>
+                                    <div class="single-action openuptip" data-flow="up" title="Compare" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                        <i class="fa-solid fa-arrows-retweet"></i>
+                                    </div>
+                                    <div class="single-action openuptip cta-quickview product-details-popup-btn" data-flow="up" title="Quick View">
+                                        <i class="fa-regular fa-eye"></i>
+                                    </div>
+                                </div>*@
+                            </div>
+                            <!-- Image Section End -->
+                            <!-- Body Content -->
+                            <div class="body-content">
+                                <a href="@Url.Action("productdetails", "Customer", new { id = p.ProductId })">
+                                    <h4 class="title fs-3">@p.ProductName</h4>
+                                    @if (!string.IsNullOrEmpty(p.tagline))
+                                    {
+                                        <span class="mb-3">@p.tagline</span>
+                                    }
+                                </a>
+
+                                <div class="price-area">
+                                    <span class="current current-price-@p.ProductId">₹@displayFinalPrice</span>
+                                    <div class="previous original-price-@p.ProductId">₹@displayPrice</div>
+                                </div>
+
+                                <div class="custom-dropdown-wrapper">
+                                    <select class="custom-unit-select"
+                                            onchange="updatePrice@(p.ProductId)(this)">
+                                        @if (unitsCombined.Count > 0 && p.Price != null && p.FinalPrice != null)
+                                        {
+                                            for (int i = 0; i < unitsCombined.Count; i++)
+                                            {
+                                                var finalPrice = i < p.FinalPrice.Count ? p.FinalPrice[i] : 0;
+                                                var originalPrice = i < p.Price.Count ? p.Price[i] : 0;
+                                                var discount = i < p.Discount.Count ? p.Discount[i] : 0;
+
+                                                <option value="@i"
+                                                        data-finalprice="@finalPrice"
+                                                        data-originalprice="@originalPrice"
+                                                        data-discount="@discount">
+                                                    @unitsCombined[i]
+                                                </option>
+                                            }
+                                        }
+                                    </select>
+                                </div>
+
+
+                                <script>
+                            function updatePrice@(p.ProductId)(selectElement) {
+                                var selectedOption = selectElement.options[selectElement.selectedIndex];
+                                var finalPrice = selectedOption.getAttribute('data-finalprice');
+                                var originalPrice = selectedOption.getAttribute('data-originalprice');
+                                var discount = selectedOption.getAttribute('data-discount');
+
+                                // Update prices
+                                document.querySelector('.current-price-@p.ProductId').textContent = '₹' + finalPrice;
+                                document.querySelector('.original-price-@p.ProductId').textContent = '₹' + originalPrice;
+
+                                // Update discount badge
+                                if (discount && discount > 0) {
+                                    document.querySelector('.discount-badge-@p.ProductId').textContent = Math.round(discount) + '% Off';
+                                }
+                            }
+                                </script>
+
+                                <div class="quantity-edit">
+                                    <button class="add-to-cart-btn"
+                                            data-id="@p.ProductId"
+                                            data-name="@p.ProductName"
+                                            data-price="@displayFinalPrice"
+                                            data-image="@mainImg">
+                                        <i class="fa-regular fa-cart-shopping"></i>
+                                        <span class="text-light">Add to Cart</span>
+                                    </button>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+
+
+
+    </div>
+    <!-- rts grocery feature area end -->
+    <!-- rts category feature area start -->
+    <div class="category-feature-area rts-section-gapTop">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-lg-3 col-md-6 col-sm-12 col-12">
+                    <div class="single-feature-card bg_image one">
+                        <div class="content-area">
+                            <a href="shop-grid-sidebar-1.html" class="rts-btn btn-primary">Weekend Discount</a>
+                            <h3 class="title">
+                                Drink Fresh Corn Juice <br>
+                                <span>Good Taste</span>
+                            </h3>
+                            <a href="shop-grid-sidebar-1.html" class="shop-now-goshop-btn">
+                                <span class="text">Shop Now</span>
+                                <div class="plus-icon">
+                                    <i class="fa-sharp fa-regular fa-plus"></i>
+                                </div>
+                                <div class="plus-icon">
+                                    <i class="fa-sharp fa-regular fa-plus"></i>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 col-sm-12 col-12">
+                    <div class="single-feature-card bg_image two">
+                        <div class="content-area">
+                            <a href="shop-grid-sidebar-1.html" class="rts-btn btn-primary">Weekend Discount</a>
+                            <h3 class="title">
+                                Organic Lemon Flavored
+                                <span>Banana Chips</span>
+                            </h3>
+                            <a href="shop-grid-sidebar-1.html" class="shop-now-goshop-btn">
+                                <span class="text">Shop Now</span>
+                                <div class="plus-icon">
+                                    <i class="fa-sharp fa-regular fa-plus"></i>
+                                </div>
+                                <div class="plus-icon">
+                                    <i class="fa-sharp fa-regular fa-plus"></i>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 col-sm-12 col-12">
+                    <div class="single-feature-card bg_image three">
+                        <div class="content-area">
+                            <a href="shop-grid-sidebar-1.html" class="rts-btn btn-primary">Weekend Discount</a>
+                            <h3 class="title">
+                                Nozes Pecanera Brasil
+                                <span>Chocolate Snacks</span>
+                            </h3>
+                            <a href="shop-grid-sidebar-1.html" class="shop-now-goshop-btn">
+                                <span class="text">Shop Now</span>
+                                <div class="plus-icon">
+                                    <i class="fa-sharp fa-regular fa-plus"></i>
+                                </div>
+                                <div class="plus-icon">
+                                    <i class="fa-sharp fa-regular fa-plus"></i>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 col-sm-12 col-12">
+                    <div class="single-feature-card bg_image four">
+                        <div class="content-area">
+                            <a href="shop-grid-sidebar-1.html" class="rts-btn btn-primary">Weekend Discount</a>
+                            <h3 class="title">
+                                Strawberry Water Drinks
+                                <span>Flavors Awesome</span>
+                            </h3>
+                            <a href="shop-grid-sidebar-1.html" class="shop-now-goshop-btn">
+                                <span class="text">Shop Now</span>
+                                <div class="plus-icon">
+                                    <i class="fa-sharp fa-regular fa-plus"></i>
+                                </div>
+                                <div class="plus-icon">
+                                    <i class="fa-sharp fa-regular fa-plus"></i>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- rts category feature area end -->
+
+
+    <!-- best selling groceris -->
+    <div class="weekly-best-selling-area rts-section-gap bg_light-1">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 col-sm-12 col-sm-3 col-md-3">
+                    <div class="title-area-between">
+                        <h2 class="title-left">
+                            Weekly Best Selling Groceries
+                        </h2>
+
+                        @if (Model != null && Model.Count > 0)
+                        {
+                            <ul class="nav nav-tabs best-selling-grocery category-tab" role="tablist">
+                                @foreach (var cat in ViewBag.Categories)
+                                {
+                                    <li class="nav-item" role="presentation">
+                                        <a href="javascript:void(0);"
+                                           class="nav-link @(cat.categoryname == ViewBag.DefaultCategoryName ? "active" : "") category-link"
+                                           data-category="@cat.categoryname">
+                                            <i class="fas fa-tags me-2"></i>@cat.categoryname
+                                        </a>
+                                    </li>
+                                }
+                            </ul>
+
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <!-- Loader -->
+            <div id="loader" class="text-center my-5" style="display:none;">
+                <div class="spinner-border text-success" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+            </div>
+
+            <!-- ✅ Product Container -->
+            <div class="row g-4" id="productContainer">
+                @Html.Partial("_ProductListPartial", ViewBag.DefaultCategoryProducts as List<Kaasht_Kart.Models.productmodel>)
+            </div>
+
+
+        </div>
+    </div>
+    <!-- best selling groceris end -->
+
+
+
+
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+
+    <script>
+        $(document).ready(function () {
+
+            // When any category link is clicked
+            $(".category-link").on("click", function () {
+                var category = $(this).data("category");
+
+                // Remove 'active' from all links, add to current one
+                $(".category-link").removeClass("active");
+                $(this).addClass("active");
+
+                // Show loader and hide product container
+                $("#loader").show();
+                $("#productContainer").hide();
+
+                // AJAX call to fetch category-wise products
+                $.ajax({
+                    url: '/Customer/ProductListPartial',
+                    type: 'GET',
+                    data: { categoryname: category },
+                    success: function (html) {
+                        $("#loader").hide();
+                        $("#productContainer").html(html).fadeIn();
+                    },
+                    error: function () {
+                        $("#loader").hide();
+                        $("#productContainer").html('<p class="text-center text-danger">⚠️ Error loading products.</p>').fadeIn();
+                    }
+                });
+            });
+        });
+
+
+
+        document.addEventListener("DOMContentLoaded", function () {
+
+            document.querySelectorAll(".addToCartBtn").forEach(btn => {
+
+                btn.addEventListener("click", function (e) {
+                    e.preventDefault();
+
+                    let productId = this.dataset.id;
+                    let productName = this.dataset.name;
+                    let productPrice = this.dataset.price;
+                    let productImage = this.dataset.image;
+                    let productUnit = this.dataset.unit || "1 pc";
+
+                    // Call function to add cart
+                    addToCart(productId, productName, productPrice, productImage, productUnit);
+                });
+            });
+
+        });
+
+
+
+        $(document).on('click', '.addToCartBtn', function () {
+
+            var id = $(this).data("id");
+
+            $.ajax({
+                url: '/Customer/AddToCart',
+                type: 'POST',
+                data: { productId: id, qty: 1 },
+                success: function (response) {
+
+                },
+                error: function () {
+                    alert("Error adding to cart");
+                }
+            });
+
+        });
+
+        $(document).ready(function () {
+            // Unit dropdown change होने पर price update करें
+            $('.unit-selector').on('change', function () {
+                const selectedIndex = parseInt($(this).val());
+                const card = $(this).closest('.single-shopping-card-one');
+
+                // Get price arrays from data attributes
+                const finalPrices = $(this).data('prices');
+                const originalPrices = $(this).data('original-prices');
+                const discounts = $(this).data('discounts');
+
+                // Update prices
+                if (finalPrices && finalPrices[selectedIndex] !== undefined) {
+                    card.find('.current-price').text('₹' + finalPrices[selectedIndex]);
+                }
+
+                if (originalPrices && originalPrices[selectedIndex] !== undefined) {
+                    card.find('.original-price').text('₹' + originalPrices[selectedIndex]);
+                }
+
+                // Update discount badge
+                if (discounts && discounts[selectedIndex] !== undefined) {
+                    const discountValue = Math.round(discounts[selectedIndex]);
+                    card.find('.discount-badge').html(discountValue + '% <br /> Off');
+                }
+            });
+        });
+    </script>

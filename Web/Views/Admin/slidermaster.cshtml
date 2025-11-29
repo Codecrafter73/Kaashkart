@@ -1,0 +1,571 @@
+﻿
+@{
+    ViewBag.Title = "slidermaster";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet" />
+
+<style>
+    :root {
+        --primary-green: #177e3f;
+        --primary-hover: #125e30;
+        --light-green: #e8f5ed;
+        --border-radius: 10px;
+    }
+
+    .page-header {
+        /*        background: linear-gradient(135deg, var(--primary-green) 0%, #1a9d4f 100%);*/
+        border-radius: var(--border-radius);
+        padding: 5px 15px;
+        margin-bottom: 2rem;
+        color: var(--primary-green);
+        box-shadow: 0 8px 24px rgba(23, 126, 63, 0.2);
+    }
+
+        .page-header h3 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin: 0;
+        }
+
+    .add-category-btn {
+        background: white;
+        color: var(--primary-green);
+        border: none;
+        border-radius: 12px;
+        padding: 12px 24px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+        .add-category-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+            background: #f8f9fa;
+            color: var(--primary-green);
+        }
+
+    .category-card {
+        border-radius: var(--border-radius);
+        transition: all 0.3s ease;
+        cursor: pointer;
+        border: 2px solid transparent;
+        background: white;
+        overflow: hidden;
+        position: relative;
+    }
+
+        .category-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--primary-green);
+            transition: width 0.3s ease;
+        }
+
+        .category-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 32px rgba(23, 126, 63, 0.15);
+            border-color: var(--primary-green);
+        }
+
+            .category-card:hover::before {
+                width: 100%;
+                opacity: 0.05;
+            }
+
+        .category-card .card-body {
+            padding: 1.5rem;
+        }
+
+        .category-card h6 {
+            font-size: 20px !important;
+            font-weight: 600;
+            color: #2c3e50;
+            margin: 0;
+        }
+
+        .category-card i {
+            color: var(--primary-green);
+            transition: transform 0.3s ease;
+            font-size: 25px !important;
+        }
+
+        .category-card:hover i {
+            transform: translateX(5px);
+        }
+
+    .empty-state {
+        text-align: center;
+        padding: 4rem 2rem;
+        background: var(--light-green);
+        border-radius: var(--border-radius);
+        border: 2px dashed var(--primary-green);
+    }
+
+        .empty-state i {
+            font-size: 4rem;
+            color: var(--primary-green);
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        .empty-state h5 {
+            color: var(--primary-green);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .empty-state p {
+            color: #5a6c7d;
+            margin: 0;
+        }
+
+    .modal-content {
+        border: none;
+        border-radius: var(--border-radius);
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+    }
+
+    .modal-header {
+        background: linear-gradient(135deg, var(--primary-green) 0%, #1a9d4f 100%);
+        color: white;
+        border-radius: var(--border-radius) var(--border-radius) 0 0;
+        padding: 1.5rem;
+        border: none;
+    }
+
+        .modal-header .modal-title {
+            font-weight: 600;
+            font-size: 1.3rem;
+        }
+
+        .modal-header .btn-close {
+            filter: brightness(0) invert(1);
+            opacity: 0.8;
+        }
+
+            .modal-header .btn-close:hover {
+                opacity: 1;
+            }
+
+    .modal-body {
+        padding: 2rem;
+    }
+
+    .form-label {
+        font-weight: 600;
+        color: #2c3e50;
+        margin-bottom: 0.5rem;
+        font-size: 0.95rem;
+    }
+
+    .form-control {
+        border: 2px solid #e0e6ed;
+        border-radius: 10px;
+        padding: 0.75rem 1rem;
+        transition: all 0.3s ease;
+        font-size: 1rem;
+    }
+
+        .form-control:focus {
+            border-color: var(--primary-green);
+            box-shadow: 0 0 0 4px rgba(23, 126, 63, 0.1);
+        }
+
+    .submit-btn {
+        width: 100%;
+        background: var(--primary-green);
+        color: white;
+        border: none;
+        border-radius: 10px;
+        padding: 0.9rem;
+        font-weight: 600;
+        font-size: 1.05rem;
+        transition: all 0.3s ease;
+        margin-top: 1rem;
+    }
+
+        .submit-btn:hover {
+            background: var(--primary-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(23, 126, 63, 0.3);
+        }
+
+        .submit-btn i {
+            margin-right: 0.5rem;
+        }
+
+    .category-count {
+        background: rgba(255, 255, 255, 0.2);
+        padding: 0.4rem 1rem;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        font-weight: 600;
+    }
+
+    .category-count {
+        padding: 6px 10px;
+        border-radius: 20px;
+        font-size: 14px;
+        font-weight: 600;
+    }
+
+
+    .add-category-btn {
+        padding: 8px 18px;
+    }
+
+    h3 {
+        font-family: Sitka Small !important;
+        color: var(--primary-green);
+    }
+    /* Toggle Switch */
+    .switch {
+        position: relative;
+        display: inline-block;
+        width: 48px;
+        height: 24px;
+    }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+    .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        transition: .4s;
+        border-radius: 34px;
+    }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+    /* Checked State */
+    .slider-img-box {
+        position: relative;
+        width: 70px;
+        height: 50px;
+        border-radius: 8px;
+        overflow: hidden;
+        cursor: pointer;
+    }
+
+    .slider-thumb {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 6px;
+    }
+
+    /* Eye icon overlay */
+    .view-icon {
+        position: absolute;
+        top: 7px;
+        right: 14px;
+        background: rgba(0,0,0,0.7);
+        color: white !important;
+        padding: 5px 6px;
+        border-radius: 50%;
+        font-size: 11px;
+    }
+
+    .slider-img-box:hover .view-icon {
+        opacity: 1;
+    }
+
+
+    /* Toggle Switch Style */
+    .switch {
+        position: relative;
+        display: inline-block;
+        width: 55px;
+        height: 28px;
+    }
+
+        .switch input {
+            display: none;
+        }
+
+    .slider.round {
+        border-radius: 34px;
+    }
+
+    .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        transition: .3s;
+        border-radius: 50px;
+    }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 22px;
+            width: 22px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .3s;
+            border-radius: 50%;
+        }
+
+    /* ✅ ON (Active - Green) */
+    input:checked + .slider {
+        background-color: #28a745 !important; /* Success Green */
+    }
+
+        /* ✅ Button circle shift when ON */
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+</style>
+
+@if (TempData["msg"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @TempData["msg"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+
+
+
+<div class="page-header">
+    <div class="d-flex align-items-center gap-4 ">
+
+        <h3 class="mb-0 ">Slider Management</h3>
+        <button class="add-category-btn btn btn-primary fs-3 btn-md fw-bold ms-auto"
+                data-bs-toggle="modal" data-bs-target="#addSliderModal"
+                style="border-radius: 10px; width: 210px;">
+            <i class="fas fa-plus me-2"></i>
+            Add New Slider
+        </button>
+
+    </div>
+</div>
+
+@{
+    var sliders = ViewBag.sliderlist;
+}
+
+
+
+
+@if (sliders != null && sliders.Rows.Count > 0)
+{
+    <div class="row g-4">
+        @foreach (System.Data.DataRow item in sliders.Rows)
+        {
+            <div class="col-md-6 col-lg-4">
+                <div class="card category-card shadow-sm">
+                    <div class="card-body d-flex justify-content-between align-items-center">
+
+                        <div class="d-flex align-items-center">
+                            <!-- Image Box With Eye Icon -->
+                            <div class="slider-img-box me-3" onclick="openSliderModal('@item["files"]')">
+                                @if (!Convert.IsDBNull(item["files"]) && !string.IsNullOrEmpty(item["files"].ToString()))
+                                {
+                                    <img class="slider-thumb"
+                                         src="~/Content/Adminfile/Products/Bannerfile/@item["files"].ToString()" />
+                                }
+                                else
+                                {
+                                    <img class="slider-thumb" src="~/Content/no-image.png" />
+                                }
+
+                                <div class="view-icon"><i class="fas fa-eye text-light"></i></div>
+                            </div>
+
+                            <h6 class="mb-0">@item["ImageName"]</h6>
+                        </div>
+
+                        <!-- Slider Status Toggle -->
+                        <label class="switch">
+                            <input type="checkbox" class="sliderStatus"
+                                   data-id="@item["SliderId"]"
+                                   @(Convert.ToBoolean(item["IsActive"]) ? "checked" : "") />
+                            <span class="slider round"></span>
+                        </label>
+
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+else
+{
+    <div class="empty-state text-center">
+        <i class="fas fa-image fa-3x mb-3"></i>
+        <h5>No Sliders Yet</h5>
+        <p>Add a slider to begin</p>
+    </div>
+}
+
+<!-- Add Slider Modal -->
+<div class="modal fade" id="addSliderModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title fs-3 text-light">
+                    <i class="fas fa-images me-2"></i>
+                    Add New Slider
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+                <form id="sliderForm" enctype="multipart/form-data" method="post">
+
+                    <!-- Image Name -->
+                    <div class="mb-3">
+                        <label class="form-label fs-3">
+                            <i class="fas fa-tag me-1"></i>
+                            Slider Name
+                        </label>
+                        <input type="text" class="form-control p-2 rounded border border-success"
+                               name="bannername" id="sliderName"
+                               placeholder="Enter slider image name"
+                               required>
+                    </div>
+
+                    <!-- Image File -->
+                    <div class="mb-3">
+                        <label class="form-label fs-3">
+                            <i class="fas fa-image me-1"></i>
+                            Slider Image
+                        </label>
+                        <input type="file" class="form-control p-2 rounded border border-success"
+                               id="sliderImageFile" name="imagefile"
+                               accept="image/*" required style="font-size:14px;" />
+                    </div>
+
+                    <!-- Preview -->
+                    <div class="text-center mb-3">
+                        <img id="sliderPreview" src="#" alt="Preview"
+                             style="display:none; width:150px; height:120px; border-radius:10px; border:2px solid #198754;">
+                    </div>
+
+                    <!-- Status -->
+                    <!--<div class="mb-3">
+                        <label class="form-label">
+                            <i class="fas fa-toggle-on me-1"></i> Status
+                        </label>
+                        <select name="IsActive" class="form-control border-success" style="font-size:14px;">
+                            <option value="true">Active</option>
+                            <option value="false">Inactive</option>
+                        </select>
+                    </div>-->
+
+                    <button type="submit" class="submit-btn fs-3 w-100">
+                        <i class="fas fa-check-circle me-1"></i>
+                        Add Slider
+                    </button>
+
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="sliderModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-light">Slider Preview</h5>
+                <button class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body text-center">
+                <img id="modalSliderImage" src="" style="width:100%; border-radius:10px;" />
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    $(".sliderStatus").change(function () {
+        var sliderId = $(this).data("id");
+        var status = $(this).is(":checked");
+
+        $.ajax({
+            url: '/Admin/UpdateSliderStatus',
+            type: 'POST',
+            data: { sliderId: sliderId, status: status },
+            success: function (res) {
+                if (res.success) {
+                    Swal.fire({
+                        icon: "success",
+                        title: "Status Updated!",
+                        text: res.message, // ✅ dynamic message
+                        timer: 1500,
+                        showConfirmButton: false
+                    });
+                } else {
+                    Swal.fire({
+                        icon: "error",
+                        title: "Update Failed!",
+                        text: res.message
+                    });
+                }
+            },
+            error: function () {
+                Swal.fire({
+                    icon: "error",
+                    title: "Error!",
+                    text: "Something went wrong while updating status."
+                });
+            }
+        });
+    });
+
+
+
+    function openSliderModal(imageName) {
+        if (!imageName) return;
+
+        var fullImagePath = "/Content/Adminfile/Products/Bannerfile" + imageName;
+        $("#modalSliderImage").attr("src", fullImagePath);
+        $("#sliderModal").modal("show");
+    }
+
+
+
+</script>
+
+

@@ -1,0 +1,1150 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>KaashtKart - Fresh Fields, Digital Feast | Online Grocery & Farm Fresh Produce</title>
+    <!-- plugins css -->
+    <link rel="stylesheet preload" href="~/Content/assets/css/plugins-1.css" as="style">
+    <link rel="stylesheet preload" href="~/Content/assets/css/style-1.css" as="style">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            font-family: "Montserrat", sans-serif;
+            font-optical-sizing: auto;
+            font-style: normal;
+        }
+        h1, h2, h3, h4, h5, h6, a {
+            font-family: "Quicksand", sans-serif !important;
+            font-optical-sizing: auto;
+            font-style: normal;
+        }
+
+        :root {
+            --color-primary: #177e3f !important;
+        }
+
+        @@media only screen and (min-width: 1200px) and (max-width: 1599px) {
+            .logo-search-category-wrapper .category-search-wrapper .search-header input {
+                width: 600px;
+            }
+        }
+
+        .header-top-area {
+            background: var(--color-primary);
+            padding: 10px 0;
+        }
+
+        .rts-btn.btn-primary {
+            background: var(--color-primary);
+        }
+
+        .single-footer-wized .call-area .info .number {
+            color: var(--color-primary);
+        }
+
+        .search-header-area-main {
+            padding: 10px 0 !important;
+            border-top: 1px solid #E2E2E2;
+        }
+
+        .logo {
+            -ms-interpolation-mode: bicubic;
+            border: 0;
+            vertical-align: middle;
+            max-width: 100%;
+            height: 80px !important;
+        }
+
+        .progress-bar-bg {
+            width: 100%;
+            height: 6px;
+            background: #e5e5e5;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            width: 0%;
+            background: #66bb2a; /* Green Color */
+            transition: width 0.4s ease;
+        }
+
+        .language-hover:hover {
+            color: white !important;
+        }
+
+        .header-top-area {
+            background: var(--color-primary);
+            padding: 0px 0 !important;
+        }
+
+        /*.logo-header {
+            position: fixed !important;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 9999;
+            background: #fff;
+            box-shadow: 0px 7px 18px #1810100d;
+            animation: stickyanimations 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+        }
+
+        .header--sticky {
+            position: sticky !important;
+            top: 80px;*/ /* Logo header ki height ke hisaab se adjust karein */
+        /*left: 0;
+            width: 100%;
+            z-index: 9998;
+            background: #fff;
+            box-shadow: 0px 7px 18px #1810100d;
+            animation: stickyanimations 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+        }*/
+        .account-menu {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .account-dropdown {
+            position: absolute;
+            top: 42px;
+            right: 0;
+            background: #fff;
+            width: 180px;
+            border-radius: 6px;
+            padding: 10px 0;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.10);
+            display: none;
+            z-index: 99999;
+        }
+
+            .account-dropdown a {
+                display: block;
+                padding: 10px 15px;
+                font-size: 14px;
+                color: #222;
+            }
+
+                .account-dropdown a:hover {
+                    background: #f5f5f5;
+                    color: #177e3f !important;
+                }
+
+        .login-btn {
+            background: #1a8c34;
+            color: #fff !important;
+            text-align: center;
+            margin: 5px 15px;
+            border-radius: 4px;
+            padding: 8px 0 !important;
+        }
+
+     
+
+        .category-scroll {
+            max-height: 350px; 
+            overflow-y: auto; 
+            overflow-x: hidden; 
+        }
+
+    </style>
+</head>
+<body class="shop-main-h">
+    <div class="rts-header-one-area-one">
+        @*Topbar*@
+        <div class="header-top-area">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="bwtween-area-header-top">
+                            <div class="contact-number-area">
+                                <p>
+                                    Need help? Call Us:
+                                    <a href="tel:+4733378901">+258 3268 21485</a>
+                                </p>
+                            </div>
+                            <div class="discount-area">
+                                <ul class="nav-h_top language">
+                                    <li class="category-hover-header language-hover text-light">
+                                        <a href="#">English</a>
+                                        <ul class="category-sub-menu">
+                                            <li>
+                                                <a href="#" class="menu-item">
+                                                    <span>Italian</span>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="#" class="menu-item">
+                                                    <span>Russian</span>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="#" class="menu-item">
+                                                    <span>Chinian</span>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </li>
+
+
+                                </ul>
+                                <p>
+                                    <a href="/Customer/registration">| Vendor </a>
+                                </p>
+                                <p>
+                                    <a href="#">| Help & Support</a>
+                                </p>
+                                <p>
+                                    <a href="#">| App Download </a>
+                                </p>
+                            </div>
+
+
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @*Navbar*@
+        <div class="rts-header-nav-area-one header--sticky">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12">
+
+                        <div class="logo-search-category-wrapper py-2">
+                            <a href="/Customer/Index" class="logo-area">
+                                <img src="~/Content/Kaashtkart-Data/kklogo.png" alt="logo-main" class="logo">
+                            </a>
+                            <div class="category-search-wrapper">
+
+                                <form action="#" class="search-header">
+                                    <input type="text" placeholder="Search for products, categories or brands" class="border" required="">
+                                    <a href="#" class="rts-btn btn-primary radious-sm with-icon">
+                                        <div class="btn-text">
+                                            Search
+                                        </div>
+                                        <div class="arrow-icon">
+                                            <i class="fa-light fa-magnifying-glass"></i>
+                                        </div>
+                                        <div class="arrow-icon">
+                                            <i class="fa-light fa-magnifying-glass"></i>
+                                        </div>
+                                    </a>
+                                </form>
+                            </div>
+                            <div class="actions-area">
+                                <div class="search-btn" id="searchs">
+
+                                    <svg width="17" height="16" viewbox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M15.75 14.7188L11.5625 10.5312C12.4688 9.4375 12.9688 8.03125 12.9688 6.5C12.9688 2.9375 10.0312 0 6.46875 0C2.875 0 0 2.9375 0 6.5C0 10.0938 2.90625 13 6.46875 13C7.96875 13 9.375 12.5 10.5 11.5938L14.6875 15.7812C14.8438 15.9375 15.0312 16 15.25 16C15.4375 16 15.625 15.9375 15.75 15.7812C16.0625 15.5 16.0625 15.0312 15.75 14.7188ZM1.5 6.5C1.5 3.75 3.71875 1.5 6.5 1.5C9.25 1.5 11.5 3.75 11.5 6.5C11.5 9.28125 9.25 11.5 6.5 11.5C3.71875 11.5 1.5 9.28125 1.5 6.5Z" fill="#1F1F25"></path>
+                                    </svg>
+
+                                </div>
+                                <div class="menu-btn" id="menu-btn">
+
+                                    <svg width="20" height="16" viewbox="0 0 20 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <rect y="14" width="20" height="2" fill="#1F1F25"></rect>
+                                        <rect y="7" width="20" height="2" fill="#1F1F25"></rect>
+                                        <rect width="20" height="2" fill="#1F1F25"></rect>
+                                    </svg>
+
+                                </div>
+                            </div>
+                            <div class="accont-wishlist-cart-area-header">
+
+                                <div class="btn-border-only cart category-hover-header account-menu">
+                                    <i class="fa-light fa-user"></i>
+                                    <span class="text">Account</span>
+                                    <div class="category-sub-menu card-number-show account-dropdown">
+
+                                        @if (Session["UserId"] == null)
+                                        {
+                                            <!-- IF NOT LOGGED IN -->
+                                            <div class="logged-out text-dark" style="background:var(--color-primary);">
+                                                <a href="/Account/userlogin" class="btn btn-success text-light fs-3 fw-bold">Login</a>
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <!-- IF LOGGED IN -->
+                                            <div class="logged-in text-dark">
+
+                                                <!-- NO MODAL — DIRECT PAGE -->
+                                                <a href="/Account/Profile">My Profile</a>
+
+                                                <a href="/Orders/Track">My Orders</a>
+                                                <a href="/Wishlist">My Wishlist</a>
+                                                <a href="javascript:void(0)" onclick="handleLogout()">Logout</a>
+
+                                            </div>
+                                        }
+
+                                    </div>
+
+                                </div>
+
+
+
+
+
+                                <!-- ✅ Cart Count Start -->
+                                <!-- ========================================== -->
+                                <!-- CART HEADER BUTTON -->
+                                <!-- ========================================== -->
+                                <div class="btn-border-only cart category-hover-header">
+                                    <i class="fa-sharp fa-regular fa-cart-shopping"></i>
+                                    <span class="text">Cart</span>
+                                    <!-- ✅ Cart count badge -->
+                                    <span class="number" id="cartCount">0</span>
+
+                                    <div class="category-sub-menu card-number-show">
+                                        <!-- ✅ Header with count -->
+                                        <h5 class="shopping-cart-number">Shopping Cart (<span id="cartCountHeader">0</span>)</h5>
+
+                                        <!-- ✅ Dynamic cart items container -->
+                                        <div id="miniCartItems" class="text-dark">
+                                            <!-- Cart items will be rendered here by renderCart() -->
+                                        </div>
+
+                                        <!-- ✅ Cart summary footer -->
+                                        <div class="sub-total-cart-balance" id="cartSummary" style="display:none;">
+                                            <div class="bottom-content-deals mt--10">
+                                                <div class="top">
+                                                    <span>Sub Total:</span>
+                                                    <span class="number-c">₹<span id="cartTotal">0</span></span>
+                                                </div>
+                                            </div>
+
+                                            <div class="button-wrapper d-flex align-items-center justify-content-between">
+                                                <a href="/Customer/Cart" class="rts-btn btn-primary">View Cart</a>
+                                                <a href="javascript:void(0)" id="btnCheckout" class="rts-btn btn-primary border-only">CheckOut</a>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    <a href="/Customer/Cart" class="over_link"></a>
+                                </div>
+
+
+                                <!-- ✅ Cart Count Ends -->
+
+                            </div>
+                        </div>
+
+
+                        <div class="nav-and-btn-wrapper">
+                            <div class="nav-area-bottom-left-header-four">
+                                <div class="category-btn category-hover-header five-style">
+                                    <img class="parent" src="~/Content/assets/images/icons/14.svg" alt="icons">
+                                    <span class="ml--10">All Categories</span>
+
+                                    @if (ViewBag.getallcategories != null)
+                                    {
+                                        <ul class="category-sub-menu category-scroll" id="category-active-four">
+                                            @foreach (var cat in ViewBag.getallcategories)
+                                            {
+                                                <li>
+                                                    <a href="/Customer/getcategorywiseproductdetails?categoryname=@cat.categoryname" target="_blank" class="menu-item">
+                                                        <img src="~/Content/assets/images/icons/10.svg" alt="icons">
+                                                        <span>@cat.categoryname</span>
+                                                    </a>
+                                                </li>
+                                            }
+                                        </ul>
+                                    }
+                                    else
+                                    {
+                                        <span disabled>No categories available</span>
+                                    }
+                                </div>
+
+                                <div class="nav-area">
+                                    <nav>
+                                        <ul class="parent-nav">
+                                            @if (ViewBag.Categories != null && ViewBag.Categories.Count > 0)
+                                            {
+                                                foreach (var cat in ViewBag.Categories)
+                                                {
+                                                    <li class="parent">
+                                                        <a href="/Customer/getcategorywiseproductdetails?categoryname=@cat.categoryname"
+                                                           target="_blank" class="nav-link">
+                                                            <span>&nbsp; @cat.categoryname</span>
+                                                        </a>
+                                                    </li>
+
+                                                }
+                                            }
+
+                                            @*<li class="parent has-dropdown">
+                                                    <a class="nav-link" href="#">Shop Category</a>
+                                                    <ul class="submenu">
+                                                    </ul>
+                                                    }
+                                                    else
+                                                    {
+                                                    <ul>
+                                                        <li>No Catergory Here.......</li>
+                                                    </ul>
+                                                    }
+                                                </li>*@
+
+                                            <li class="parent has-dropdown">
+                                                <a class="nav-link fw-bold" href="#" >Vendors</a>
+                                                <ul class="submenu">
+                                                    <li><a class="sub-b" href="/Customer/registration">Registration / Login</a></li>
+                                                </ul>
+                                            </li>
+                                        </ul>
+                                    </nav>
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+                    <div class="col-lg-12">
+                        <div class="logo-search-category-wrapper after-md-device-header header-mid-five-call">
+                            <a href="index-1.html" class="logo-area">
+                                <img src="~/Content/Kaashtkart-Data/kklogo.png" alt="logo-main" class="logo">
+                            </a>
+                            <div class="category-search-wrapper">
+                                <div class="category-btn category-hover-header">
+                                    <img class="parent" src="~/Content/assets/images/icons/bar-1-1.svg" alt="icons">
+                                    <span>Categories</span>
+                                    @if (ViewBag.Categories != null)
+                                    {
+                                        <ul class="category-sub-menu" id="category-active-four">
+                                            @foreach (var cat in ViewBag.Categories)
+                                            {
+
+                                                <li>
+                                                    <a href="/@cat.categoryname" class="menu-item">
+                                                        <img src="~/Content/assets/images/icons/10.svg" alt="icons">
+                                                        <span>@cat.categoryname</span>
+                                                    </a>
+                                                </li>
+                                            }
+                                        </ul>
+                                    }
+                                    else
+                                    {
+                                        <span disabled>No categories available</span>
+                                    }
+                                </div>
+                                <form action="#" class="search-header">
+                                    <input type="text" placeholder="Search for products, categories or brands" required="">
+                                    <button class="rts-btn btn-primary radious-sm with-icon">
+                                        <span class="btn-text">
+                                            Search
+                                        </span>
+                                        <span class="arrow-icon">
+                                            <i class="fa-light fa-magnifying-glass"></i>
+                                        </span>
+                                        <span class="arrow-icon">
+                                            <i class="fa-light fa-magnifying-glass"></i>
+                                        </span>
+                                    </button>
+                                </form>
+                            </div>
+                            <div class="main-wrapper-action-2 d-flex">
+                                <div class="accont-wishlist-cart-area-header">
+                                    <a href="account-1.html" class="btn-border-only account">
+                                        <i class="fa-light fa-user"></i>
+                                        Account
+                                    </a>
+                                    <a href="wishlist-1.html" class="btn-border-only wishlist">
+                                        <i class="fa-regular fa-heart"></i>
+                                        Wishlist
+                                    </a>
+                                    <div class="btn-border-only cart category-hover-header">
+                                        <i class="fa-sharp fa-regular fa-cart-shopping"></i>
+                                        <span class="text">Cart</span>
+
+                                        <!-- ✅ Show Cart Count -->
+                                        <span class="number" id="cartCount">0</span>
+
+                                        <div class="category-sub-menu card-number-show">
+                                            <h5 class="shopping-cart-number">Shopping Cart (<span id="cartCountHeader">0</span>)</h5>
+                                            <div id="miniCartItems"></div> <!-- ✅ Dynamic items will display here -->
+                                            <!-- ✅ Subtotal area -->
+                                            <div class="sub-total-cart-balance" id="cartSummary" style="display:none;">
+                                                <div class="bottom-content-deals mt--10">
+                                                    <div class="top">
+                                                        <span>Sub Total:</span>
+                                                        <span class="number-c">₹<span id="cartTotal">0</span></span>
+                                                    </div>
+                                                </div>
+                                                <div class="button-wrapper d-flex align-items-center justify-content-between">
+                                                    <a href="/Customer/Cart" class="rts-btn btn-primary ">View Cart</a>
+                                                    <a href="/Customer/Checkout" class="rts-btn btn-primary border-only">CheckOut</a>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <a href="/Customer/Cart" class="over_link"></a>
+                                    </div>
+
+                                </div>
+                                <div class="actions-area">
+                                    <div class="search-btn" id="search">
+
+                                        <svg width="17" height="16" viewbox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M15.75 14.7188L11.5625 10.5312C12.4688 9.4375 12.9688 8.03125 12.9688 6.5C12.9688 2.9375 10.0312 0 6.46875 0C2.875 0 0 2.9375 0 6.5C0 10.0938 2.90625 13 6.46875 13C7.96875 13 9.375 12.5 10.5 11.5938L14.6875 15.7812C14.8438 15.9375 15.0312 16 15.25 16C15.4375 16 15.625 15.9375 15.75 15.7812C16.0625 15.5 16.0625 15.0312 15.75 14.7188ZM1.5 6.5C1.5 3.75 3.71875 1.5 6.5 1.5C9.25 1.5 11.5 3.75 11.5 6.5C11.5 9.28125 9.25 11.5 6.5 11.5C3.71875 11.5 1.5 9.28125 1.5 6.5Z" fill="#1F1F25"></path>
+                                        </svg>
+
+                                    </div>
+                                    <div class="menu-btn" id="menu-btn">
+
+                                        <svg width="20" height="16" viewbox="0 0 20 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <rect y="14" width="20" height="2" fill="#1F1F25"></rect>
+                                            <rect y="7" width="20" height="2" fill="#1F1F25"></rect>
+                                            <rect width="20" height="2" fill="#1F1F25"></rect>
+                                        </svg>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="side-bar" class="side-bar header-two">
+        <button class="close-icon-menu"><i class="far fa-times"></i></button>
+
+
+        <form action="#" class="search-input-area-menu mt--30">
+            <input type="text" placeholder="Search..." required="">
+            <button><i class="fa-light fa-magnifying-glass"></i></button>
+        </form>
+
+        <div class="mobile-menu-nav-area tab-nav-btn mt--20">
+
+            <nav>
+                <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                    <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="true">Menu</button>
+                    <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">Category</button>
+                </div>
+            </nav>
+
+            <div class="tab-content" id="nav-tabContent">
+                <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab" tabindex="0">
+                    <!-- mobile menu area start -->
+                    <div class="mobile-menu-main">
+                        <nav class="nav-main mainmenu-nav mt--30">
+                            <ul class="mainmenu metismenu" id="mobile-menu-active">
+                                <li class="has-droupdown">
+                                    <a href="#" class="main">Home</a>
+                                    <ul class="submenu mm-collapse">
+                                        <li><a class="mobile-menu-link" href="index-1.html">Home One</a></li>
+                                        <li><a class="mobile-menu-link" href="index-two-1.html">Home Two</a></li>
+                                        <li><a class="mobile-menu-link" href="index-three-1.html">Home Three</a></li>
+                                        <li><a class="mobile-menu-link" href="index-four-1.html">Home Four</a></li>
+                                        <li><a class="mobile-menu-link" href="index-five-1.html"> Home Five</a></li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <a href="about-1.html" class="main">About</a>
+                                </li>
+
+                                <li class="has-droupdown">
+                                    <a href="#" class="main">Shop Category</a>
+                                    @if (ViewBag.Categories != null && ViewBag.Categories.Count > 0)
+                                    {
+                                        <ul class="submenu mm-collapse">
+                                            @foreach (var cat in ViewBag.Categories)
+                                            {
+
+
+                                                <li class="my-2">
+                                                    <a href="/Customer/getcategorywiseproductdetails?categoryname=@cat.categoryname"
+                                                       target="_blank"
+                                                       class="menu-item d-flex"
+                                                       style="text-decoration:none; background:#f8f9fa; transition:0.3s; font-weight:500;">
+                                                        <img src="~/Content/assets/images/icons/10.svg"
+                                                             alt="icon"
+                                                             style="width:20px; height:20px; object-fit:contain;" />
+
+                                                        <span>&nbsp; @cat.categoryname</span>
+                                                    </a>
+                                                </li>
+
+                                            }
+                                        </ul>
+
+                                    }
+                                    else
+                                    {
+                                        <ul>
+                                            <li>No Catergory Here.......</li>
+                                        </ul>
+                                    }
+                                </li>
+
+
+                                <li class="has-droupdown">
+                                    <a href="#" class="main">Blog</a>
+                                    <ul class="submenu mm-collapse">
+                                        <li><a class="mobile-menu-link" href="blog-1.html">Blog</a></li>
+                                        <li><a class="mobile-menu-link" href="blog-list-left-sidebar-1.html">Blog Left Sidebar</a></li>
+                                        <li><a class="mobile-menu-link" href="blog-list-right-sidebar-1.html">Blog List Right Sidebar</a></li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <a href="contact-1.html" class="main">Contact Us</a>
+                                </li>
+                            </ul>
+                        </nav>
+
+                    </div>
+                    <!-- mobile menu area end -->
+                </div>
+                <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab" tabindex="0">
+                    <div class="category-btn category-hover-header menu-category">
+                        @if (ViewBag.Categories != null)
+                        {
+                            <ul class="category-sub-menu" id="category-active-four">
+                                @foreach (var cat in ViewBag.Categories)
+                                {
+
+                                    <li>
+                                        <a href="/@cat.categoryname" class="menu-item">
+                                            <img src="~/Content/assets/images/icons/10.svg" alt="icons">
+                                            <span>@cat.categoryname</span>
+                                        </a>
+                                    </li>
+                                }
+                            </ul>
+                        }
+                        else
+                        {
+                            <span disabled>No categories available</span>
+                        }
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- button area wrapper start -->
+        <div class="button-area-main-wrapper-menuy-sidebar mt--50">
+            <div class="contact-area">
+                <div class="phone">
+                    <i class="fa-light fa-headset"></i>
+                    <a href="#">02345697871</a>
+                </div>
+                <div class="phone">
+                    <i class="fa-light fa-envelope"></i>
+                    <a href="#">02345697871</a>
+                </div>
+            </div>
+            <div class="buton-area-bottom">
+                <a href="login-1.html" class="rts-btn btn-primary">Sign In</a>
+                <a href="register-1.html" class="rts-btn btn-primary">Sign Up</a>
+            </div>
+        </div>
+        <!-- button area wrapper end -->
+
+    </div>
+
+
+    <div class="blog-area-start rts-section-gapBottom">
+        @RenderBody()
+    </div>
+
+
+    <!-- rts footer one area start -->
+    <div class="rts-footer-area pt--80 bg_light-1">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="footer-main-content-wrapper pb--70 pb_sm--30">
+                        <!-- single footer area wrapper -->
+                        <div class="single-footer-wized">
+                            <h3 class="footer-title">About Company</h3>
+                            <div class="call-area">
+                                <div class="icon">
+                                    <i class="fa-solid fa-phone-rotary"></i>
+                                </div>
+                                <div class="info">
+                                    <span>Have Question? Call Us 24/7</span>
+                                    <a href="#" class="number">+258 3692 2569</a>
+                                </div>
+                            </div>
+                            <div class="opening-hour">
+                                <div class="single">
+                                    <p>Monday - Friday: <span>8:00am - 6:00pm</span></p>
+                                </div>
+                                <div class="single">
+                                    <p>Saturday: <span>8:00am - 6:00pm</span></p>
+                                </div>
+                                <div class="single">
+                                    <p>Sunday: <span>Service Close</span></p>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- single footer area wrapper -->
+                        <!-- single footer area wrapper -->
+                        <div class="single-footer-wized">
+                            <h3 class="footer-title">Our Stores</h3>
+                            <div class="footer-nav">
+                                <ul>
+                                    <li><a href="#">Delivery Information</a></li>
+                                    <li><a href="#">Privacy Policy</a></li>
+                                    <li><a href="#">Terms & Conditions</a></li>
+                                    <li><a href="#">Support Center</a></li>
+                                    <li><a href="#">Careers</a></li>
+                                    <li><a href="/Admin/Dashboard">Admin</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <!-- single footer area wrapper -->
+                        <!-- single footer area wrapper -->
+                        <div class="single-footer-wized">
+                            <h3 class="footer-title">Shop Categories</h3>
+
+
+
+
+                            <div class="footer-nav">
+                                @if (ViewBag.Categories != null)
+                                {
+                                    <ul>
+                                        @foreach (var cat in ViewBag.Categories)
+                                        {
+
+                                            <li>
+                                                <a href="/Customer/getcategorywiseproductdetails?categoryname=@cat.categoryname" target="_blank" class="menu-item">
+
+                                                    <span>@cat.categoryname</span>
+                                                </a>
+                                            </li>
+                                        }
+                                    </ul>
+                                }
+                                else
+                                {
+                                    <span disabled>No categories available</span>
+                                }
+                            </div>
+                        </div>
+                        <!-- single footer area wrapper -->
+                        <!-- single footer area wrapper -->
+                        <div class="single-footer-wized">
+                            <h3 class="footer-title">Our Newsletter</h3>
+                            <p class="disc-news-letter">
+                                Subscribe to the mailing list to receive updates one <br> the new arrivals and other discounts
+                            </p>
+                            <form class="footersubscribe-form" action="#">
+                                <input type="email" placeholder="Your email address" required="">
+                                <button class="rts-btn btn-primary">Subscribe</button>
+                            </form>
+
+                            <p class="dsic">
+                                I would like to receive news and special offer
+                            </p>
+                        </div>
+                        <!-- single footer area wrapper -->
+                    </div>
+                    <div class="social-and-payment-area-wrapper">
+                        <div class="social-one-wrapper">
+                            <span>Follow Us:</span>
+                            <ul>
+                                <li><a href="#"><i class="fa-brands fa-facebook-f"></i></a></li>
+                                <li><a href="#"><i class="fa-brands fa-twitter"></i></a></li>
+                                <li><a href="#"><i class="fa-brands fa-youtube"></i></a></li>
+                                <li><a href="#"><i class="fa-brands fa-whatsapp"></i></a></li>
+                                <li><a href="#"><i class="fa-brands fa-instagram"></i></a></li>
+                            </ul>
+                        </div>
+                        <div class="payment-access">
+                            <span>Payment Accepts:</span>
+                            <img src="~/Content/assets/images/payment/01.png" alt="">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- rts footer one area end -->
+    <!-- rts copyright-area start -->
+    <div class="rts-copyright-area">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="copyright-between-1">
+                        <p class="disc">
+                            Copyright 2024 <a href="#">Code Crafter Web Solutions</a> All rights reserved.
+                        </p>
+                        <a href="#" class="playstore-app-area">
+                            <span>Download App</span>
+                            <img src="~/Content/assets/images/payment/02.png" alt="">
+                            <img src="~/Content/assets/images/payment/03.png" alt="">
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- rts copyright-area end -->
+    <!--User Profile Modal Start -->
+
+    <div class="modal fade" id="profileModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h5 class="modal-title">My Profile</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body" id="profileModalBody">
+                    <!-- AJAX loads Profile view here -->
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+    <!--User Profile Modal Ends -->
+    <!-- plugins js -->
+    <script defer="" src="~/Content/assets/js/plugins.js"></script>
+
+    <!-- custom js -->
+    <script defer="" src="~/Content/assets/js/main.js"></script>
+    <!-- header style two End -->
+
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+/*
+  Unified Cart Script
+  - Single cart key per user
+  - increase/decrease/remove
+  - optimistic UI + optional server sync
+  - safe JSON parsing
+*/
+
+/* ---------- 0) Session user id (Razor safe) ----------
+   This will render a JS string value: "" (empty) when not logged in,
+   or the user's id when logged in (server-side).
+*/
+const SESSION_USER_ID = @Html.Raw(Json.Encode(Session["UserId"] ?? ""));
+
+/* ---------- Utilities ---------- */
+function safeParse(json, fallback) {
+    try { return json ? JSON.parse(json) : fallback; }
+    catch (e) { console.warn("safeParse failed:", e); return fallback; }
+}
+
+function effectiveUserId() {
+    const sid = (typeof SESSION_USER_ID === "string") ? SESSION_USER_ID.trim() : "";
+    const localId = localStorage.getItem("UserId");
+    if (sid && sid !== "null") return sid;
+    if (localId && localId !== "null" && localId !== "") return localId;
+    return "guest";
+}
+
+function getUserCartKey() {
+    return "cart_user_" + effectiveUserId();
+}
+
+/* ---------- Load / Save ---------- */
+function loadCart() {
+    const raw = localStorage.getItem(getUserCartKey());
+    return safeParse(raw, []);
+}
+
+function saveCart(cart) {
+    localStorage.setItem(getUserCartKey(), JSON.stringify(cart));
+    renderCart();      // update all UI places
+}
+
+/* ---------- Cart Operations ---------- */
+function findCartItem(cart, productId) {
+    return cart.find(i => String(i.id) === String(productId));
+}
+
+function addToCart(productId, name, price, image, unit = "1 pc", qtyToAdd = 1) {
+    productId = String(productId);
+    qtyToAdd = Number(qtyToAdd) || 1;
+    price = parseFloat(price) || 0;
+
+    const cart = loadCart();
+    const existing = findCartItem(cart, productId);
+    if (existing) {
+        existing.qty = (Number(existing.qty) || 0) + qtyToAdd;
+    } else {
+        cart.push({
+            id: productId,
+            name: name,
+            price: price,
+            image: image || "",
+            unit: unit,
+            qty: qtyToAdd,
+            addedAt: new Date().toISOString()
+        });
+    }
+    saveCart(cart);
+
+    // server sync if logged in
+    if (effectiveUserId() !== "guest") {
+        $.post('/Customer/AddToCart', { productId: productId, qty: qtyToAdd })
+            .fail(() => console.warn("Server AddToCart failed"));
+    }
+}
+
+function increaseQty(productId) {
+    const cart = loadCart();
+    const item = findCartItem(cart, productId);
+    if (!item) return;
+    item.qty = Number(item.qty || 0) + 1;
+    saveCart(cart);
+
+    if (effectiveUserId() !== "guest") {
+        $.post('/Customer/ChangeQty', { productId: productId, qty: item.qty })
+            .fail(() => console.warn("Server ChangeQty failed"));
+    }
+}
+
+function decreaseQty(productId) {
+    const cart = loadCart();
+    const item = findCartItem(cart, productId);
+    if (!item) return;
+
+    if (Number(item.qty) > 1) {
+        item.qty = Number(item.qty) - 1;
+        saveCart(cart);
+
+        if (effectiveUserId() !== "guest") {
+            $.post('/Customer/ChangeQty', { productId: productId, qty: item.qty })
+                .fail(() => console.warn("Server ChangeQty failed"));
+        }
+    } else {
+        // confirm removal
+        Swal.fire({
+            title: 'Remove item?',
+            text: 'Do you want to remove this item from the cart?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#1b8905',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, remove'
+        }).then(result => {
+            if (result.isConfirmed) removeFromCart(productId);
+        });
+    }
+}
+
+function removeFromCart(productId) {
+    let cart = loadCart();
+    const item = findCartItem(cart, productId);
+    if (!item) return;
+    cart = cart.filter(i => String(i.id) !== String(productId));
+    saveCart(cart);
+
+    if (effectiveUserId() !== "guest") {
+        $.post('/Customer/RemoveFromCart', { productId: productId })
+            .fail(() => console.warn("Server RemoveFromCart failed"));
+    }
+}
+
+/* ---------- Rendering ---------- */
+function getCartTotal(cart) {
+    cart = cart || loadCart();
+    return cart.reduce((s, i) => s + (Number(i.price || 0) * Number(i.qty || 0)), 0);
+}
+function getTotalQuantity(cart) {
+    cart = cart || loadCart();
+    return cart.reduce((s, i) => s + (Number(i.qty || 0)), 0);
+}
+
+function renderCart() {
+    const cart = loadCart();
+
+    // Mini-cart / header
+    const miniContainer = document.getElementById("miniCartItems");
+    const cartTotalEl = document.getElementById("cartTotal");
+    const cartCount = document.getElementById("cartCount");
+    const cartCountHeader = document.getElementById("cartCountHeader");
+    const cartSummary = document.getElementById("cartSummary");
+
+    // Order review table
+    const tbody = document.getElementById("cartTableBody");
+    const emptyCart = document.getElementById("emptyCart");
+    const grandTotalEl = document.getElementById("grandTotal");
+    const subtotalEl = document.getElementById("subtotal");
+    const totalItemsEl = document.getElementById("totalItems");
+
+    // update mini cart HTML
+    if (miniContainer) {
+        if (!cart || cart.length === 0) {
+            miniContainer.innerHTML = '<div style="padding:20px;text-align:center;color:#999">Cart is empty</div>';
+            if (cartSummary) cartSummary.style.display = 'none';
+        } else {
+            let html = '';
+            cart.forEach(item => {
+                html += `
+                    <div class="cart-item d-flex justify-content-between align-items-center" style="padding:8px 0;">
+                        <div style="display:flex;align-items:center;gap:8px;">
+                            <img src="${item.image}" style="width:48px;height:48px;object-fit:cover;border-radius:6px;">
+                            <div>
+                                <div style="font-weight:600">${item.name}</div>
+                                <div style="font-size:12px;color:#666">${item.unit} • ₹${item.price} × ${item.qty}</div>
+                            </div>
+                        </div>
+                        <div style="text-align:right">
+                            <div style="font-weight:700;color:#177e3f">₹${(Number(item.price)*Number(item.qty)).toFixed(2)}</div>
+                            <button class="btn btn-sm btn-link fs-4 text-danger text-decoration-none" onclick="removeFromCart('${item.id}')">Remove</button>
+                        </div>
+                    </div>`;
+            });
+            miniContainer.innerHTML = html;
+            if (cartSummary) cartSummary.style.display = 'block';
+        }
+    }
+
+    // header counts
+    if (cartCount) cartCount.innerText = String(cart.length);
+    if (cartCountHeader) cartCountHeader.innerText = String(cart.length);
+    if (cartTotalEl) cartTotalEl.innerText = getCartTotal(cart).toFixed(2);
+
+    // order review table
+    if (tbody) {
+        if (!cart || cart.length === 0) {
+            tbody.innerHTML = '';
+            if (emptyCart) emptyCart.style.display = 'block';
+        } else {
+            if (emptyCart) emptyCart.style.display = 'none';
+            let rows = '';
+            cart.forEach(item => {
+                const total = (Number(item.price) * Number(item.qty)).toFixed(2);
+                rows += `
+                <tr>
+                    <td>
+                        <div style="display:flex;align-items:center;gap:10px;">
+                            <img src="${item.image}" style="width:60px;height:60px;object-fit:cover;border-radius:6px;">
+                            <div>
+                                <div style="font-weight:600">${item.name}</div>
+                                <div style="font-size:12px;color:#666">${item.unit}</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="qty-box" style="display:flex;align-items:center;gap:8px;">
+                            <button class="btn btn-sm btn-secondary" onclick="decreaseQty('${item.id}')">−</button>
+                            <span style="min-width:24px;text-align:center;display:inline-block">${item.qty}</span>
+                            <button class="btn btn-sm btn-secondary" onclick="increaseQty('${item.id}')">+</button>
+                        </div>
+                    </td>
+                    <td>₹${Number(item.price).toFixed(2)}</td>
+                    <td>₹${total}</td>
+                </tr>`;
+            });
+            tbody.innerHTML = rows;
+        }
+    }
+
+    // totals in summary
+    if (grandTotalEl) grandTotalEl.innerText = getCartTotal(cart).toFixed(2);
+    if (subtotalEl) subtotalEl.innerText = getCartTotal(cart).toFixed(2);
+    if (totalItemsEl) totalItemsEl.innerText = String(getTotalQuantity(cart));
+}
+
+/* ---------- Place Order (completeOrder) ---------- */
+function completeOrder() {
+    // determine payment method if present
+    const selectedMethodEl = document.querySelector('.payment-method.selected');
+    const paymentMethod = selectedMethodEl ? selectedMethodEl.dataset.method : 'COD';
+
+    // disable UI while processing (optional)
+    const completeBtn = document.getElementById("completeBtn");
+    if (completeBtn) {
+        completeBtn.disabled = true;
+        completeBtn.style.opacity = 0.6;
+    }
+
+    $.ajax({
+        url: "/Customer/SaveOrder",
+        type: "POST",
+        data: { paymentMethod: paymentMethod },
+        success: function (response) {
+            if (response && response.status === "success") {
+                // clear client cart
+                localStorage.removeItem(getUserCartKey());
+                renderCart();
+                // if layout has renderCart() function, call it too
+                if (typeof renderCart === "function") try { renderCart(); } catch(e){}
+
+                // redirect to success (use response.orderId if available)
+                const orderId = response.orderId || "";
+                window.location.href = "/Customer/Success" + (orderId ? ("?orderId=" + orderId) : "");
+            } else {
+                Swal.fire('Error', (response && response.message) ? response.message : 'Failed to create order', 'error');
+                if (completeBtn) { completeBtn.disabled = false; completeBtn.style.opacity = 1; }
+            }
+        },
+        error: function () {
+            Swal.fire('Server error', 'Server error while placing order!', 'error');
+            if (completeBtn) { completeBtn.disabled = false; completeBtn.style.opacity = 1; }
+        }
+    });
+}
+
+/* ---------- Initialization ---------- */
+document.addEventListener('DOMContentLoaded', function () {
+    renderCart();
+
+    // If server session indicates a logged-in user, persist it locally for subsequent pages
+    try {
+        const sid = (typeof SESSION_USER_ID === "string") ? SESSION_USER_ID.trim() : "";
+        const localId = localStorage.getItem("UserId");
+        if (sid && sid !== "" && sid !== "null" && localId !== String(sid)) {
+            // Set local UserId so getUserCartKey uses same id across pages
+            localStorage.setItem("UserId", String(sid));
+            // (optional) If you want to merge a guest cart into server cart, implement server-side endpoint
+        }
+    } catch (e) {
+        console.warn("init persist user id failed", e);
+    }
+
+    // Attach simple delegation for checkout button if present
+    const btnCheckout = document.getElementById("btnCheckout") || document.getElementById("checkoutBtn");
+    if (btnCheckout) {
+        btnCheckout.addEventListener('click', function (ev) {
+            ev.preventDefault();
+            const cart = loadCart();
+            if (!cart || cart.length === 0) {
+                Swal.fire('Cart is empty', 'Please add items to cart before checkout', 'warning');
+                return;
+            }
+            // If server session indicates logged-in, go to payment directly
+            const sid = (typeof SESSION_USER_ID === "string") ? SESSION_USER_ID.trim() : "";
+            if (sid && sid !== "" && sid !== "null") {
+                window.location.href = '/Customer/Payment';
+            } else {
+                // Ask login (you may want to redirect with returnUrl)
+                window.location.href = '/Account/userlogin';
+            }
+        });
+    }
+});
+    </script>
+
+
+</body>
+</html>

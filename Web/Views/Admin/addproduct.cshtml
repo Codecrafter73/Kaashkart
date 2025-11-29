@@ -1,0 +1,632 @@
+﻿
+@{
+    ViewBag.Title = "addproduct";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+
+
+<style>
+
+    :root {
+        --primary-green: #177e3f;
+        --primary-hover: #125e30;
+        --light-green: #e8f5ed;
+        --border-radius: 5px;
+    }
+
+    .page-header {
+        /*        background: linear-gradient(135deg, var(--primary-green) 0%, #1a9d4f 100%);*/
+        border-radius: var(--border-radius);
+        padding: 8px 20px;
+        margin-bottom: 2rem;
+        color: black;
+        box-shadow: 0 8px 24px rgba(23, 126, 63, 0.2);
+    }
+
+        .page-header h3 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin: 0;
+        }
+
+    .add-category-btn {
+        background: white;
+        color: var(--primary-green);
+        border: none;
+        border-radius: 12px;
+        padding: 12px 24px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+        .add-category-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+            background: #f8f9fa;
+            color: var(--primary-green);
+        }
+
+    .category-card {
+        border-radius: var(--border-radius);
+        transition: all 0.3s ease;
+        cursor: pointer;
+        border: 2px solid transparent;
+        background: white;
+        overflow: hidden;
+        position: relative;
+    }
+
+        .category-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--primary-green);
+            transition: width 0.3s ease;
+        }
+
+        .category-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 32px rgba(23, 126, 63, 0.15);
+            border-color: var(--primary-green);
+        }
+
+            .category-card:hover::before {
+                width: 100%;
+                opacity: 0.05;
+            }
+
+        .category-card .card-body {
+            padding: 1.5rem;
+        }
+
+        .category-card h6 {
+            font-size: 20px !important;
+            font-weight: 600;
+            color: #2c3e50;
+            margin: 0;
+        }
+
+        .category-card i {
+            color: var(--primary-green);
+            transition: transform 0.3s ease;
+            font-size: 25px !important;
+        }
+
+        .category-card:hover i {
+            transform: translateX(5px);
+        }
+
+    .empty-state {
+        text-align: center;
+        padding: 4rem 2rem;
+        background: var(--light-green);
+        border-radius: var(--border-radius);
+        border: 2px dashed var(--primary-green);
+    }
+
+        .empty-state i {
+            font-size: 4rem;
+            color: var(--primary-green);
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        .empty-state h5 {
+            color: var(--primary-green);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .empty-state p {
+            color: #5a6c7d;
+            margin: 0;
+        }
+
+    .modal-content {
+        border: none;
+        border-radius: var(--border-radius);
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+    }
+
+    .modal-header {
+        background: linear-gradient(135deg, var(--primary-green) 0%, #1a9d4f 100%);
+        color: white;
+        border-radius: var(--border-radius) var(--border-radius) 0 0;
+        padding: 1.5rem;
+        border: none;
+    }
+
+        .modal-header .modal-title {
+            font-weight: 600;
+            font-size: 1.3rem;
+        }
+
+        .modal-header .btn-close {
+            filter: brightness(0) invert(1);
+            opacity: 0.8;
+        }
+
+            .modal-header .btn-close:hover {
+                opacity: 1;
+            }
+
+    .modal-body {
+        padding: 2rem;
+    }
+
+    .form-label {
+        font-weight: 600;
+        color: #2c3e50;
+        margin-bottom: 0.5rem;
+        font-size: 0.95rem;
+    }
+
+    .form-control, .form-select {
+        border: 1px solid #e7e5e5 !important;
+        border-radius: 5px !important;
+        padding: 0.75rem 1rem;
+        transition: all 0.3s ease;
+        font-size: 1rem;
+    }
+
+        .form-control:focus {
+            border-color: var(--primary-green);
+            box-shadow: 0 0 0 4px rgba(23, 126, 63, 0.1);
+        }
+
+    .submit-btn {
+        width: 100%;
+        background: var(--primary-green);
+        color: white;
+        border: none;
+        border-radius: 10px;
+        padding: 0.9rem;
+        font-weight: 600;
+        font-size: 1.05rem;
+        transition: all 0.3s ease;
+        margin-top: 1rem;
+    }
+
+        .submit-btn:hover {
+            background: var(--primary-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(23, 126, 63, 0.3);
+        }
+
+        .submit-btn i {
+            margin-right: 0.5rem;
+        }
+
+    .category-count {
+        background: rgba(255, 255, 255, 0.2);
+        padding: 0.4rem 1rem;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        font-weight: 600;
+    }
+
+    .category-count {
+        padding: 6px 10px;
+        border-radius: 20px;
+        font-size: 14px;
+        font-weight: 600;
+    }
+
+
+    .add-category-btn {
+        padding: 8px 18px;
+    }
+
+    input[type=text], input[type=number] {
+        line-height: 43px !important;
+    }
+
+    .unit {
+        line-height: 28px !important;
+        font-size: 15px;
+    }
+
+    .form-label {
+        font-size: 16px !important;
+    }
+
+    .btn-outline-danger {
+        width: 50px;
+    }
+
+        .btn-outline-danger:hover {
+            color: white !important;
+        }
+
+    .form-control.is-invalid, .form-select.is-invalid {
+        border-color: #dc3545 !important;
+        padding-right: calc(1.5em + 0.75rem) !important;
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' width='12' height='12' fill='none' stroke='%23dc3545'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath stroke-linejoin='round' d='M6 3.5v3M6 8.5h.01'/%3e%3c/svg%3e") !important;
+        background-repeat: no-repeat !important;
+        background-position: right calc(0.375em + 0.1875rem) center !important;
+        background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem) !important;
+    }
+</style>
+
+<div class="page-header">
+    <div class="d-flex align-items-center gap-4 ">
+
+        <h3 class="mb-0 ">Product Management</h3>
+
+        @*<button class="add-category-btn btn fs-3 btn-md fw-bold ms-auto"
+                    data-bs-toggle="modal" data-bs-target="#addProductModal"
+                    style="border-radius: 10px; width: 200px;">
+                <i class="fas fa-plus me-2"></i>
+                Add Product
+            </button>*@
+
+    </div>
+</div>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">@TempData["Success"]</div>
+}
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">@TempData["Error"]</div>
+}
+
+
+<!-- Add Product Modal -->
+<div class="card p-5 rounded">
+    <div class="card-body ">
+        <form id="productForm" method="post" enctype="multipart/form-data" action="/Admin/addproduct">
+
+
+            <div class="row g-4">
+
+                <!-- Category -->
+                <div class="col-md-6">
+                    <label class="form-label fw-bold">Select Category</label>
+                    <select class="form-select form-select-lg fs-3" name="categoryname" required>
+                        <option value="">Choose category...</option>
+                        @foreach (var cat in ViewBag.Categories)
+                        {
+                            <option value="@cat.categoryname">@cat.categoryname</option>
+                        }
+                    </select>
+                </div>
+
+                <!-- Product Name -->
+                <div class="col-md-6">
+                    <label class="form-label fw-bold">Product Name</label>
+                    <input type="text" class="form-control form-control-lg"
+                           name="productname"
+                           placeholder="Enter product name" required>
+                </div>
+
+                <!-- Product Image -->
+                <div class="col-md-6">
+                    <label class="form-label fw-bold">Product Image</label>
+                    <input type="file" class="form-control form-control-lg fs-3"
+                           name="productimage" accept="image/*">
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label fw-bold">Product Sub Image</label>
+                    <input type="file" class="form-control form-control-lg fs-3"
+                           name="productsubimageupload" multiple accept="image/*">
+                </div>
+
+
+                <table class="table table-bordered align-middle mt-5">
+                    <thead class="table-success text-center">
+                        <tr>
+                            <th style="width: 10%">N. Quantity</th>
+                            <th style="width: 10%">Unit</th>
+                            <th style="width: 15%">Original Price (₹)</th>
+                            <th style="width: 10%">Discount (%)</th>
+                            <th style="width: 15%">Final Price</th>
+                            <th style="width: 15%">Stock Qty</th>
+                            <th style="width: 10%">Action</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="dynamicRows">
+                        <tr class="product-row">
+
+                            <td>
+                                <input type="number" class="form-control qty"
+                                       name="unitquantity[]" placeholder="Qty" min="0">
+                            </td>
+
+                            <td>
+                                <select class="form-control unit" name="unit[]" required>
+                                    <option value="">--Unit--</option>
+                                    <option value="kg">Kg</option>
+                                    <option value="g">Gram</option>
+                                </select>
+                            </td>
+
+                            <td>
+                                <input type="number" class="form-control price"
+                                       name="price[]" placeholder="0.00">
+                            </td>
+
+                            <td>
+                                <input type="number" class="form-control discount"
+                                       name="discount[]" placeholder="0">
+                            </td>
+
+                            <td>
+                                <input type="text" class="form-control bg-light final-price"
+                                       name="finalprice[]" readonly placeholder="Auto">
+                            </td>
+
+                            <td>
+                                <input type="number" class="form-control stock"
+                                       name="stock_quantity[]" placeholder="Stock" min="0">
+                            </td>
+
+                            <td class="text-center">
+                                <!-- FIRST ROW BUTTON -->
+                                <button type="button" id="addRowBtn" class="btn btn-primary btn-sm p-2 fs-2" style="width:50px;">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </td>
+
+                        </tr>
+                    </tbody>
+
+                </table>
+
+                <div class="col-md-12">
+                    <label class="form-label fw-bold">Tag Line</label>
+                    <input type="text" class="form-control form-control-lg"
+                           name="tagline"
+                           placeholder="Enter Tag Line" required>
+                </div>
+
+
+
+                <div class="col-md-6">
+                    <label class="form-label fw-bold">Product Description</label>
+                    <textarea id="descriptionEditor"
+                              class="form-control form-control-lg fs-3"
+                              name="description"
+                              rows="5"
+                              style="max-height:100px !important;"
+                              placeholder="Write description..."></textarea>
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label fw-bold">Product Ingradient</label>
+                    <textarea id="ingradient"
+                              class="form-control form-control-lg fs-3"
+                              name="ingradient"
+                              rows="3"
+                              style="height:70px !important;"
+                              placeholder="Write ingradient..."></textarea>
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label fw-bold">Usage Info</label>
+                    <textarea id="usageInfo"
+                              class="form-control form-control-lg fs-3"
+                              name="usageinfo"
+                              rows="3"
+                              placeholder="Write usage info..."></textarea>
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label fw-bold">Benefits</label>
+                    <textarea id="benefits"
+                              class="form-control form-control-lg fs-3"
+                              name="benefits"
+                              rows="3"
+                              placeholder="Write benefits..."></textarea>
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label fw-bold">Storage Info</label>
+                    <textarea id="storageInfo"
+                              class="form-control form-control-lg fs-3"
+                              name="storageinfo"
+                              rows="3"
+                              placeholder="Write storage info..."></textarea>
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label fw-bold">FAQ</label>
+                    <textarea id="faq"
+                              class="form-control form-control-lg fs-3"
+                              name="faq"
+                              rows="15"
+                              style="height:300px !important; resize: vertical;"
+                              placeholder="Write FAQ..."></textarea>
+                </div>
+
+
+
+
+            </div>
+
+            <div class="mt-4">
+                <button type="submit" class="btn btn-success btn-lg px-5 p-3 w-25 fs-3 fw-bold">
+                    <i class="fas fa-check-circle me-2"></i> Save Product
+                </button>
+            </div>
+        </form>
+
+    </div>
+
+</div>
+
+
+
+
+
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<!--Table Printing Jquery-->
+<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+
+<script src="https://cdn.ckeditor.com/ckeditor5/39.0.2/classic/ckeditor.js"></script>
+
+<script>
+    const editors = ['descriptionEditor', 'ingradient', 'usageInfo', 'benefits', 'storageInfo', 'faq'];
+
+    editors.forEach(id => {
+        ClassicEditor
+            .create(document.querySelector('#' + id))
+            .catch(error => console.error(error));
+    });
+
+
+    $(document).ready(function () {
+
+        // फ़ाइनल प्राइस (Final Price) को कैलकुलेट करने का फंक्शन
+        function calculateFinalPrice(row) {
+            const $row = $(row);
+            const price = parseFloat($row.find('.price').val()) || 0;
+            const discount = parseFloat($row.find('.discount').val()) || 0;
+
+            let finalPrice = price;
+            if (discount > 0 && discount <= 100) {
+                // Final Price = Price - (Price * Discount / 100)
+                finalPrice = price - (price * discount / 100);
+            }
+
+            $row.find('.final-price').val(finalPrice.toFixed(2));
+        }
+
+        // Price और Discount बदलने पर Final Price को तुरंत कैलकुलेट करें
+        $('#dynamicRows').on('keyup change', '.price, .discount', function () {
+            calculateFinalPrice($(this).closest('.product-row'));
+        });
+
+        // --- डायनेमिक रो (Dynamic Row) लॉजिक ---
+        $('#addRowBtn').on('click', function () {
+            const newRow = `
+            <tr class="product-row">
+                <td><input type="number" class="form-control qty" name="unitquantity[]" placeholder="Qty" min="0" required></td>
+                <td>
+                    <select class="form-control unit" name="unit[]" required>
+                        <option value="">--Unit--</option>
+                        <option value="kg">Kg</option>
+                        <option value="g">Gram</option>
+                    </select>
+                </td>
+                <td><input type="number" class="form-control price" name="price[]" placeholder="0.00" min="0.01" step="0.01" required></td>
+                <td><input type="number" class="form-control discount" name="discount[]" placeholder="0" min="0" max="100"></td>
+                <td><input type="text" class="form-control bg-light final-price" name="finalprice[]" readonly placeholder="Auto"></td>
+                <td><input type="number" class="form-control stock" name="stock_quantity[]" placeholder="Stock" min="0" required></td>
+                <td class="text-center">
+                    <button type="button" class="btn btn-danger btn-sm p-2 fs-2 removeRowBtn" style="width:50px;">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </td>
+            </tr>
+        `;
+            $('#dynamicRows').append(newRow);
+        });
+
+        // रो (Row) हटाने का लॉजिक
+        $('#dynamicRows').on('click', '.removeRowBtn', function () {
+            if ($('#dynamicRows .product-row').length > 1) {
+                $(this).closest('.product-row').remove();
+            } else {
+                alert('You must have at least one product row.');
+            }
+        });
+
+        // --- फॉर्म सबमिशन वैलिडेशन ---
+        $('#productForm').on('submit', function (e) {
+            let isValid = true;
+
+            // 1. सामान्य ज़रूरी फ़ील्ड (Basic Required Fields)
+            $(this).find('input[required], select[required], textarea[required]').each(function () {
+                if ($(this).val().trim() === '') {
+                    $(this).addClass('is-invalid');
+                    isValid = false;
+                } else {
+                    $(this).removeClass('is-invalid');
+                }
+            });
+
+            // 2. प्राइस/स्टॉक टेबल वैलिडेशन (Price/Stock Table Validation)
+            $('#dynamicRows .product-row').each(function (index, row) {
+                const $row = $(row);
+                const qty = $row.find('.qty').val();
+                const unit = $row.find('.unit').val();
+                const price = $row.find('.price').val();
+                const stock = $row.find('.stock').val();
+
+                if (!qty || !unit || !price || !stock) {
+                    alert(`Error in Product Variation Row ${index + 1}: Quantity, Unit, Price, and Stock are required.`);
+                    isValid = false;
+                }
+            });
+
+            // 3. इमेज साइज़ और टाइप वैलिडेशन (Image Size and Type Validation)
+            const maxFileSize = 50 * 1024 * 1024; // 50 MB
+            const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/jpg', 'image/webp'];
+
+            // मेन इमेज (Main Image)
+            const mainImage = $('input[name="productimage"]').prop('files')[0];
+            if (mainImage) {
+                if (mainImage.size > maxFileSize) {
+                    alert('Product Image size must be less than 50 MB.');
+                    isValid = false;
+                } else if (!allowedTypes.includes(mainImage.type)) {
+                    alert('Product Image must be JPEG, PNG, GIF, or WEBP format.');
+                    isValid = false;
+                }
+            }
+
+            // सब इमेज (Sub Images) - अब size validation भी active है
+            const subImages = $('input[name="productsubimageupload"]').prop('files');
+            if (subImages.length > 0) {
+                for (let i = 0; i < subImages.length; i++) {
+                    if (subImages[i].size > maxFileSize) {
+                        alert(`Sub Image ${i + 1} size must be less than 50 MB.`);
+                        isValid = false;
+                        break;
+                    } else if (!allowedTypes.includes(subImages[i].type)) {
+                        alert(`Sub Image ${i + 1} must be JPEG, PNG, GIF, or WEBP format.`);
+                        isValid = false;
+                        break;
+                    }
+                }
+            }
+
+            if (!isValid) {
+                e.preventDefault(); // फॉर्म को सबमिट होने से रोकें
+                // पहले इनवैलिड फ़ील्ड तक स्क्रॉल करें
+                $('html, body').animate({
+                    scrollTop: $('.is-invalid:first').offset().top - 50
+                }, 500);
+            }
+        });
+
+        // फ़ील्ड बदलने पर real-time invalid क्लास हटाएँ
+        $('#productForm').on('change keyup', 'input, select, textarea', function () {
+            if ($(this).val().trim() !== '') {
+                $(this).removeClass('is-invalid');
+            } else if ($(this).prop('required')) {
+                $(this).addClass('is-invalid');
+            }
+        });
+
+        // पेज लोड होने पर Final Price की कैलकुलेशन को ट्रिगर करें
+        $('#dynamicRows .product-row').each(function () {
+            calculateFinalPrice(this);
+        });
+
+    });
+</script>
+
