@@ -8,7 +8,7 @@ import 'package:kaashtkart/features/splash/screen/SplashScreen.dart';
 import 'package:kaashtkart/core/utls/storage_helper.dart';
 import 'package:provider/provider.dart';
 
-
+// check for commit changes
 
 void main() async  {
   WidgetsFlutterBinding.ensureInitialized();
@@ -23,6 +23,8 @@ void main() async  {
     statusBarIconBrightness: Brightness.light, // White icons on Android
     statusBarBrightness: Brightness.dark, // White icons on iOS
   ));
+
+
 
   runApp(
     MultiProvider(
