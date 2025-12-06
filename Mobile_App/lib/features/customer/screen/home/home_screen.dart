@@ -30,7 +30,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   children: [
                     HomeBannerSliderSection(),
                     ResponsiveHelper.sizedBoxHeight(context, 20),
-                    HomeCategorySection( sectionHeading: 'Categories',  ),
+                    HomeCategorySection( sectionHeading: 'Top Selling Categories',  ),
                     HomelProductListSection( sectionHeading: 'Products',  ),
                     HomeBestSellinglProductListSection( sectionHeading: 'Best Selling',  ),
                     HomeEndingSectionGradient(),

@@ -9,7 +9,7 @@ class AuthInterceptor extends Interceptor {
     // options.headers['x-api-key'] = 'ayush_don_123';
 
     // Conditionally add the userId header
-    final userId = StorageHelper().getUserId();
+    final userId = StorageHelper().getLoginUserId();
     if (userId.isNotEmpty) {
       options.headers['userId'] = userId;
     }

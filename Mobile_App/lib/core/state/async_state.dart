@@ -18,15 +18,15 @@ class AsyncState<T> {
   AsyncState<T> success(T data) => AsyncState<T>(isLoading: false, data: data);
   AsyncState<T> failure(String error) => AsyncState<T>(isLoading: false, error: error);
 
-  AsyncState<T> copyWith({
-    bool? isLoading,
-    T? data,
-    String? error,
-  }) {
-    return AsyncState<T>(
-      isLoading: isLoading ?? this.isLoading,
-      data: data ?? this.data,
-      error: error,
-    );
-  }
+  // AsyncState<T> copyWith({
+  //   bool? isLoading,
+  //   T? data,
+  //   String? error,
+  // }) {
+  //   return AsyncState<T>(
+  //     isLoading: isLoading ?? this.isLoading,
+  //     data: data ?? this.data,
+  //     error: error,
+  //   );
+  // }
 }

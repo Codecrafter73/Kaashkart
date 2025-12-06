@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:kaashtkart/core/ui_helper/app_colors.dart';
 import 'package:kaashtkart/core/ui_helper/theme/app_theme.dart';
+import 'package:kaashtkart/features/auth/controller/auth_controller.dart';
 import 'package:kaashtkart/features/customer/screen/cart/cart_controller.dart';
 import 'package:kaashtkart/features/splash/controller/network_provider_controller.dart';
 import 'package:kaashtkart/features/splash/screen/SplashScreen.dart';
@@ -31,6 +32,7 @@ void main() async  {
       providers: [
         ChangeNotifierProvider(create: (_) => NetworkProvider()),
         ChangeNotifierProvider(create: (_) => CartProvider()),
+        ChangeNotifierProvider(create: (_) => AuthApiProvider()),
       ],
       child: const MyApp(),
     ),

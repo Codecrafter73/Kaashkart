@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:kaashtkart/core/ui_helper/app_colors.dart';
 import 'package:kaashtkart/core/utls/responsive_helper_utils.dart';
+import 'package:kaashtkart/core/utls/storage_helper.dart';
+import 'package:kaashtkart/features/auth/customer_login_screen.dart';
 import 'package:kaashtkart/features/auth/intro_login_screen.dart';
+import 'package:kaashtkart/features/customer/screen/bottom_navigation/entrypoint_ui.dart';
 import 'package:kaashtkart/features/splash/controller/network_provider_controller.dart';
 import 'package:kaashtkart/features/splash/screen/NoInternetScreen.dart';
 import 'package:provider/provider.dart';
@@ -32,7 +35,14 @@ class _SplashScreenState extends State<SplashScreen> {
       _navigateTo(NoInternetScreen());
       return;
     }
-    _navigateTo(IntroLoginPage());
+
+    final isLoggedIn =await StorageHelper().getBoolIsLoggedIn();
+    final userId =await StorageHelper().getLoginUserId();
+    if (isLoggedIn && userId.isNotEmpty) {
+      _navigateTo(const CustomerEntryPointUI());
+    } else {
+      _navigateTo(const CustomerLoginFormScreen());
+    }
   }
 
   void _navigateTo(Widget screen) {

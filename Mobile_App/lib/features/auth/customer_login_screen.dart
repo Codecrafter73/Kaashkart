@@ -1,13 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_credit_card/constants.dart';
+import 'package:kaashtkart/core/utls/constants/app_constants.dart';
+import 'package:kaashtkart/features/auth/controller/auth_controller.dart';
+import 'package:provider/provider.dart';
 import 'package:kaashtkart/core/ui_helper/app_colors.dart';
 import 'package:kaashtkart/core/ui_helper/app_text_styles.dart';
 import 'package:kaashtkart/core/utls/custom_buttons_utils.dart';
+import 'package:kaashtkart/core/utls/image_loader_util.dart';
 import 'package:kaashtkart/core/utls/responsive_dropdown_utils.dart';
 import 'package:kaashtkart/core/utls/responsive_helper_utils.dart';
 import 'package:kaashtkart/features/customer/screen/bottom_navigation/entrypoint_ui.dart';
 import 'package:kaashtkart/core/utls/custom_text_field_utils.dart';
 import 'package:pinput/pinput.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class CustomerLoginFormScreen extends StatefulWidget {
   const CustomerLoginFormScreen({super.key});
@@ -17,12 +23,16 @@ class CustomerLoginFormScreen extends StatefulWidget {
       _CustomerLoginFormScreenState();
 }
 
-
-class _CustomerLoginFormScreenState extends State<CustomerLoginFormScreen> {
+class _CustomerLoginFormScreenState extends State<CustomerLoginFormScreen>
+    with SingleTickerProviderStateMixin {
   final PageController _pageController = PageController();
-  int _currentTab = 0; // 0: Email Login, 1: Mobile Login, 2: Register
+  int _currentTab = 0;
   final TextEditingController _otpController = TextEditingController();
   bool _showOtpField = false;
+
+  // Animation Controller for initial page load only
+  late AnimationController _fadeController;
+  late Animation<double> _fadeAnimation;
 
   // Form Keys
   final GlobalKey<FormState> _emailLoginFormKey = GlobalKey<FormState>();
@@ -48,7 +58,24 @@ class _CustomerLoginFormScreenState extends State<CustomerLoginFormScreen> {
   bool _agreeToTerms = false;
 
   @override
+  void initState() {
+    super.initState();
+    _fadeController = AnimationController(
+      duration: const Duration(milliseconds: 800),
+      vsync: this,
+    );
+
+    _fadeAnimation = CurvedAnimation(
+      parent: _fadeController,
+      curve: Curves.easeIn,
+    );
+
+    _fadeController.forward();
+  }
+
+  @override
   void dispose() {
+    _fadeController.dispose();
     _pageController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
@@ -73,43 +100,63 @@ class _CustomerLoginFormScreenState extends State<CustomerLoginFormScreen> {
     );
   }
 
-  void _handleEmailLogin() {
-    if (_emailLoginFormKey.currentState!.validate()) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Email Login Successful!')),
-      );
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (_) => const CustomerEntryPointUI()),
-      );
+  /// ✅ Email Login with API Integration - FIXED
+  Future<void> _handleEmailLogin() async {
+    if (!_emailLoginFormKey.currentState!.validate()) {
+      return;
     }
+    FocusScope.of(context).unfocus();
+    final Map<String, dynamic> loginBody = {
+      'Email': _emailController.text.trim(),
+      'Password': _passwordController.text.trim(),
+    };
+    final authProvider = Provider.of<AuthApiProvider>(context, listen: false);
+    await authProvider.loginUser(context, loginBody);
   }
-
   void _handleMobileLogin() {
     if (_mobileLoginFormKey.currentState!.validate()) {
       setState(() => _showOtpField = true);
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('OTP Sent Successfully!')),
+        SnackBar(
+          content: const Text('OTP Sent Successfully!'),
+          backgroundColor: Colors.green,
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        ),
       );
     }
   }
 
-  // Naya method add karo:
   void _verifyOtp() {
     if (_otpController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please enter OTP')),
+        SnackBar(
+          content: const Text('Please enter OTP'),
+          backgroundColor: Colors.orange,
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        ),
       );
       return;
     }
     if (_otpController.text.length != 6) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('OTP must be 6 digits')),
+        SnackBar(
+          content: const Text('OTP must be 6 digits'),
+          backgroundColor: Colors.orange,
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        ),
       );
       return;
     }
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Login Successful!')),
+      SnackBar(
+        content: const Text('Login Successful!'),
+        backgroundColor: Colors.green,
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      ),
     );
     Navigator.push(
       context,
@@ -121,12 +168,22 @@ class _CustomerLoginFormScreenState extends State<CustomerLoginFormScreen> {
     if (_registerFormKey.currentState!.validate()) {
       if (!_agreeToTerms) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Please accept Terms & Conditions')),
+          SnackBar(
+            content: const Text('Please accept Terms & Conditions'),
+            backgroundColor: Colors.orange,
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          ),
         );
         return;
       }
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Account Created Successfully!')),
+        SnackBar(
+          content: const Text('Account Created Successfully!'),
+          backgroundColor: Colors.green,
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        ),
       );
     }
   }
@@ -137,26 +194,20 @@ class _CustomerLoginFormScreenState extends State<CustomerLoginFormScreen> {
     final isDark = theme.brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: isDark ? Colors.grey[900] : Colors.white,
-      appBar: AppBar(
-        automaticallyImplyLeading: false, // ✅ Yeh add karo - back button remove ho jayega
-        title: Text(
-          'KaashKart',
-          style: AppTextStyles.heading1(context,
-            overrideStyle: TextStyle(
-              color: AppColors.whiteColor,
-              fontSize: 20,
-            ),
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: isDark
+                ? [Colors.grey[900]!, Colors.grey[850]!]
+                : [Colors.white, Colors.green[50]!],
           ),
         ),
-        elevation: 0,
-        backgroundColor: isDark ? Colors.grey[850] : AppColors.primary,
-      ),
-      body: Stack(
-        children: [
-          // Main Content
-          Column(
+        child: SafeArea(
+          child: Column(
             children: [
+              _buildHeader(isDark),
               _buildTabBar(isDark),
               Expanded(
                 child: PageView(
@@ -169,88 +220,118 @@ class _CustomerLoginFormScreenState extends State<CustomerLoginFormScreen> {
                   ],
                 ),
               ),
+              PoweredByFooter(), // ✅ Fixed footer sabke liye
             ],
-          ),
-
-
-          // Bottom Background Image
-          // Positioned(
-          //   bottom: 0,
-          //   left: 0,
-          //   right: 0,
-          //   child: Image.asset(
-          //     'assets/images/layer_bg.png', // ✅ Apna image path yahan daalein
-          //     fit: BoxFit.cover,
-          //     height: MediaQuery.of(context).size.height * 0.25, // Adjust height as needed
-          //   ),
-          // ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildTabBar(bool isDark) {
-    return Container(
-      margin: ResponsiveHelper.paddingSymmetric(
-        context,
-        horizontal: 16,
-        vertical: 12,
-      ),
-      decoration: BoxDecoration(
-        color: isDark ? Colors.grey[800] : Colors.grey[200],
-        borderRadius: ResponsiveHelper.borderRadiusAll(context, 12),
-      ),
-      child: Row(
-        children: [
-          _buildTab('Email Login', 0),
-          _buildTab('Mobile Login', 1),
-          _buildTab('Register', 2),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildTab(String title, int index) {
-    final isSelected = _currentTab == index;
-    return Expanded(
-      child: GestureDetector(
-        onTap: () => _switchTab(index),
-        child: Container(
-          padding: ResponsiveHelper.paddingSymmetric(
-            context,
-            vertical: 14,
-            horizontal: 12,
-          ),
-          decoration: BoxDecoration(
-            color: isSelected ? AppColors.primary : Colors.transparent,
-            borderRadius: ResponsiveHelper.borderRadiusAll(context, 10),
-          ),
-          child: Text(
-            title,
-            textAlign: TextAlign.center,
-            style: AppTextStyles.body1(
-              context,
-              overrideStyle: TextStyle(
-                color: isSelected ? Colors.white : Colors.grey[700],
-                fontWeight: isSelected ? FontWeight.bold : FontWeight.w600,
-                fontSize: 14,
-              ),
-            ),
           ),
         ),
       ),
     );
   }
 
-  // Email Login Form
+  Widget _buildHeader(bool isDark) {
+    return FadeTransition(
+      opacity: _fadeAnimation,
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 20),
+        child: Column(
+          children: [
+            Container(
+              width: ResponsiveHelper.containerWidth(context, 200),
+              child: ImageLoaderUtil.assetImage(
+                'assets/images/transparent_logo.png',
+                fit: BoxFit.cover,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTabBar(bool isDark) {
+    return FadeTransition(
+      opacity: _fadeAnimation,
+      child: Container(
+        margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+        padding: const EdgeInsets.all(4),
+        decoration: BoxDecoration(
+          color: isDark ? Colors.grey[800] : Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: AppColors.primary.withOpacity(0.1),
+              blurRadius: 12,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        child: Row(
+          children: [
+            _buildTab('Email', 0, Icons.email_rounded),
+            _buildTab('Mobile', 1, Icons.phone_android_rounded),
+            _buildTab('Register', 2, Icons.person_add_rounded),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTab(String title, int index, IconData icon) {
+    final isSelected = _currentTab == index;
+    return Expanded(
+      child: GestureDetector(
+        onTap: () => _switchTab(index),
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeInOut,
+          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
+          decoration: BoxDecoration(
+            color: isSelected ? AppColors.primary : Colors.transparent,
+            borderRadius: BorderRadius.circular(12),
+            boxShadow: isSelected
+                ? [
+              BoxShadow(
+                color: AppColors.primary.withOpacity(0.3),
+                blurRadius: 8,
+                offset: const Offset(0, 2),
+              ),
+            ]
+                : [],
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                icon,
+                size: 20,
+                color: isSelected ? Colors.white : Colors.grey[600],
+              ),
+              const SizedBox(height: 4),
+              Text(
+                title,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: isSelected ? Colors.white : Colors.grey[700],
+                  fontWeight: isSelected ? FontWeight.bold : FontWeight.w600,
+                  fontSize: 12,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   Widget _buildEmailLoginForm() {
     return SingleChildScrollView(
-      padding: ResponsiveHelper.paddingOnly(context,left:  20,right: 20,top: 10,bottom: 20),
+      padding: const EdgeInsets.symmetric(horizontal: 24),
       child: Form(
         key: _emailLoginFormKey,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            const SizedBox(height: 8),
             CustomTextField(
               title: 'Email',
               hintText: 'Enter your email',
@@ -270,104 +351,124 @@ class _CustomerLoginFormScreenState extends State<CustomerLoginFormScreen> {
               validator: (value) =>
               value?.isEmpty ?? true ? 'Please enter password' : null,
             ),
-            SizedBox(height: ResponsiveHelper.spacing(context, 0)),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Row(
                   children: [
                     Transform.scale(
-                      scale: 0.8, // ⬅️ Checkbox chhota
+                      scale: 0.9,
                       child: Checkbox(
                         value: _rememberMe,
                         onChanged: (value) =>
                             setState(() => _rememberMe = value ?? false),
                         activeColor: AppColors.primary,
-                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(4),
+                        ),
                       ),
                     ),
                     Text(
                       'Remember me',
-                      style: AppTextStyles.body1(context).copyWith(
-                        fontSize: 12, // ⬅️ Text chhota
-                      ),
+                      style: AppTextStyles.body1(context).copyWith(fontSize: 13),
                     ),
                   ],
                 ),
                 TextButton(
                   onPressed: () {},
+                  style: TextButton.styleFrom(
+                    padding: EdgeInsets.zero,
+                    minimumSize: const Size(0, 0),
+                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  ),
                   child: Text(
                     'Forgot Password?',
                     style: TextStyle(
                       color: AppColors.primary,
                       fontWeight: FontWeight.w600,
-                      fontSize: 12, // ⬅️ Text chhota
+                      fontSize: 13,
                     ),
                   ),
                 ),
               ],
             ),
-            SizedBox(height: ResponsiveHelper.spacing(context, 0)),
-            CustomButton(
-              text: 'Login',
-              onPressed: _handleEmailLogin,
-              color: AppColors.primary,
+            const SizedBox(height: 8),
+            Consumer<AuthApiProvider>(
+              builder: (context, authProvider, child) {
+                final isLoading = authProvider.loginState.isLoading;
+
+                return Column(
+                  children: [
+                    CustomButton(
+                      text: isLoading ? 'Logging in...' : 'Login',
+                      onPressed: isLoading ? null : _handleEmailLogin,
+                      color: AppColors.primary,
+                    ),
+                    const SizedBox(height: 16),
+                    Row(
+                      children: [
+                        Expanded(child: Divider(color: Colors.grey[300])),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          child: Text(
+                            'or',
+                            style: TextStyle(color: Colors.grey[600], fontSize: 13),
+                          ),
+                        ),
+                        Expanded(child: Divider(color: Colors.grey[300])),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+                  ],
+                );
+              },
             ),
-            SizedBox(height: ResponsiveHelper.spacing(context, 8)),
-            Center(
-              child: Text(
-                'or',
-                style: AppTextStyles.body1(context).copyWith(
-                  fontSize: 12,
-                ),
+            IgnorePointer(
+              child: CustomButton(
+                text: 'Login with Mobile OTP',
+                type: ButtonType.outlined,
+                onPressed: () => _switchTab(1),
+                color: AppColors.primary,
+                textColor: AppColors.primary,
               ),
             ),
-            SizedBox(height: ResponsiveHelper.spacing(context, 8)),
-            CustomButton(
-              text: 'Login with Mobile OTP',
-              type: ButtonType.outlined,
-              onPressed: () => _switchTab(1),
-              color: AppColors.primary,
-              textColor: AppColors.primary,
-            ),
-            SizedBox(height: ResponsiveHelper.spacing(context, 24)),
+            const SizedBox(height: 24),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
                   "Don't have an account? ",
-                  style: AppTextStyles.body1(context).copyWith(
-                    fontSize: 12,
-                  ),
+                  style: AppTextStyles.body1(context).copyWith(fontSize: 13),
                 ),
                 GestureDetector(
                   onTap: () => _switchTab(2),
                   child: Text(
                     'Sign Up',
-                    style: AppTextStyles.heading1(context).copyWith(
-                        fontSize: 14,
-                        color: AppColors.primary
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.primary,
                     ),
                   ),
                 ),
               ],
             ),
-            SizedBox(height: 120), // ✅ Bottom padding for image space
+            const SizedBox(height: 80), // Footer ke liye space
           ],
         ),
       ),
     );
   }
 
-  // Mobile Login Form
   Widget _buildMobileLoginForm() {
     return SingleChildScrollView(
-      padding: ResponsiveHelper.paddingOnly(context,left:  20,right: 20,top: 10,bottom: 20),
+      padding: const EdgeInsets.symmetric(horizontal: 24),
       child: Form(
         key: _mobileLoginFormKey,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            const SizedBox(height: 8),
             CustomTextField(
               title: 'Mobile Number',
               hintText: 'Enter 10-digit mobile number',
@@ -377,32 +478,26 @@ class _CustomerLoginFormScreenState extends State<CustomerLoginFormScreen> {
               maxLength: 10,
               keyboardType: TextInputType.phone,
               validationType: ValidationType.phone,
-              // inputFormatters: [
-              //   FilteringTextInputFormatter.digitsOnly,
-              //   LengthLimitingTextInputFormatter(10),
-              // ],
-              // validator: (value) {
-              //   if (value?.isEmpty ?? true) return 'Please enter mobile number';
-              //   if (value!.length != 10) return 'Mobile number must be 10 digits';
-              //   return null;
-              // },
             ),
-            SizedBox(height: ResponsiveHelper.spacing(context, 10)),
+            const SizedBox(height: 16),
             CustomButton(
               text: 'Get OTP',
               onPressed: _handleMobileLogin,
               color: AppColors.primary,
             ),
             if (_showOtpField) ...[
-              SizedBox(height: ResponsiveHelper.spacing(context, 20)),
+              const SizedBox(height: 24),
               Text(
                 'Enter OTP',
-                style: AppTextStyles.heading1(context, overrideStyle: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                )),
+                style: AppTextStyles.heading1(
+                  context,
+                  overrideStyle: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
               ),
-              SizedBox(height: ResponsiveHelper.spacing(context, 12)),
+              const SizedBox(height: 16),
               Center(
                 child: Pinput(
                   controller: _otpController,
@@ -417,7 +512,7 @@ class _CustomerLoginFormScreenState extends State<CustomerLoginFormScreen> {
                     ),
                     decoration: BoxDecoration(
                       border: Border.all(color: Colors.grey.shade300),
-                      borderRadius: BorderRadius.circular(8),
+                      borderRadius: BorderRadius.circular(12),
                     ),
                   ),
                   focusedPinTheme: PinTheme(
@@ -430,30 +525,35 @@ class _CustomerLoginFormScreenState extends State<CustomerLoginFormScreen> {
                     ),
                     decoration: BoxDecoration(
                       border: Border.all(color: AppColors.primary, width: 2),
-                      borderRadius: BorderRadius.circular(8),
+                      borderRadius: BorderRadius.circular(12),
                     ),
                   ),
                   submittedPinTheme: PinTheme(
                     width: 50,
                     height: 55,
-                    textStyle: TextStyle(
+                    textStyle: const TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.w600,
                       color: Colors.black,
                     ),
                     decoration: BoxDecoration(
                       color: AppColors.primary.withAlpha(30),
-                      borderRadius: BorderRadius.circular(8),
+                      borderRadius: BorderRadius.circular(12),
                     ),
                   ),
-                  // onCompleted: (pin) => _verifyOtp(),
                 ),
               ),
-              // SizedBox(height: ResponsiveHelper.spacing(context, 16)),
               TextButton(
                 onPressed: () {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('OTP Resent Successfully!')),
+                    SnackBar(
+                      content: const Text('OTP Resent Successfully!'),
+                      backgroundColor: Colors.green,
+                      behavior: SnackBarBehavior.floating,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
                   );
                 },
                 child: Text(
@@ -472,58 +572,21 @@ class _CustomerLoginFormScreenState extends State<CustomerLoginFormScreen> {
                 textColor: AppColors.orangeColor,
               ),
             ],
-            // SizedBox(height: ResponsiveHelper.spacing(context, 0)),
-            // Center(
-            //   child: TextButton(
-            //     onPressed: () => _switchTab(0),
-            //     child: Row(
-            //       mainAxisSize: MainAxisSize.min,
-            //       children: [
-            //         Icon(Icons.arrow_back, size: 18, color: AppColors.primary),
-            //         SizedBox(width: 4),
-            //         Text(
-            //           'Back to Email Login',
-            //           style: TextStyle(
-            //             color: AppColors.primary,
-            //             fontWeight: FontWeight.w600,
-            //           ),
-            //         ),
-            //       ],
-            //     ),
-            //   ),
-            // ),
-            SizedBox(height: ResponsiveHelper.spacing(context, 10)),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  "Don't have an account? ",
-                  style: AppTextStyles.body1(context,overrideStyle: TextStyle(fontSize: 12)),
-                ),
-                GestureDetector(
-                  onTap: () => _switchTab(2),
-                  child: Text(
-                    'Sign Up',
-                    style: AppTextStyles.heading1(context,overrideStyle: TextStyle(fontSize: 14,color: AppColors.primary)),
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(height: 120), // ✅ Bottom padding for image space
+            const SizedBox(height: 80), // Footer ke liye space
           ],
         ),
       ),
     );
   }
 
-  // Register Form
   Widget _buildRegisterForm() {
     return SingleChildScrollView(
-      padding: ResponsiveHelper.paddingOnly(context,left:  20,right: 20,top: 10,bottom: 20),
+      padding: const EdgeInsets.symmetric(horizontal: 24),
       child: Form(
         key: _registerFormKey,
         child: Column(
           children: [
+            const SizedBox(height: 8),
             CustomTextField(
               title: 'Username',
               hintText: 'Enter username',
@@ -539,22 +602,13 @@ class _CustomerLoginFormScreenState extends State<CustomerLoginFormScreen> {
               letterSpacing: 1.2,
               keyboardType: TextInputType.phone,
               validationType: ValidationType.phone,
-              // inputFormatters: [
-              //   FilteringTextInputFormatter.digitsOnly,
-              //   LengthLimitingTextInputFormatter(10),
-              // ],
-              // validator: (value) {
-              //   if (value?.isEmpty ?? true) return 'Required';
-              //   if (value!.length != 10) return 'Invalid';
-              //   return null;
-              // },
             ),
             Row(
               children: [
                 Expanded(
                   child: CustomTextField(
                     title: 'Date of Birth',
-                    hintText: 'Select Date of Birth',
+                    hintText: 'Select DOB',
                     controller: _regDobController,
                     readOnly: true,
                     letterSpacing: 1.2,
@@ -563,7 +617,7 @@ class _CustomerLoginFormScreenState extends State<CustomerLoginFormScreen> {
                     value?.isEmpty ?? true ? 'Select DOB' : null,
                   ),
                 ),
-                SizedBox(width: ResponsiveHelper.spacing(context, 12)),
+                const SizedBox(width: 12),
                 Expanded(
                   child: ResponsiveDropdown<String>(
                     value: _regGenderController.text.isEmpty
@@ -581,19 +635,13 @@ class _CustomerLoginFormScreenState extends State<CustomerLoginFormScreen> {
                 ),
               ],
             ),
-            Row(
-              children: [
-                Expanded(
-                  child: CustomTextField(
-                    title: 'Email Address',
-                    hintText: 'your.email@example.com',
-                    controller: _regEmailController,
-                    letterSpacing: 1.2,
-                    keyboardType: TextInputType.emailAddress,
-                    validationType: ValidationType.email,
-                  ),
-                ),
-              ],
+            CustomTextField(
+              title: 'Email Address',
+              hintText: 'your.email@example.com',
+              controller: _regEmailController,
+              letterSpacing: 1.2,
+              keyboardType: TextInputType.emailAddress,
+              validationType: ValidationType.email,
             ),
             CustomTextField(
               title: 'Password',
@@ -613,12 +661,12 @@ class _CustomerLoginFormScreenState extends State<CustomerLoginFormScreen> {
               controller: _regAddressController,
               isMultiLine: true,
               maxLines: 3,
-              minLines:3,
+              minLines: 3,
               letterSpacing: 1.2,
               validator: (value) =>
               value?.isEmpty ?? true ? 'Please enter address' : null,
             ),
-            SizedBox(height: ResponsiveHelper.spacing(context, 10)),
+            const SizedBox(height: 12),
             Row(
               children: [
                 SizedBox(
@@ -629,48 +677,51 @@ class _CustomerLoginFormScreenState extends State<CustomerLoginFormScreen> {
                     onChanged: (value) =>
                         setState(() => _agreeToTerms = value ?? false),
                     activeColor: AppColors.primary,
-                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(4),
+                    ),
                   ),
                 ),
-                SizedBox(width: 8),
+                const SizedBox(width: 8),
                 Expanded(
                   child: Text(
                     'I agree to the Terms & Conditions and Privacy Policy',
                     style: AppTextStyles.body1(
                       context,
-                      overrideStyle: const TextStyle(fontSize: 10),
+                      overrideStyle: const TextStyle(fontSize: 11),
                     ),
                   ),
                 ),
               ],
             ),
-            SizedBox(height: ResponsiveHelper.spacing(context, 10)),
+            const SizedBox(height: 16),
             CustomButton(
               text: 'Create Account',
               onPressed: _handleRegister,
               color: AppColors.primary,
             ),
-            SizedBox(height: ResponsiveHelper.spacing(context, 16)),
+            const SizedBox(height: 16),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
                   'Already have an account? ',
-                  style: AppTextStyles.body1(context,overrideStyle: TextStyle(fontSize: 12)),
+                  style: AppTextStyles.body1(context).copyWith(fontSize: 13),
                 ),
                 GestureDetector(
                   onTap: () => _switchTab(0),
                   child: Text(
                     'Login',
                     style: TextStyle(
-                      color: AppColors.primary,
+                      fontSize: 14,
                       fontWeight: FontWeight.bold,
+                      color: AppColors.primary,
                     ),
                   ),
                 ),
               ],
             ),
-            SizedBox(height: 120), // ✅ Bottom padding for image space
+            const SizedBox(height: 80), // Footer ke liye space
           ],
         ),
       ),
@@ -697,5 +748,60 @@ class _CustomerLoginFormScreenState extends State<CustomerLoginFormScreen> {
         controller.text = "${picked.day}/${picked.month}/${picked.year}";
       });
     }
+  }
+}
+
+// ✅ Reusable PoweredBy Footer Widget
+class PoweredByFooter extends StatelessWidget {
+   PoweredByFooter({super.key});
+
+  final Uri _url =  Uri.parse(
+    AppDefaultConstants.codeCrafterSiteUrl,
+  );
+
+  Future<void> _launchURL(BuildContext context) async {
+    try {
+      if (!await launchUrl(_url, mode: LaunchMode.externalApplication)) {
+        throw Exception('Could not launch $_url');
+      }
+    } catch (e) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Could not open link: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            "Powered by ",
+            style: TextStyle(
+              fontSize: 13,
+              color: Colors.grey[600],
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          GestureDetector(
+            onTap: () => _launchURL(context),
+            child: ImageLoaderUtil.assetImage(
+              "assets/images/code_crafter_logo.png",
+              width: 100,
+              fit: BoxFit.contain,
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }

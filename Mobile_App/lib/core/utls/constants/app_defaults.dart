@@ -4,7 +4,7 @@ class AppDefaults {
   static const double radius = 15;
   static const double margin = 15;
   static const double padding = 15;
-  static const double sectionHeadingSize = 14;
+  static const double sectionHeadingSize = 12;
   static const double verticalSpacing = 20.0;
   /// Used For Border Radius
   static BorderRadius borderRadius = BorderRadius.circular(radius);

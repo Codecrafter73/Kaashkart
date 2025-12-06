@@ -5,6 +5,7 @@ import 'package:kaashtkart/core/ui_helper/app_colors.dart';
 import 'package:kaashtkart/core/ui_helper/app_text_styles.dart';
 import 'package:kaashtkart/core/utls/locatino_manager.dart';
 import 'package:kaashtkart/core/utls/responsive_helper_utils.dart';
+import 'package:kaashtkart/core/utls/storage_helper.dart';
 import 'package:kaashtkart/features/customer/screen/cart/cart_list_screen.dart';
 import 'package:kaashtkart/features/customer/screen/cart/cart_controller.dart';
 import 'package:provider/provider.dart';
@@ -20,6 +21,7 @@ class FixedHeader extends StatefulWidget {
 class _FixedHeaderState extends State<FixedHeader> {
   String _address = "Fetching location...";
   bool isLoadingAddress = true;
+  String userName = "";
 
   // Rotating search texts
   final List<String> _searchTexts = [
@@ -36,9 +38,8 @@ class _FixedHeaderState extends State<FixedHeader> {
   @override
   void initState() {
     super.initState();
+    loadUserData();
     _fetchLocation();
-
-    // Auto rotate every 2.8 seconds
     _timer = Timer.periodic(const Duration(milliseconds: 2800), (timer) {
       if (mounted) {
         setState(() {
@@ -46,6 +47,15 @@ class _FixedHeaderState extends State<FixedHeader> {
         });
       }
     });
+  }
+
+  Future<void> loadUserData() async {
+    final name = await StorageHelper().getLoginUserName();
+    if (mounted) {
+      setState(() {
+        userName = name;
+      });
+    }
   }
 
   @override
@@ -114,7 +124,7 @@ class _FixedHeaderState extends State<FixedHeader> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Hello, Ashish Kumar',
+                              'Hello,  $userName',
                               style: AppTextStyles.heading1(context).copyWith(
                                 color: Colors.white,
                                 fontSize: 13,

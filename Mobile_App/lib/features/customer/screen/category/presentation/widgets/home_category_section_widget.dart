@@ -3,6 +3,7 @@ import 'package:kaashtkart/core/ui_helper/app_colors.dart';
 import 'package:kaashtkart/core/ui_helper/app_text_styles.dart';
 import 'package:kaashtkart/core/utls/constants/app_defaults.dart';
 import 'package:kaashtkart/core/utls/divider_separation_widget_util.dart';
+import 'package:kaashtkart/core/utls/image_loader_util.dart';
 import 'package:kaashtkart/core/utls/responsive_helper_utils.dart';
 
 
@@ -45,7 +46,6 @@ class _HomeCategorySectionState extends State<HomeCategorySection> {
     final services = _getServicesData();
     final displayedServices = services.take(columns * 2).toList();
 
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
@@ -71,21 +71,6 @@ class _HomeCategorySectionState extends State<HomeCategorySection> {
                   ),
                 ),
               ),
-              GestureDetector(
-                onTap: () {
-                  print("View all tapped");
-                },
-                child: Text(
-                  "View all",
-                  style: AppTextStyles.heading2(
-                    context,
-                    overrideStyle: TextStyle(
-                      color: AppColors.primary,
-                      fontSize: ResponsiveHelper.fontSize(context, 12),
-                    ),
-                  ),
-                ),
-              ),
             ],
           ),
         ),
@@ -101,7 +86,7 @@ class _HomeCategorySectionState extends State<HomeCategorySection> {
             crossAxisCount: columns,
             crossAxisSpacing: cardSpacing,
             mainAxisSpacing: mainAxisSpacing,
-            childAspectRatio: 0.80,
+            childAspectRatio: 0.7, // Adjusted for better proportions
           ),
           itemCount: displayedServices.length,
           itemBuilder: (context, index) {
@@ -116,9 +101,7 @@ class _HomeCategorySectionState extends State<HomeCategorySection> {
         ),
         SizedBox(height: AppDefaults.verticalSpacing),
 
-        // 🔹 Divider at the bottom
         const CommonDivider(),
-
       ],
     );
   }
@@ -140,9 +123,11 @@ class _HomeCategorySectionState extends State<HomeCategorySection> {
       borderRadius: BorderRadius.circular(12),
       child: Column(
         mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          // Card Container with Image Only
-          Expanded(
+          // Card Container with Fixed Aspect Ratio for Image
+          AspectRatio(
+            aspectRatio: 1.0, // Perfect square for consistent look
             child: Container(
               width: double.infinity,
               decoration: BoxDecoration(
@@ -160,36 +145,31 @@ class _HomeCategorySectionState extends State<HomeCategorySection> {
                   ),
                 ],
               ),
-              // padding: EdgeInsets.all(isMobile ? 14.0 : 16.0),
-              padding: ResponsiveHelper.paddingAll(context,isMobile ? 10.0 : 16.0),
-              child: Image.asset(
+              padding: ResponsiveHelper.paddingAll(context, isMobile ? 10.0 : 16.0),
+              child: ImageLoaderUtil.assetImage(
                 imagePath,
                 fit: BoxFit.contain,
-                errorBuilder: (context, error, stackTrace) {
-                  return Icon(
-                    Icons.image_outlined,
-                    size: ResponsiveHelper.iconSize(context, 40),
-                    color: Colors.grey[400],
-                  );
-                },
               ),
             ),
           ),
 
-          SizedBox(height: 6),
+          // Fixed height spacer
+          SizedBox(height: isMobile ? 6.0 : 8.0),
 
-          // Title Outside Card
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 4),
+          // Title with Fixed Height Container (2 lines max)
+          Container(
+            height: isMobile ? 28.0 : 32.0, // Fixed height for 2 lines
+            alignment: Alignment.topCenter,
+            padding: ResponsiveHelper.paddingSymmetric(context, horizontal: 4),
             child: Text(
               title,
               style: AppTextStyles.caption(
                 context,
                 overrideStyle: TextStyle(
                   color: Colors.black87,
-                  fontSize: ResponsiveHelper.fontSize(context, isMobile ? 11 : 12),
+                  fontSize: ResponsiveHelper.fontSize(context, isMobile ? 10 : 12),
                   fontWeight: FontWeight.w600,
-                  height: 1.2,
+                  height: 1.3,
                   letterSpacing: -0.1,
                 ),
               ),

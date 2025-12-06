@@ -23,8 +23,10 @@ class StorageHelper {
     if (!_isInitialized) await init();
   }
 
+  //////// 👉👉👉👉👉👉👉👉👉👉👉👉👉👉👉👉👉👉👉👉👉 CUSTOMER 👉👉👉👉👉👉👉👉👉👉👉👉👉👉👉👉👉👉👉👉👉👉
+
   String _getCartKey() {
-    final userId = getUserId();
+    final userId = getLoginUserId();
     return userId.isNotEmpty ? '${_cartKeyPrefix}_$userId' : _cartKeyPrefix;
   }
 
@@ -50,16 +52,51 @@ class StorageHelper {
     await _ensureInitialized();
     await _prefs.remove(_getCartKey());
   }
+  Future<void> setBoolIsLoggedIn(bool value) async {
+    print("📝 setBoolIsLoggedIn: $value");
+    await _prefs.setBool("isLoggedIn", value);
+  }
 
-  // User ID (for multi-user support)
-  Future<void> setUserId(String id) async {
+  Future<bool> getBoolIsLoggedIn() async {
+    final value = _prefs.getBool("isLoggedIn") ?? false;
+    print("📤 getBoolIsLoggedIn: $value");
+    return value;
+  }
+
+  Future<void> setLoginUserId(String id) async {
     await _ensureInitialized();
     await _prefs.setString('user_id', id);
   }
 
-  String getUserId() {
+  String getLoginUserId() {
     return _prefs.getString('user_id') ?? '';
   }
+
+  Future<void> setLoginUserName(String token) async {
+    print("📝 setLoginUserName: $token");
+    await _prefs.setString('login_user_name', token);
+  }
+
+  Future<String> getLoginUserName() async {
+    return _prefs.getString('login_user_name') ?? "";
+  }
+
+  Future<void> setLoginUserEmail(String token) async {
+    await _prefs.setString('login_user_email', token);
+  }
+
+  Future<String> getLoginUserEmail() async {
+    return _prefs.getString('login_user_email') ?? "";
+  }
+
+  Future<void> setLoginUserPhone(String token) async {
+    await _prefs.setString('login_user_phone', token);
+  }
+
+  Future<String> getLoginUserPhone() async {
+    return _prefs.getString('login_user_phone') ?? "";
+  }
+
 
   Future<void> clearUserData() async {
     await _ensureInitialized();

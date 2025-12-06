@@ -324,6 +324,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
               context,
               overrideStyle: TextStyle(
                 fontSize: ResponsiveHelper.fontSize(context, 12),
+                color: Colors.black,
                 letterSpacing: widget.letterSpacing ?? 0,
               ),
             ),
